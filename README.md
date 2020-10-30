@@ -1,6 +1,7 @@
 # WALKERHOLIC_ondev
 
 ## currently dependent plug-in
+```
   flame: ^0.26.0
   pedometer: ^2.0.2
   cloud_firestore: ^0.14.0+2
@@ -13,6 +14,7 @@
   permission_handler: ^5.0.1+1
   activity_recognition_flutter: ^1.2.4+1
   foreground_service: ^2.0.1+1
+```
 
 ## Github Desktop
 
