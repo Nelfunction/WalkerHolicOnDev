@@ -28,7 +28,7 @@
 ## Github Desktop
 ![image](https://user-images.githubusercontent.com/20199960/97769373-a47d6a80-1b6d-11eb-89eb-9d95ac15942f.png)
 
- 좌측 리스트는 순서대로 {삭제됨, 새 파일, 변경됨, 변경됨} 을 의미함
+ 좌측 리스트는 순서대로 {변경됨, 삭제됨, 새 파일, 변경됨} 을 의미함
  
  아래 Summary와 Description을 작성하고 commit 가능.
  사진과 같은 상황에서는 Github의 remote 저장소에서도 새 commit이 있었기 때문에 merge 과정 필요 
