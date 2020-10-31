@@ -11,8 +11,6 @@ import 'Options.dart';
 import 'Data.dart';
 import 'pedoForeground.dart';
 
-int primarySteps;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
