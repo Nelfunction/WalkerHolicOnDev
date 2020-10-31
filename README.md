@@ -1,5 +1,8 @@
 # WALKERHOLIC_ondev
 
+ pub get -> google-services.json 파일 android/app/에 추가
+ iOS는 GoogleService-Info.plist 관련 내용이 /ios/Runner.xcodeproj/project.pbxproj 에 작성되어 있음. 또는 Xcode로 파일 추가 
+
 ## currently dependent plug-in
 ```
   flame: ^0.26.0
