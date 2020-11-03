@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// Custom library
+import 'package:walkerholic_sprite/login.dart';
+import 'package:walkerholic_sprite/CharacterPage.dart';
+
 import 'bottom.dart';
 import 'home.dart';
 import 'Pedometer.dart';
@@ -14,6 +16,11 @@ import 'pedoForeground.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await signInWithGoogle();
+  await loadfrienddata();
+
+
   runApp(MyApp());
 }
 
@@ -29,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     // Load Color Option.
     _initPermission();
     _loadPref();
@@ -75,13 +83,14 @@ class _MyAppState extends State<MyApp> {
               },
             ),
             DefaultTabController(
-              length: 3,
+              length: 4,
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: TabBarView(
                   //physics: NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     MyHome(),
+                    CharacterPage(),
                     MyPedo(),
                     MyOption(
                       ctrl: myColor,
