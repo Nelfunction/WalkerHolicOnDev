@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:walkerholic_sprite/box-game.dart';
 
-import 'Home.dart';
+import 'home.dart';
 
 class FullGame extends StatefulWidget {
   @override

@@ -5,10 +5,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // Custom library
 import 'bottom.dart';
-import 'Home.dart';
+import 'home.dart';
 import 'Pedometer.dart';
-import 'Options.dart';
-import 'Data.dart';
+import 'options.dart';
+import 'data/data.dart';
 import 'pedoForeground.dart';
 
 void main() async {
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             StreamBuilder(
               stream: myColor.stream, // Replace with Bloc result
               initialData: 0,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+              builder: (context, snapshot) {
                 if (_prefs != null) {
                   _prefs.setInt('myColor', snapshot.data);
                 }

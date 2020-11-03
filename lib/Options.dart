@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
 import 'login.dart';
-import 'Data.dart';
+import 'data/data.dart';
 
 class MyOption extends StatefulWidget {
   final StreamController ctrl;
@@ -25,6 +25,7 @@ class _MyOptionState extends State<MyOption> {
           return Container(
             height: 200,
             child: CupertinoPicker(
+              //scrollController: FixedExtentScrollController(initialItem: (ctrl.stream.last ?? 0)),
               backgroundColor: Colors.white,
               onSelectedItemChanged: (value) {
                 ctrl.add(value);

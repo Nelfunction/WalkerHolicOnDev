@@ -47,9 +47,46 @@ class MyGame extends BaseGame {
     rows: 1,
   );
 
+  static final sky = SpriteSheet(
+    imageName: 'sky.png',
+    textureWidth: 270,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
+  static final way = SpriteSheet(
+    imageName: 'way.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
+  static final mountain = SpriteSheet(
+    imageName: 'mountain.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
+  static final cloud = SpriteSheet(
+    imageName: 'cloud.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
   final animation = spriteSheet.createAnimation(0, stepTime: 0.05);
   final kitten_ani = myKitten.createAnimation(0, stepTime: 0.1);
   final background = myBackground.createAnimation(0, stepTime: 0.05);
+
+  final sky_sprite = sky.createAnimation(0, stepTime: 0.05);
+  final way_sprite = way.createAnimation(0, stepTime: 0.05);
+  final cloud_sprite = cloud.createAnimation(0, stepTime: 0.05);
+  final mountain_sprite = mountain.createAnimation(0, stepTime: 0.05);
 
   final TextConfig config = TextConfig(
       fontSize: 30.0, fontFamily: 'Awesome Font', color: Colors.white);
@@ -64,14 +101,30 @@ class MyGame extends BaseGame {
     Position(20, 50),
     Position(40, 70)
   ];
-  Position position_skel = Position(0, 220);
 
+  Position position_skel = Position(0, 220);
   Position background_p = Position(0, 0);
+
+  Position sky_p = Position(0, 0);
+  Position way_p = Position(0, 0);
+  Position mountain_p = Position(0, 0);
+  Position cloud_p = Position(0, 0);
 
   @override
   void render(Canvas canvas) {
+    sky_sprite.getSprite().renderPosition(canvas, sky_p,
+        size: Position(270 / (320 / screenSize.height), screenSize.height));
+
+    cloud_sprite.getSprite().renderPosition(canvas, cloud_p,
+        size: Position(630 / (320 / screenSize.height), screenSize.height));
+    mountain_sprite.getSprite().renderPosition(canvas, mountain_p,
+        size: Position(630 / (320 / screenSize.height), screenSize.height));
+    way_sprite.getSprite().renderPosition(canvas, way_p,
+        size: Position(630 / (320 / screenSize.height), screenSize.height));
+
+    /*
     background.getSprite().renderPosition(canvas, background_p,
-        size: Position(2584 / (1080 / screenSize.height), screenSize.height));
+        size: Position(2584 / (1080 / screenSize.height), screenSize.height));*/
     kitten_ani.getSprite().renderPosition(
         canvas,
         Position((screenSize.width - _size.x) / 2,
@@ -82,9 +135,17 @@ class MyGame extends BaseGame {
   @override
   void update(double t) {
     kitten_ani.update(t);
-    background_p.x -= 5;
-    if (background_p.x < -(1920 / (1080 / screenSize.height))) {
-      background_p.x = 0;
+    cloud_p.x -= 1;
+    mountain_p.x -= 2;
+    way_p.x -= 5;
+    if (cloud_p.x < -(360 / (320 / screenSize.height))) {
+      cloud_p.x = 0;
+    }
+    if (mountain_p.x < -(360 / (320 / screenSize.height))) {
+      mountain_p.x = 0;
+    }
+    if (way_p.x < -(360 / (320 / screenSize.height))) {
+      way_p.x = 0;
     }
     //print(background_p.x.toString() +"\n");
   }

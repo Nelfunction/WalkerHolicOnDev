@@ -153,7 +153,8 @@ class PersonalStatus {
                     padding: EdgeInsets.symmetric(vertical: 30),
                     child: LinearPercentIndicator(
                       width: 120,
-                      animateFromLastPercent: true,
+                      //animateFromLastPercent: true,
+                      restartAnimation: true,
                       backgroundColor: Colors.transparent,
                       animation: true,
                       lineHeight: 12.0,
