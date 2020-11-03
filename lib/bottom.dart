@@ -13,10 +13,16 @@ class Bottom extends StatelessWidget {
           indicatorColor: Colors.transparent,
           tabs: <Widget>[
             Tab(
-              icon: new Image.asset("assets/images/home.png",
+              icon: new Image.asset("assets/images/game.png",
               width: 40,
               height: 40,
               )
+            ),
+            Tab(
+                icon: new Image.asset("assets/images/home.png",
+                  width: 40,
+                  height: 40,
+                )
             ),
             Tab(
                 icon: new Image.asset("assets/images/graph.png",
