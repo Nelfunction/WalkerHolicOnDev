@@ -7,6 +7,18 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
 
+  // 개같이 대충 코딩한 부분임.
+  // input이 입력받은 데이터임.
+  List<List<String>> input = [
+    ["","BlackWhite","Black","Flame"],
+    ["Q", "Q", "Q", "Q"],
+    ["Q", "Q", "Q", "Q"],
+    ["Q", "Q", "Q", "Q"],
+    ["Q", "Q", "Q", "Q"],
+    ["Q", "Q", "Q", "Q"],
+    ["Q", "Q", "Q", "Q"]
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +34,12 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       padding: EdgeInsets.all(10),
                       shrinkWrap: true,
-                      itemCount: 4,
+                      itemCount: input.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return CharaterRow();
+                        return CharaterRow(char1: input[index][0],char2: input[index][1], char3: input[index][2],char4: input[index][3],);
                       }
                   ),
                 )
@@ -39,6 +52,11 @@ class _CharacterPageState extends State<CharacterPage> {
 }
 
 class CharaterRow extends StatefulWidget {
+
+  final String char1, char2, char3, char4;
+
+  const CharaterRow({this.char1 = "", this.char2 = "", this.char3 = "", this.char4 = ""});
+
   _CharaterRowState createState() => _CharaterRowState();
 }
 
@@ -50,10 +68,10 @@ class _CharaterRowState extends State<CharaterRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CharacterContainer(),
-          CharacterContainer(),
-          CharacterContainer(),
-          CharacterContainer(),
+          CharacterContainer(nameChar: widget.char1),
+          CharacterContainer(nameChar: widget.char2),
+          CharacterContainer(nameChar: widget.char3),
+          CharacterContainer(nameChar: widget.char4),
         ],
       ),
     );
@@ -62,8 +80,19 @@ class _CharaterRowState extends State<CharaterRow> {
 }
 
 class CharacterContainer extends StatelessWidget {
+
+  final String nameChar;
+  const CharacterContainer({this.nameChar = ""});
+
   @override
   Widget build(BuildContext context) {
+    String nameText;
+    if(nameChar == "Q") {
+      nameText = "???";
+    } else {
+      nameText = nameChar + ' Cat';
+    }
+
     return Column(
       children: [
         Container(
@@ -78,12 +107,12 @@ class CharacterContainer extends StatelessWidget {
           child: SizedBox(
             width: 40,
             height: 40,
-            child: Image.asset("assets/images/kittenIcon.png"),
+            child: Image.asset("assets/images/kittenIcon"+nameChar+".png"),
           ),
         ),
         Text(
-          "Cat",
-          style: TextStyle(fontSize: 18, color: Colors.white),
+          nameText,
+          style: TextStyle(fontSize: 10, color: Colors.white),
         )
       ],
     );
