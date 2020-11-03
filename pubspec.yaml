@@ -97,3 +97,9 @@ flutter:
     - assets/images/character1.png
     - assets/images/character2.png
     - assets/images/kitten.png
+    - assets/images/kittenIcon.png
+    - assets/images/game.png
+    - assets/images/kittenIconBlack.png
+    - assets/images/kittenIconBlackWhite.png
+    - assets/images/kittenIconFlame.png
+    - assets/images/kittenIconQ.png

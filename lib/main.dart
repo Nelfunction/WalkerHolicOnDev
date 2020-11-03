@@ -4,7 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:walkerholic_sprite/login.dart';
-// Custom library
+import 'package:walkerholic_sprite/CharacterPage.dart';
+
 import 'bottom.dart';
 import 'Home.dart';
 import 'Pedometer.dart';
@@ -82,13 +83,14 @@ class _MyAppState extends State<MyApp> {
               },
             ),
             DefaultTabController(
-              length: 3,
+              length: 4,
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: TabBarView(
                   //physics: NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     MyHome(),
+                    CharacterPage(),
                     MyPedo(),
                     MyOption(
                       ctrl: myColor,
