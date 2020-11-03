@@ -46,13 +46,64 @@ class _MyHomeState extends State<MyHome> {
           accentColor: Colors.white,
           buttonColor: Colors.black),
       home: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: gamecards.length,
-            itemBuilder: (context, index) {
-              return Mygamecard(gamecards[index]);
-            },
+        backgroundColor: Colors.transparent,
+        body: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: gamecards.length,
+          itemBuilder: (context, index) {
+            return temp(gamecards[index]);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget temp(gamecard Gamecard) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
+      child: InkWell(
+          onTap: () {
+            print("tapped!");
+            Navigator.of(context).push(createRoute(FullGame(Gamecard)));
+          },
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: new AssetImage('assets/images/pixel_background' +
+                          Gamecard.character.toString() +
+                          '.jpg'),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.transparent, width: 150),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.0, 2.0), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      Gamecard.name,
+                      style: thumbnailStyle,
+                    ),
+                    Text(
+                      (Gamecard.steps).toString() + " Steps",
+                      style: thumbnailStyle,
+                    )
+                  ],
+                ),
+                right: 20,
+                bottom: 20,
+              )
+            ],
           )),
     );
   }
@@ -85,7 +136,7 @@ Future<void> loadfrienddata() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      gamecardstep = documentSnapshot.get('step');
+      gamecardstep = documentSnapshot.get('steps');
     } else {
       gamecardstep = 0;
     }
@@ -161,88 +212,4 @@ Future<void> loadfrienddata() async {
 
 Future<int> loadAsyncData() async {
   return datastep;
-}
-
-class Mygamecard extends StatefulWidget {
-  final gamecard Gamecard;
-  Mygamecard(this.Gamecard);
-
-  @override
-  _MygamecardState createState() => _MygamecardState(Gamecard);
-}
-
-class _MygamecardState extends State<Mygamecard> {
-  final gamecard Gamecard;
-  _MygamecardState(this.Gamecard);
-
-  TextStyle thumbnailStyle =
-      new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
-    Shadow(
-        // bottomLeft
-        offset: Offset(-1.5, -1.5),
-        color: Colors.black),
-    Shadow(
-        // bottomRight
-        offset: Offset(1.5, -1.5),
-        color: Colors.black),
-    Shadow(
-        // topRight
-        offset: Offset(1.5, 1.5),
-        color: Colors.black),
-    Shadow(
-        // topLeft
-        offset: Offset(-1.5, 1.5),
-        color: Colors.black),
-  ]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
-      child: InkWell(
-          onTap: () {
-            print("tapped!");
-            Navigator.of(context).push(createRoute(FullGame(Gamecard)));
-          },
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: new AssetImage('assets/images/pixel_background' +
-                          Gamecard.character.toString() +
-                          '.jpg'),
-                      fit: BoxFit.none),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.transparent, width: 140),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(0.0, 2.0), //(x,y)
-                      blurRadius: 6.0,
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      Gamecard.name,
-                      style: thumbnailStyle,
-                    ),
-                    Text(
-                      (Gamecard.steps).toString() + " Steps",
-                      style: thumbnailStyle,
-                    )
-                  ],
-                ),
-                right: 20,
-                bottom: 20,
-              )
-            ],
-          )),
-    );
-  }
 }

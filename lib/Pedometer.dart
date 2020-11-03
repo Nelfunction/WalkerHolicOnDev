@@ -34,10 +34,7 @@ class _MyPedoState extends State<MyPedo> {
 
   String _status = 'stopped';
 
-
   double max = 10000;
-
-
 
   Future<int> loadAsyncData() async {
     await FirebaseFirestore.instance
@@ -78,10 +75,9 @@ class _MyPedoState extends State<MyPedo> {
     String sp_key =
         "${temp_DateTime.year}-${temp_DateTime.month}-${temp_DateTime.day}";
     int result = sp.getInt(sp_key);
-    if(result==null)
-      {
-        result =0;
-      }
+    if (result == null) {
+      result = 0;
+    }
     return result;
   }
 
@@ -203,7 +199,6 @@ class _MyPedoState extends State<MyPedo> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-
           heroTag: "btnPedo",
           onPressed: () {
             debugPrint('steps: $steps');
@@ -211,7 +206,7 @@ class _MyPedoState extends State<MyPedo> {
             firestore
                 .collection(userid)
                 .doc(getdate(DateTime.now()))
-                .set({'time': DateTime.now(), 'step': steps - psteps});
+                .set({'time': DateTime.now(), 'steps': steps - psteps});
             loadtotalstep().then((result) {
               // If we need to rebuild the widget with the resulting data,
               // make sure to use setState

@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: TabBarView(
-                  //physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     MyHome(),
                     CharacterPage(),

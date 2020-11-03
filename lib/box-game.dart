@@ -172,22 +172,22 @@ class MyGame extends BaseGame {
       background_p.x -= 5;
       if (background_p.x < -(1920 / (1080 / screenSize.height))) {
         background_p.x = 0;
-      } else if (characternum == 2) {
-        kitten_ani2.update(t);
-        cloud_p.x -= 1;
-        mountain_p.x -= 2;
-        way_p.x -= 5;
-        if (cloud_p.x < -(360 / (320 / screenSize.height))) {
-          cloud_p.x = 0;
-        }
-        if (mountain_p.x < -(360 / (320 / screenSize.height))) {
-          mountain_p.x = 0;
-        }
-        if (way_p.x < -(360 / (320 / screenSize.height))) {
-          way_p.x = 0;
-        }
-        //print(background_p.x.toString() +"\n");
       }
+    } else if (characternum == 2) {
+      kitten_ani2.update(t);
+      cloud_p.x -= 1;
+      mountain_p.x -= 2;
+      way_p.x -= 5;
+      if (cloud_p.x < -(360 / (320 / screenSize.height))) {
+        cloud_p.x = 0;
+      }
+      if (mountain_p.x < -(360 / (320 / screenSize.height))) {
+        mountain_p.x = 0;
+      }
+      if (way_p.x < -(360 / (320 / screenSize.height))) {
+        way_p.x = 0;
+      }
+      //print(background_p.x.toString() +"\n");
     }
   }
 }
