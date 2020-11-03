@@ -4,7 +4,7 @@ import 'global.dart';
 import 'login.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:walkerholic_sprite/Pedometer.dart';
+import 'package:walkerholic_sprite/pedometer.dart';
 
 class MyHome extends StatefulWidget {
   @override
@@ -14,24 +14,22 @@ class MyHome extends StatefulWidget {
 double catsize = 200;
 
 class _MyHomeState extends State<MyHome> {
-
-
   TextStyle thumbnailStyle =
-  new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
+      new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(
-      // bottomLeft
+        // bottomLeft
         offset: Offset(-1.5, -1.5),
         color: Colors.black),
     Shadow(
-      // bottomRight
+        // bottomRight
         offset: Offset(1.5, -1.5),
         color: Colors.black),
     Shadow(
-      // topRight
+        // topRight
         offset: Offset(1.5, 1.5),
         color: Colors.black),
     Shadow(
-      // topLeft
+        // topLeft
         offset: Offset(-1.5, 1.5),
         color: Colors.black),
   ]);
@@ -39,41 +37,37 @@ class _MyHomeState extends State<MyHome> {
   //MyGame game = MyGame();
   TextEditingController controller = new TextEditingController();
 
-  @override Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Colors.black,
           accentColor: Colors.white,
-          buttonColor: Colors.black
-      ),
-      home:Scaffold(
-        backgroundColor: Colors.transparent,
-        body: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: gamecards.length,
-          itemBuilder: (context, index) {
-            return Mygamecard(gamecards[index]);
-          },
-        )
-    ),
-  );
+          buttonColor: Colors.black),
+      home: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: gamecards.length,
+            itemBuilder: (context, index) {
+              return Mygamecard(gamecards[index]);
+            },
+          )),
+    );
   }
 }
 
-
-class gamecard{
-
+class gamecard {
   String name;
   int steps;
   int character;
-  gamecard(String name,int steps, int character){
-    this.name=name;
-    this.steps=steps;
-    this.character=character;
+  gamecard(String name, int steps, int character) {
+    this.name = name;
+    this.steps = steps;
+    this.character = character;
   }
 }
-
 
 String getdate(DateTime date) {
   var date_YMD = "${date.year}-${date.month}-${date.day}";
@@ -81,10 +75,10 @@ String getdate(DateTime date) {
 }
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
-Future<void> loadfrienddata() async{
+Future<void> loadfrienddata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  int gamecardstep=0;
-  int character=1;
+  int gamecardstep = 0;
+  int character = 1;
   await FirebaseFirestore.instance //자신의 gamecard 를 생성
       .collection(userid)
       .doc(getdate(DateTime.now()))
@@ -93,7 +87,7 @@ Future<void> loadfrienddata() async{
     if (documentSnapshot.exists) {
       gamecardstep = documentSnapshot.get('step');
     } else {
-      gamecardstep  = 0;
+      gamecardstep = 0;
     }
   });
   await FirebaseFirestore.instance //자신의 gamecard 를 생성
@@ -108,11 +102,11 @@ Future<void> loadfrienddata() async{
     }
   });
 
-  gamecards.add(gamecard(userid,gamecardstep,character)); //gamecards에 추가
+  gamecards.add(gamecard(userid, gamecardstep, character)); //gamecards에 추가
 
-  int friendnum=0;
+  int friendnum = 0;
 
-  await FirebaseFirestore.instance  //친구의 숫자를 받음
+  await FirebaseFirestore.instance //친구의 숫자를 받음
       .collection(userid)
       .doc('friend_list')
       .get()
@@ -123,10 +117,10 @@ Future<void> loadfrienddata() async{
       datastep = steps;
     }
   });
-  for(int i=1;i<=friendnum;i++) //친구의 숫자만큼 gamecards에 추가
+  for (int i = 1; i <= friendnum; i++) //친구의 숫자만큼 gamecards에 추가
   {
-    String temp='name'+i.toString();
-    String friendname='temp';
+    String temp = 'name' + i.toString();
+    String friendname = 'temp';
     await FirebaseFirestore.instance
         .collection(userid)
         .doc('friend_list')
@@ -135,7 +129,7 @@ Future<void> loadfrienddata() async{
       if (documentSnapshot.exists) {
         friendname = documentSnapshot.get(temp);
       } else {
-        friendname='null';
+        friendname = 'null';
       }
     });
     await FirebaseFirestore.instance
@@ -146,7 +140,7 @@ Future<void> loadfrienddata() async{
       if (documentSnapshot.exists) {
         gamecardstep = documentSnapshot.get('steps');
       } else {
-        gamecardstep=99;
+        gamecardstep = 99;
       }
     });
     await FirebaseFirestore.instance //자신의 gamecard 를 생성
@@ -161,102 +155,94 @@ Future<void> loadfrienddata() async{
       }
     });
 
-    gamecards.add(gamecard(friendname,gamecardstep,character));
-
+    gamecards.add(gamecard(friendname, gamecardstep, character));
   }
-
-
 }
-Future<int> loadAsyncData() async {
 
+Future<int> loadAsyncData() async {
   return datastep;
 }
 
 class Mygamecard extends StatefulWidget {
-  @override
   final gamecard Gamecard;
   Mygamecard(this.Gamecard);
 
+  @override
   _MygamecardState createState() => _MygamecardState(Gamecard);
 }
 
-
-
 class _MygamecardState extends State<Mygamecard> {
-
   final gamecard Gamecard;
   _MygamecardState(this.Gamecard);
 
-
   TextStyle thumbnailStyle =
-  new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
+      new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(
-      // bottomLeft
+        // bottomLeft
         offset: Offset(-1.5, -1.5),
         color: Colors.black),
     Shadow(
-      // bottomRight
+        // bottomRight
         offset: Offset(1.5, -1.5),
         color: Colors.black),
     Shadow(
-      // topRight
+        // topRight
         offset: Offset(1.5, 1.5),
         color: Colors.black),
     Shadow(
-      // topLeft
+        // topLeft
         offset: Offset(-1.5, 1.5),
         color: Colors.black),
   ]);
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-            margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
-            child: InkWell(
-                onTap: () {
-                  print("tapped!");
-                  Navigator.of(context).push(createRoute(FullGame(Gamecard)));
-                },
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: new AssetImage(
-                                'assets/images/pixel_background'+Gamecard.character.toString() +'.jpg'),
-                            fit: BoxFit.none),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.transparent, width: 140),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(0.0, 2.0), //(x,y)
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                      ),
+    return Container(
+      margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
+      child: InkWell(
+          onTap: () {
+            print("tapped!");
+            Navigator.of(context).push(createRoute(FullGame(Gamecard)));
+          },
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: new AssetImage('assets/images/pixel_background' +
+                          Gamecard.character.toString() +
+                          '.jpg'),
+                      fit: BoxFit.none),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.transparent, width: 140),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.0, 2.0), //(x,y)
+                      blurRadius: 6.0,
                     ),
-                    Positioned(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            Gamecard.name,
-                            style: thumbnailStyle,
-                          ),
-                          Text(
-                            (Gamecard.steps).toString() + " Steps",
-                            style: thumbnailStyle,
-                          )
-                        ],
-                      ),
-                      right: 20,
-                      bottom: 20,
+                  ],
+                ),
+              ),
+              Positioned(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      Gamecard.name,
+                      style: thumbnailStyle,
+                    ),
+                    Text(
+                      (Gamecard.steps).toString() + " Steps",
+                      style: thumbnailStyle,
                     )
                   ],
-                )),
+                ),
+                right: 20,
+                bottom: 20,
+              )
+            ],
+          )),
     );
   }
-  }
-
-
+}

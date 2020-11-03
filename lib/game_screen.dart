@@ -4,11 +4,10 @@ import 'home.dart';
 import 'global.dart';
 
 class FullGame extends StatefulWidget {
-  @override
   final gamecard Gamecard;
   FullGame(this.Gamecard);
 
-
+  @override
   _FullGameState createState() => _FullGameState(Gamecard);
 }
 
@@ -39,13 +38,9 @@ class _FullGameState extends State<FullGame> {
             color: Colors.black),
       ]);
 
-
-
   @override
   Widget build(BuildContext context) {
     MyGame game = MyGame(catsize, Gamecard.character);
-
-
 
     return Scaffold(
         body: InkWell(

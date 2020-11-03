@@ -4,11 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:walkerholic_sprite/login.dart';
-import 'package:walkerholic_sprite/CharacterPage.dart';
+import 'package:walkerholic_sprite/characterPage.dart';
 
 import 'bottom.dart';
 import 'home.dart';
-import 'Pedometer.dart';
+import 'pedometer.dart';
 import 'options.dart';
 import 'data/data.dart';
 import 'pedoForeground.dart';
@@ -19,7 +19,6 @@ void main() async {
 
   await signInWithGoogle();
   await loadfrienddata();
-
 
   runApp(MyApp());
 }
