@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:walkerholic_sprite/box-game.dart';
-
+import 'global.dart';
 import 'Home.dart';
 
 class FullGame extends StatefulWidget {
   @override
-  _FullGameState createState() => _FullGameState();
+  final gamecard Gamecard;
+  FullGame(this.Gamecard);
+
+
+  _FullGameState createState() => _FullGameState(Gamecard);
 }
 
 class _FullGameState extends State<FullGame> {
+  final gamecard Gamecard;
+  _FullGameState(this.Gamecard);
+
   TextStyle inGameStyle = new TextStyle(
       color: Colors.white,
       fontSize: 24,
@@ -32,10 +39,14 @@ class _FullGameState extends State<FullGame> {
             color: Colors.black),
       ]);
 
-  MyGame game = MyGame(catsize);
+
 
   @override
   Widget build(BuildContext context) {
+    MyGame game = MyGame(catsize, Gamecard.character);
+
+
+
     return Scaffold(
         body: InkWell(
       onTap: () {
@@ -50,7 +61,7 @@ class _FullGameState extends State<FullGame> {
               }),
           Positioned(
             child: Text(
-              "StationSoen",
+              Gamecard.name,
               style: inGameStyle,
             ),
             left: 20,
@@ -58,7 +69,7 @@ class _FullGameState extends State<FullGame> {
           ),
           Positioned(
             child: Text(
-              (catsize.toInt() * 10).toString() + " Steps",
+              (Gamecard.steps).toString() + " Steps",
               style: inGameStyle,
             ),
             left: 20,

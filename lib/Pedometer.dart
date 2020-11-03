@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Data.dart';
-import 'login.dart';
+import 'global.dart';
 
 class MyPedo extends StatefulWidget {
   @override
@@ -33,34 +33,31 @@ class _MyPedoState extends State<MyPedo> {
   Stream<PedestrianStatus> _pedestrianStatusStream;
 
   String _status = 'stopped';
-  int _steps = 100;
-  int _psteps = 10;
-  int _datastep = 50;
-  int _totalsteps = 1000;
+
 
   double max = 10000;
 
-  static String id = email;
+
 
   Future<int> loadAsyncData() async {
     await FirebaseFirestore.instance
-        .collection(id)
+        .collection(userid)
         .doc(getdate(DateTime.now()))
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        _datastep = _steps - documentSnapshot.get('step');
+        datastep = steps - documentSnapshot.get('step');
       } else {
-        _datastep = _steps;
+        datastep = steps;
       }
     });
-    return _datastep;
+    return datastep;
   }
 
   Future<int> loadtotalstep() async {
     int result;
     await FirebaseFirestore.instance
-        .collection(id)
+        .collection(userid)
         .doc('total_steps')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -81,6 +78,10 @@ class _MyPedoState extends State<MyPedo> {
     String sp_key =
         "${temp_DateTime.year}-${temp_DateTime.month}-${temp_DateTime.day}";
     int result = sp.getInt(sp_key);
+    if(result==null)
+      {
+        result =0;
+      }
     return result;
   }
 
@@ -101,16 +102,16 @@ class _MyPedoState extends State<MyPedo> {
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
-        _psteps = result;
-        ps.todayCount = _steps - _psteps;
+        psteps = result;
+        ps.todayCount = steps - psteps;
       });
     });
     loadtotalstep().then((result) {
       // If we need to rebuild the widget with the resulting data,
       // make sure to use `setState`
       setState(() {
-        _totalsteps = result;
-        ps.totalCount = _totalsteps;
+        totalsteps = result;
+        ps.totalCount = totalsteps;
       });
     });
   }
@@ -123,9 +124,9 @@ class _MyPedoState extends State<MyPedo> {
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
-      _steps = event.steps;
-      ps.todayCount = _steps - _psteps;
-      ps.totalCount = _totalsteps + _steps - _psteps;
+      steps = event.steps;
+      ps.todayCount = steps - psteps;
+      ps.totalCount = totalsteps + steps - psteps;
     });
   }
 
@@ -202,23 +203,26 @@ class _MyPedoState extends State<MyPedo> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+
           heroTag: "btnPedo",
           onPressed: () {
+            debugPrint('steps: $steps');
+            debugPrint('psteps: $psteps');
             firestore
-                .collection(id)
+                .collection(userid)
                 .doc(getdate(DateTime.now()))
-                .set({'time': DateTime.now(), 'step': _steps - _psteps});
+                .set({'time': DateTime.now(), 'step': steps - psteps});
             loadtotalstep().then((result) {
               // If we need to rebuild the widget with the resulting data,
               // make sure to use setState
               setState(() {
-                _totalsteps = result;
+                totalsteps = result;
               });
             });
             firestore
-                .collection(id)
+                .collection(userid)
                 .doc('total_steps')
-                .set({'total_steps': _totalsteps + _steps - _psteps});
+                .set({'total_steps': totalsteps + steps - psteps});
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart';
+import 'global.dart';
+import 'login.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:walkerholic_sprite/Pedometer.dart';
 
 class MyHome extends StatefulWidget {
   @override
@@ -9,22 +14,24 @@ class MyHome extends StatefulWidget {
 double catsize = 200;
 
 class _MyHomeState extends State<MyHome> {
+
+
   TextStyle thumbnailStyle =
-      new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
+  new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(
-        // bottomLeft
+      // bottomLeft
         offset: Offset(-1.5, -1.5),
         color: Colors.black),
     Shadow(
-        // bottomRight
+      // bottomRight
         offset: Offset(1.5, -1.5),
         color: Colors.black),
     Shadow(
-        // topRight
+      // topRight
         offset: Offset(1.5, 1.5),
         color: Colors.black),
     Shadow(
-        // topLeft
+      // topLeft
         offset: Offset(-1.5, 1.5),
         color: Colors.black),
   ]);
@@ -32,22 +39,183 @@ class _MyHomeState extends State<MyHome> {
   //MyGame game = MyGame();
   TextEditingController controller = new TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
+  @override Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Colors.black,
           accentColor: Colors.white,
-          buttonColor: Colors.black),
-      home: Scaffold(
+          buttonColor: Colors.black
+      ),
+      home:Scaffold(
         backgroundColor: Colors.transparent,
-        body: Container(
+        body: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: gamecards.length,
+          itemBuilder: (context, index) {
+            return Mygamecard(gamecards[index]);
+          },
+        )
+    ),
+  );
+  }
+}
+
+
+class gamecard{
+
+  String name;
+  int steps;
+  int character;
+  gamecard(String name,int steps, int character){
+    this.name=name;
+    this.steps=steps;
+    this.character=character;
+  }
+}
+
+
+String getdate(DateTime date) {
+  var date_YMD = "${date.year}-${date.month}-${date.day}";
+  return date_YMD;
+}
+
+//cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
+Future<void> loadfrienddata() async{
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  int gamecardstep=0;
+  int character=1;
+  await FirebaseFirestore.instance //자신의 gamecard 를 생성
+      .collection(userid)
+      .doc(getdate(DateTime.now()))
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      gamecardstep = documentSnapshot.get('step');
+    } else {
+      gamecardstep  = 0;
+    }
+  });
+  await FirebaseFirestore.instance //자신의 gamecard 를 생성
+      .collection(userid)
+      .doc('character')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      character = documentSnapshot.get('character');
+    } else {
+      character = 1;
+    }
+  });
+
+  gamecards.add(gamecard(userid,gamecardstep,character)); //gamecards에 추가
+
+  int friendnum=0;
+
+  await FirebaseFirestore.instance  //친구의 숫자를 받음
+      .collection(userid)
+      .doc('friend_list')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      friendnum = documentSnapshot.get('num');
+    } else {
+      datastep = steps;
+    }
+  });
+  for(int i=1;i<=friendnum;i++) //친구의 숫자만큼 gamecards에 추가
+  {
+    String temp='name'+i.toString();
+    String friendname='temp';
+    await FirebaseFirestore.instance
+        .collection(userid)
+        .doc('friend_list')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        friendname = documentSnapshot.get(temp);
+      } else {
+        friendname='null';
+      }
+    });
+    await FirebaseFirestore.instance
+        .collection(friendname)
+        .doc(getdate(DateTime.now()))
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        gamecardstep = documentSnapshot.get('steps');
+      } else {
+        gamecardstep=99;
+      }
+    });
+    await FirebaseFirestore.instance //자신의 gamecard 를 생성
+        .collection(friendname)
+        .doc('character')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        character = documentSnapshot.get('character');
+      } else {
+        character = 1;
+      }
+    });
+
+    gamecards.add(gamecard(friendname,gamecardstep,character));
+
+  }
+
+
+}
+Future<int> loadAsyncData() async {
+
+  return datastep;
+}
+
+class Mygamecard extends StatefulWidget {
+  @override
+  final gamecard Gamecard;
+  Mygamecard(this.Gamecard);
+
+  _MygamecardState createState() => _MygamecardState(Gamecard);
+}
+
+
+
+class _MygamecardState extends State<Mygamecard> {
+
+  final gamecard Gamecard;
+  _MygamecardState(this.Gamecard);
+
+
+  TextStyle thumbnailStyle =
+  new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
+    Shadow(
+      // bottomLeft
+        offset: Offset(-1.5, -1.5),
+        color: Colors.black),
+    Shadow(
+      // bottomRight
+        offset: Offset(1.5, -1.5),
+        color: Colors.black),
+    Shadow(
+      // topRight
+        offset: Offset(1.5, 1.5),
+        color: Colors.black),
+    Shadow(
+      // topLeft
+        offset: Offset(-1.5, 1.5),
+        color: Colors.black),
+  ]);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
             margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
             child: InkWell(
                 onTap: () {
                   print("tapped!");
-                  Navigator.of(context).push(createRoute(FullGame()));
+                  Navigator.of(context).push(createRoute(FullGame(Gamecard)));
                 },
                 child: Stack(
                   children: [
@@ -55,10 +223,10 @@ class _MyHomeState extends State<MyHome> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             image: new AssetImage(
-                                'assets/images/pixel_background2.jpg'),
+                                'assets/images/pixel_background'+Gamecard.character.toString() +'.jpg'),
                             fit: BoxFit.none),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.transparent, width: 8),
+                        border: Border.all(color: Colors.transparent, width: 140),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black,
@@ -73,11 +241,11 @@ class _MyHomeState extends State<MyHome> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "Station_Soen",
+                            Gamecard.name,
                             style: thumbnailStyle,
                           ),
                           Text(
-                            (catsize.toInt() * 10).toString() + " Steps",
+                            (Gamecard.steps).toString() + " Steps",
                             style: thumbnailStyle,
                           )
                         ],
@@ -86,21 +254,9 @@ class _MyHomeState extends State<MyHome> {
                       bottom: 20,
                     )
                   ],
-                ))),
-        floatingActionButton: FloatingActionButton(
-          heroTag: "btnHome",
-          onPressed: () {
-            if (catsize == 400) {
-              catsize = 200;
-            } else {
-              catsize = 400;
-            }
-            setState(() {});
-          },
-          tooltip: "Increment",
-          child: Icon(Icons.add),
-        ),
-      ),
+                )),
     );
   }
-}
+  }
+
+
