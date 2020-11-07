@@ -1,6 +1,8 @@
-//login 전역변수
 import 'package:walkerholic_sprite/home.dart';
 
+class Global {}
+
+//login 전역변수
 String name;
 String email = 'temp';
 String userid = 'temp';
@@ -14,4 +16,4 @@ int totalsteps = 1000;
 int steps = 100;
 
 //gamecard 전역변수
-final gamecards = <gamecard>[];
+final gamecards = <Gamecard>[];

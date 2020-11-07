@@ -16,9 +16,8 @@ import 'pedoForeground.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   await signInWithGoogle();
-  await loadfrienddata();
+  await Gamecard.loadfrienddata();
 
   runApp(MyApp());
 }
@@ -78,7 +77,7 @@ class _MyAppState extends State<MyApp> {
                 if (_prefs != null) {
                   _prefs.setInt('myColor', snapshot.data);
                 }
-                return ColorTheme.colorpreset[snapshot.data].buildContainer();
+                return ColorTheme.colorPreset[snapshot.data].buildContainer();
               },
             ),
             DefaultTabController(

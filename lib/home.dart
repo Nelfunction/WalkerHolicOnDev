@@ -51,20 +51,20 @@ class _MyHomeState extends State<MyHome> {
           scrollDirection: Axis.horizontal,
           itemCount: gamecards.length,
           itemBuilder: (context, index) {
-            return temp(gamecards[index]);
+            return cardview(gamecards[index]);
           },
         ),
       ),
     );
   }
 
-  Widget temp(gamecard Gamecard) {
+  Widget cardview(Gamecard gamecard) {
     return Container(
       margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
       child: InkWell(
           onTap: () {
             print("tapped!");
-            Navigator.of(context).push(createRoute(FullGame(Gamecard)));
+            Navigator.of(context).push(createRoute(FullGame(gamecard)));
           },
           child: Stack(
             children: [
@@ -72,7 +72,7 @@ class _MyHomeState extends State<MyHome> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: new AssetImage('assets/images/pixel_background' +
-                          Gamecard.character.toString() +
+                          gamecard.character.toString() +
                           '.jpg'),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(12),
@@ -91,11 +91,11 @@ class _MyHomeState extends State<MyHome> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      Gamecard.name,
+                      gamecard.name,
                       style: thumbnailStyle,
                     ),
                     Text(
-                      (Gamecard.steps).toString() + " Steps",
+                      (gamecard.cardSteps).toString() + " Steps",
                       style: thumbnailStyle,
                     )
                   ],
@@ -109,93 +109,44 @@ class _MyHomeState extends State<MyHome> {
   }
 }
 
-class gamecard {
+class Gamecard {
   String name;
-  int steps;
+  int cardSteps;
   int character;
-  gamecard(String name, int steps, int character) {
+  Gamecard(String name, int steps, int character) {
     this.name = name;
-    this.steps = steps;
+    this.cardSteps = steps;
     this.character = character;
   }
-}
 
-String getdate(DateTime date) {
-  var date_YMD = "${date.year}-${date.month}-${date.day}";
-  return date_YMD;
-}
+  static String getdate(DateTime date) {
+    var date_YMD = "${date.year}-${date.month}-${date.day}";
+    return date_YMD;
+  }
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
-Future<void> loadfrienddata() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  int gamecardstep = 0;
-  int character = 1;
-  await FirebaseFirestore.instance //자신의 gamecard 를 생성
-      .collection(userid)
-      .doc(getdate(DateTime.now()))
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      gamecardstep = documentSnapshot.get('steps');
-    } else {
-      gamecardstep = 0;
-    }
-  });
-  await FirebaseFirestore.instance //자신의 gamecard 를 생성
-      .collection(userid)
-      .doc('character')
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      character = documentSnapshot.get('character');
-    } else {
-      character = 1;
-    }
-  });
 
-  gamecards.add(gamecard(userid, gamecardstep, character)); //gamecards에 추가
+  Future<int> loadAsyncData() async {
+    return datastep;
+  }
 
-  int friendnum = 0;
-
-  await FirebaseFirestore.instance //친구의 숫자를 받음
-      .collection(userid)
-      .doc('friend_list')
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      friendnum = documentSnapshot.get('num');
-    } else {
-      datastep = steps;
-    }
-  });
-  for (int i = 1; i <= friendnum; i++) //친구의 숫자만큼 gamecards에 추가
-  {
-    String temp = 'name' + i.toString();
-    String friendname = 'temp';
-    await FirebaseFirestore.instance
+  static Future<void> loadfrienddata() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    int gamecardstep = 0;
+    int character = 1;
+    await FirebaseFirestore.instance //자신의 Gamecard 를 생성
         .collection(userid)
-        .doc('friend_list')
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        friendname = documentSnapshot.get(temp);
-      } else {
-        friendname = 'null';
-      }
-    });
-    await FirebaseFirestore.instance
-        .collection(friendname)
         .doc(getdate(DateTime.now()))
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         gamecardstep = documentSnapshot.get('steps');
       } else {
-        gamecardstep = 99;
+        gamecardstep = 0;
       }
     });
-    await FirebaseFirestore.instance //자신의 gamecard 를 생성
-        .collection(friendname)
+    await FirebaseFirestore.instance //자신의 Gamecard 를 생성
+        .collection(userid)
         .doc('character')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -206,10 +157,60 @@ Future<void> loadfrienddata() async {
       }
     });
 
-    gamecards.add(gamecard(friendname, gamecardstep, character));
-  }
-}
+    gamecards.add(Gamecard(userid, gamecardstep, character)); //gamecards에 추가
 
-Future<int> loadAsyncData() async {
-  return datastep;
+    int friendnum = 0;
+
+    await FirebaseFirestore.instance //친구의 숫자를 받음
+        .collection(userid)
+        .doc('friend_list')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        friendnum = documentSnapshot.get('num');
+      } else {
+        datastep = steps;
+      }
+    });
+    for (int i = 1; i <= friendnum; i++) //친구의 숫자만큼 gamecards에 추가
+    {
+      String temp = 'name' + i.toString();
+      String friendname = 'temp';
+      await FirebaseFirestore.instance
+          .collection(userid)
+          .doc('friend_list')
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          friendname = documentSnapshot.get(temp);
+        } else {
+          friendname = 'null';
+        }
+      });
+      await FirebaseFirestore.instance
+          .collection(friendname)
+          .doc(getdate(DateTime.now()))
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          gamecardstep = documentSnapshot.get('steps');
+        } else {
+          gamecardstep = 99;
+        }
+      });
+      await FirebaseFirestore.instance //자신의 Gamecard 를 생성
+          .collection(friendname)
+          .doc('character')
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          character = documentSnapshot.get('character');
+        } else {
+          character = 1;
+        }
+      });
+
+      gamecards.add(Gamecard(friendname, gamecardstep, character));
+    }
+  }
 }

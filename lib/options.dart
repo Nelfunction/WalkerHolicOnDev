@@ -49,17 +49,13 @@ class _MyOptionState extends State<MyOption> {
   Widget build(BuildContext context) {
     return Center(
       child: ClipRRect(
-        //margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
-        //borderRadius: BorderRadius.circular(24.0),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
           child: Container(
               margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
-              //width: 350.0,
-              //height: 550.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24.0),
-                color: const Color(0x4ef0f0f0),
+                color: const Color(0x7fffffff),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

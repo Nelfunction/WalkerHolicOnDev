@@ -29,7 +29,7 @@ class ColorTheme {
     );
   }
 
-  static List<ColorTheme> colorpreset = [
+  static List<ColorTheme> colorPreset = [
     ColorTheme(
       -1.1,
       -0.3,
@@ -204,3 +204,9 @@ class PersonalStatus {
         ]);
   }
 } // class PersonalStatus
+
+class PersonalOptions {
+  //배경색
+  //UI(아이콘, 글자) 색
+  //UI 크기
+}
