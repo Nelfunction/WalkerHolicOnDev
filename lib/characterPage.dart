@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'characterOne.dart';
+
 class CharacterPage extends StatefulWidget {
   @override
   _CharacterPageState createState() => _CharacterPageState();
@@ -95,18 +97,23 @@ class CharacterContainer extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white, width: 4),
-            color: Color.fromARGB(100, 255, 255, 255),
-          ),
-          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          padding: EdgeInsets.all(10),
-          child: SizedBox(
-            width: 40,
-            height: 40,
-            child: Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(CustomPageRoute(CharacterOne(nameChar: nameChar,)));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white, width: 4),
+              color: Color.fromARGB(100, 255, 255, 255),
+            ),
+            margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            padding: EdgeInsets.all(10),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
+            ),
           ),
         ),
         Text(
@@ -116,4 +123,35 @@ class CharacterContainer extends StatelessWidget {
       ],
     );
   }
+}
+
+class CustomPageRoute<T> extends PageRoute<T> {
+  CustomPageRoute(this.child);
+  @override
+  // TODO: implement barrierColor
+  Color get barrierColor => Colors.transparent;
+
+  @override
+  String get barrierLabel => null;
+  
+  @override
+  // TODO: implement opaque
+  bool get opaque => false;
+
+  final Widget child;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
 }
