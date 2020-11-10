@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:walkerholic_sprite/login.dart';
-import 'package:walkerholic_sprite/characterPage.dart';
 
-import 'bottom.dart';
 import 'home.dart';
+import 'characterPage.dart';
 import 'pedometer.dart';
 import 'options.dart';
-import 'data/data.dart';
-import 'pedoForeground.dart';
+
+import 'ui/bottom.dart';
+import 'logic/format.dart';
+import 'logic/global.dart';
+import 'logic/pedoForeground.dart';
+import 'logic/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await signInWithGoogle();
-  await Gamecard.loadfrienddata();
+  await loadfrienddata();
 
   runApp(MyApp());
 }
@@ -34,8 +36,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    // Load Color Option.
     _initPermission();
     _loadPref();
     maybeStartFGS();
@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
     myColor.close();
   }
 
+  /// 활동 기록 권한
   void _initPermission() async {
     if (await Permission.activityRecognition.request().isGranted) {
       debugPrint("PERMISSION OK");
@@ -56,7 +57,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Load Saved Preference.
+  /// 저장된 Preference 로드
   _loadPref() async {
     _prefs = await SharedPreferences.getInstance();
     myColor.add(_prefs.getInt('myColor') ?? 0);
@@ -64,7 +65,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    //final myOption = MyOption.of(context);
     return MaterialApp(
         title: "WalkerHolic_Sprite",
         home: Stack(

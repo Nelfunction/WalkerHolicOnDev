@@ -1,12 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'global.dart';
-import 'package:flutter/material.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
-
 
 Future<String> signInWithGoogle() async {
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
@@ -36,7 +33,7 @@ Future<String> signInWithGoogle() async {
     if (name.contains(" ")) {
       name = name.substring(0, name.indexOf(" "));
     }
-    userid=email.substring(0,email.indexOf("@"));
+    userid = email.substring(0, email.indexOf("@"));
 
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);

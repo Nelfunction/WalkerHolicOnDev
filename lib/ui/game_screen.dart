@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:walkerholic_sprite/box-game.dart';
-import 'home.dart';
-import 'global.dart';
+import 'box-game.dart';
+import '../logic/format.dart';
 
 class FullGame extends StatefulWidget {
   final Gamecard gamecard;
@@ -40,7 +39,7 @@ class _FullGameState extends State<FullGame> {
 
   @override
   Widget build(BuildContext context) {
-    MyGame game = MyGame(catsize, gamecard.character);
+    MyGame game = MyGame(gamecard.character, input: 200);
 
     return Scaffold(
         body: InkWell(

@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'data/data.dart';
-import 'login.dart';
-import 'global.dart';
+import 'logic/format.dart';
+import 'logic/global.dart';
 
 class MyPedo extends StatefulWidget {
   @override
@@ -23,11 +22,7 @@ class _MyPedoState extends State<MyPedo> {
   );
   // Test end
   SharedPreferences sp;
-  //MyPedo pedo = MyPedo();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  //var timestamp;
-  //dynamic step;
 
   Stream<StepCount> _stepCountStream;
   Stream<PedestrianStatus> _pedestrianStatusStream;

@@ -3,8 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
-import 'login.dart';
-import 'data/data.dart';
+import 'logic/login.dart';
 
 class MyOption extends StatefulWidget {
   final StreamController ctrl;
