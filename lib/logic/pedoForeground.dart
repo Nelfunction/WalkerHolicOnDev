@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:pedometer/pedometer.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import '../data/data.dart';
 
 class Bloc {
   StreamController<int> colorTheme = StreamController();

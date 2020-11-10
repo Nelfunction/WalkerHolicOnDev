@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'dart:math';
+
+/// Class for cardview at HOME.
+class Gamecard {
+  String name;
+  int cardSteps;
+  int character;
+  Gamecard(String name, int steps, int character) {
+    this.name = name;
+    this.cardSteps = steps;
+    this.character = character;
+  }
+}
 
 /// Class for background Color Theme.
 /// Contains 3 presets and widget-build option.
