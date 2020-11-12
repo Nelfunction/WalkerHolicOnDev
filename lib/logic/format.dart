@@ -217,6 +217,7 @@ class PersonalStatus {
 
 class PersonalOptions {
   //배경색
+  int colornum;
   //UI(아이콘, 글자) 색
   //UI 크기
 }

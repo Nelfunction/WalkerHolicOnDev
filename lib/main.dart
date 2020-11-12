@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'home.dart';
 import 'characterPage.dart';
 import 'pedometer.dart';
@@ -19,6 +18,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await signInWithGoogle();
+  await initPermission();
+  await getServerdata();
+  await getLocaldata();
   await loadfrienddata();
 
   runApp(MyApp());
@@ -30,14 +32,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // Variables for background color
-  StreamController<int> myColor = StreamController<int>();
-  SharedPreferences _prefs;
-
   @override
   void initState() {
     super.initState();
-    _initPermission();
-    _loadPref();
+    //_initPermission();
     maybeStartFGS();
   }
 
@@ -46,21 +44,6 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     super.dispose();
     myColor.close();
-  }
-
-  /// 활동 기록 권한
-  void _initPermission() async {
-    if (await Permission.activityRecognition.request().isGranted) {
-      debugPrint("PERMISSION OK");
-    } else {
-      debugPrint("ERROR : PERMISSION");
-    }
-  }
-
-  /// 저장된 Preference 로드
-  _loadPref() async {
-    _prefs = await SharedPreferences.getInstance();
-    myColor.add(_prefs.getInt('myColor') ?? 0);
   }
 
   @override
@@ -74,8 +57,8 @@ class _MyAppState extends State<MyApp> {
               stream: myColor.stream, // Replace with Bloc result
               initialData: 0,
               builder: (context, snapshot) {
-                if (_prefs != null) {
-                  _prefs.setInt('myColor', snapshot.data);
+                if (prefs != null) {
+                  prefs.setInt('myColor', snapshot.data);
                 }
                 return ColorTheme.colorPreset[snapshot.data].buildContainer();
               },
