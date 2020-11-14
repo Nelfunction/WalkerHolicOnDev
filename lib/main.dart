@@ -12,15 +12,25 @@ import 'pedometer.dart';
 import 'options.dart';
 import 'data/data.dart';
 import 'pedoForeground.dart';
+import 'global.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
+  Stopwatch stopwatch = new Stopwatch()..start();
+  await Firebase.initializeApp();
+  debugPrint('YYYfirebase.initialize ${stopwatch.elapsed}');
   await signInWithGoogle();
-  await loadfrienddata();
+  debugPrint('YYYsign google ${stopwatch.elapsed}');
+  await senddata();
+  debugPrint('YYYsendatat ${stopwatch.elapsed}');
+  await loadmydata();
+  debugPrint('YYYloadmydata ${stopwatch.elapsed}');
+  await  loadfrienddata();
+  debugPrint('YYYloadfrienddata ${stopwatch.elapsed}');
 
   runApp(MyApp());
+
 }
 
 class MyApp extends StatefulWidget {
