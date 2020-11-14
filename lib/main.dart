@@ -14,7 +14,6 @@ import 'logic/global.dart';
 import 'logic/pedoForeground.dart';
 import 'logic/login.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,15 +22,15 @@ void main() async {
   debugPrint('YYYfirebase.initialize ${stopwatch.elapsed}');
   await signInWithGoogle();
   debugPrint('YYYsign google ${stopwatch.elapsed}');
+  await initPermission();
   await senddata();
   debugPrint('YYYsendatat ${stopwatch.elapsed}');
   await loadmydata();
   debugPrint('YYYloadmydata ${stopwatch.elapsed}');
-  await  loadfrienddata();
+  await loadfrienddata();
   debugPrint('YYYloadfrienddata ${stopwatch.elapsed}');
-  
-  runApp(MyApp());
 
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

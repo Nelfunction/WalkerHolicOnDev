@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:walkerholic/logic/format.dart';
 
 import 'logic/login.dart';
 
@@ -66,55 +67,33 @@ class _MyOptionState extends State<MyOption> {
                         'Properties',
                         style: TextStyle(fontSize: 36, color: Colors.black87),
                       )),
+                  flatbutton(
+                      onPressed: showPicker,
+                      context: context,
+                      text: 'BackColor Theme'),
                   Divider(height: 1, thickness: 1),
-                  FlatButton(
-                    onPressed: showPicker,
-                    child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Row(children: [
-                          Text("BackColor Theme",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 22.0,
-                              ))
-                        ])),
-                  ),
+                  flatbutton(
+                      onPressed: () {
+                        accountSync();
+                      },
+                      context: context,
+                      text: 'Google Account Sync'),
                   Divider(height: 1, thickness: 1),
-                  FlatButton(
-                    onPressed: () {
-                      accountSync();
-                    },
-                    child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Row(children: [
-                          Text("Google Account Sync",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 22.0,
-                              ))
-                        ])),
-                  ),
+                  flatbutton(
+                      onPressed: () {},
+                      context: context,
+                      text: 'Background Option'),
                   Divider(height: 1, thickness: 1),
-                  FlatButton(
+                  flatbutton(
                     onPressed: () {},
-                    child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Row(children: [
-                          Text("Background Option",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 22.0,
-                              ))
-                        ])),
+                    context: context,
+                    text: '1',
+                  ),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {},
+                    context: context,
+                    text: '2',
                   ),
                   Divider(height: 1, thickness: 1),
                 ],

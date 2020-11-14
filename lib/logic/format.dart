@@ -221,3 +221,25 @@ class PersonalOptions {
   //UI(아이콘, 글자) 색
   //UI 크기
 }
+
+Widget flatbutton(
+    {Key key,
+    String text = 'FlatButton',
+    @required VoidCallback onPressed,
+    @required BuildContext context}) {
+  return FlatButton(
+    onPressed: onPressed,
+    child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        child: Row(children: [
+          Text(text,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 22.0,
+              ))
+        ])),
+  );
+}
