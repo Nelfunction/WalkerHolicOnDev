@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'game_screen.dart';
-import 'global.dart';
-import 'login.dart';
+import 'ui/game_screen.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:walkerholic_sprite/pedometer.dart';
+import 'logic/format.dart';
+import 'logic/global.dart';
 
 class MyHome extends StatefulWidget {
   @override
   _MyHomeState createState() => _MyHomeState();
 }
-
-double catsize = 200;
 
 class _MyHomeState extends State<MyHome> {
   TextStyle thumbnailStyle =
@@ -65,20 +61,20 @@ class _MyHomeState extends State<MyHome> {
           scrollDirection: Axis.horizontal,
           itemCount:  gamecards.length ,
           itemBuilder: (context, index) {
-            return temp(gamecards[index]);
+            return cardview(gamecards[index]);
           },
         ),
       ),
     );
   }
 
-  Widget temp(gamecard Gamecard) {
+  Widget cardview(Gamecard gamecard) {
     return Container(
       margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
       child: InkWell(
           onTap: () {
             print("tapped!");
-            Navigator.of(context).push(createRoute(FullGame(Gamecard)));
+            Navigator.of(context).push(createRoute(FullGame(gamecard)));
           },
           child: Stack(
             children: [
@@ -86,7 +82,7 @@ class _MyHomeState extends State<MyHome> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: new AssetImage('assets/images/pixel_background' +
-                          Gamecard.character.toString() +
+                          gamecard.character.toString() +
                           '.jpg'),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(12),
@@ -105,11 +101,11 @@ class _MyHomeState extends State<MyHome> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      Gamecard.name,
+                      gamecard.name,
                       style: thumbnailStyle,
                     ),
                     Text(
-                      (Gamecard.steps).toString() + " Steps",
+                      (gamecard.cardSteps).toString() + " Steps",
                       style: thumbnailStyle,
                     )
                   ],
@@ -122,21 +118,3 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 }
-
-class gamecard {
-  String name;
-  int steps;
-  int character;
-  gamecard(String name, int steps, int character) {
-    this.name = name;
-    this.steps = steps;
-    this.character = character;
-  }
-}
-
-String getdate(DateTime date) {
-  var date_YMD = "${date.year}-${date.month}-${date.day}";
-  return date_YMD;
-}
-
-

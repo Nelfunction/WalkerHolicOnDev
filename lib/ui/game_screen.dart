@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:walkerholic_sprite/box-game.dart';
-import 'home.dart';
-import 'global.dart';
+import 'box-game.dart';
+import '../logic/format.dart';
 
 class FullGame extends StatefulWidget {
-  final gamecard Gamecard;
-  FullGame(this.Gamecard);
+  final Gamecard gamecard;
+  FullGame(this.gamecard);
 
   @override
-  _FullGameState createState() => _FullGameState(Gamecard);
+  _FullGameState createState() => _FullGameState(gamecard);
 }
 
 class _FullGameState extends State<FullGame> {
-  final gamecard Gamecard;
-  _FullGameState(this.Gamecard);
+  final Gamecard gamecard;
+  _FullGameState(this.gamecard);
 
   TextStyle inGameStyle = new TextStyle(
       color: Colors.white,
@@ -40,7 +39,7 @@ class _FullGameState extends State<FullGame> {
 
   @override
   Widget build(BuildContext context) {
-    MyGame game = MyGame(catsize, Gamecard.character);
+    MyGame game = MyGame(gamecard.character, input: 200);
 
     return Scaffold(
         body: InkWell(
@@ -56,7 +55,7 @@ class _FullGameState extends State<FullGame> {
               }),
           Positioned(
             child: Text(
-              Gamecard.name,
+              gamecard.name,
               style: inGameStyle,
             ),
             left: 20,
@@ -64,7 +63,7 @@ class _FullGameState extends State<FullGame> {
           ),
           Positioned(
             child: Text(
-              (Gamecard.steps).toString() + " Steps",
+              (gamecard.cardSteps).toString() + " Steps",
               style: inGameStyle,
             ),
             left: 20,
