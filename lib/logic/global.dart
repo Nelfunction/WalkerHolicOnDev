@@ -154,7 +154,7 @@ Future<void> loadmydata() async {
     }
   });
 
-  gamecards.add(gamecard(userid, gamecardstep, character)); //gamecards에 추가
+  gamecards.add(Gamecard(userid, gamecardstep, character)); //gamecards에 추가
 
 
 }
@@ -205,6 +205,6 @@ Future<void> loadfrienddata() async {
     });
 
 
-    gamecards.add(gamecard(friendname, gamecardstep, character));
+    gamecards.add(Gamecard(friendname, gamecardstep, character));
   }
 }

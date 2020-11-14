@@ -29,8 +29,7 @@ void main() async {
   debugPrint('YYYloadmydata ${stopwatch.elapsed}');
   await  loadfrienddata();
   debugPrint('YYYloadfrienddata ${stopwatch.elapsed}');
-
-
+  
   runApp(MyApp());
 
 }
