@@ -33,6 +33,20 @@ class _MyHomeState extends State<MyHome> {
   //MyGame game = MyGame();
   TextEditingController controller = new TextEditingController();
 
+
+/*
+  void initState() {
+    super.initState();
+    loadfrienddata().then((result) {
+      // If we need to rebuild the widget with the resulting data,
+      // make sure to use `setState`
+      setState(() {
+
+      });
+    });
+  }
+*/
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,7 +59,7 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: Colors.transparent,
         body: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: gamecards.length,
+          itemCount:  gamecards.length ,
           itemBuilder: (context, index) {
             return cardview(gamecards[index]);
           },

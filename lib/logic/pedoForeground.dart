@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'global.dart';
+
 import 'package:pedometer/pedometer.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,7 +71,9 @@ Future<void> foregroundServiceFunction() async {
     String sp_key =
         "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}";
     sp.setInt(sp_key, tempSteps);
+
     debugPrint("WRITE SP!");
+    senddata();
   }
   sp.setInt("2020-10-27", 200);
 
