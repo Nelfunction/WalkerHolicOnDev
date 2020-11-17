@@ -32,8 +32,12 @@ class _Friend_request_listState extends State<Friend_request_list> {
                     spacing: 1, // space between two icons
                     children: <Widget>[
                       FlatButton(
-                          onPressed: () {
+                          onPressed: () async{
                             acceptfriendrequest(friend_requests[index]);
+                            gamecards=[];
+
+                            await loadmydata();
+                            await loadfrienddata();
                             friend_requests.removeAt(index);
                             if(friend_requests.length == 0) {
                               Navigator.pop(context);

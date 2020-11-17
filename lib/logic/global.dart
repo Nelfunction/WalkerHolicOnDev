@@ -295,7 +295,6 @@ Future<void> loadmydata() async {
 Future<void> loadfrienddata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
-  int character = 1;
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(
       imageName: myCharacter_str,
@@ -313,43 +312,46 @@ Future<void> loadfrienddata() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result = documentSnapshot.data();
-    } else {}
+      result=documentSnapshot.data();
+      result.forEach((key, value) async{
+        await firestore
+            .collection(key)
+            .doc(getdate(DateTime.now()))
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            gamecardstep = documentSnapshot.get('steps');
+          } else {
+            gamecardstep = 0;
+          }
+        });
+
+        await firestore
+            .collection(key)
+            .doc('Character+Background')
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            myCharacter_str = documentSnapshot.get('character');
+            myCharacter = SpriteSheet(
+              imageName: myCharacter_str,
+              textureWidth: 160,
+              textureHeight: 160,
+              columns: 4,
+              rows: 1,
+            );
+            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+          } else {
+            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+          }
+        });
+
+        gamecards.add(Gamecard(key, gamecardstep, myAnimation));
+      });
+    } else {
+    }
   });
 
-  result.forEach((key, value) async {
-    await firestore
-        .collection(key)
-        .doc(getdate(DateTime.now()))
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        gamecardstep = documentSnapshot.get('steps');
-      } else {
-        gamecardstep = 0;
-      }
-    });
 
-    await firestore
-        .collection(key)
-        .doc('Character+Background')
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        myCharacter_str = documentSnapshot.get('character');
-        myCharacter = SpriteSheet(
-          imageName: myCharacter_str,
-          textureWidth: 160,
-          textureHeight: 160,
-          columns: 4,
-          rows: 1,
-        );
-        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
-      } else {
-        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
-      }
-    });
 
-    gamecards.add(Gamecard(key, gamecardstep, myAnimation));
-  });
 }

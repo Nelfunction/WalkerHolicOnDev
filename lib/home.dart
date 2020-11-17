@@ -36,7 +36,7 @@ class _MyHomeState extends State<MyHome> {
   TextEditingController controller = new TextEditingController();
 
 
-/*
+
   void initState() {
     super.initState();
     loadfrienddata().then((result) {
@@ -47,7 +47,7 @@ class _MyHomeState extends State<MyHome> {
       });
     });
   }
-*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +66,6 @@ class _MyHomeState extends State<MyHome> {
             return cardview(gamecards[index]);
           },
           //autoplay: true,
-          pagination: new SwiperPagination(
-              margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
-              builder: new DotSwiperPaginationBuilder(
-                  color: Colors.white30,
-                  activeColor: Colors.white,
-                  size: 10.0,
-                  activeSize: 10.0)),
-          control: new SwiperControl(color: Colors.white),
         ),
       ),
     );
