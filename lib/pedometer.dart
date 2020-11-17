@@ -71,11 +71,9 @@ class _MyPedoState extends State<MyPedo> {
             Expanded(
               child: ListView(
                 physics: BouncingScrollPhysics(),
-                //mainAxisSize: MainAxisSize.min,
-                //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   SizedBox(height: 50),
-                  status.dailyStatus(),
+                  if (options.showList[0]) status.dailyStatus(),
                   SizedBox(height: 50),
                   status.monthlyStatus(),
                   SizedBox(height: 50),

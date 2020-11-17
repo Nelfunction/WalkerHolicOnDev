@@ -64,6 +64,22 @@ class ColorTheme {
       [Color(0xff4158d0), Color(0xffc850c0), Color(0xffffcc70)],
       [0.0, 0.46, 1.0],
     ),
+    ColorTheme(
+      0,
+      1,
+      0,
+      -1,
+      [Color(0xff08aeea), Color(0xff2af598)],
+      [0.0, 1.0],
+    ),
+    ColorTheme(
+      -1,
+      1,
+      1,
+      -1,
+      [Color(0xfffbda61), Color(0xffff5acd)],
+      [0.0, 1.0],
+    ),
   ];
 } // class ColorTheme
 
@@ -149,18 +165,19 @@ class PersonalStatus {
   }
 
   Widget monthlyStatus() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: -1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int i in recentMonth)
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            RotatedBox(
+              quarterTurns: -1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(recentMonth.length, (index) {
+                  return Container(
+                    height: 30,
                     child: LinearPercentIndicator(
                       width: 120,
                       //animateFromLastPercent: true,
@@ -169,57 +186,74 @@ class PersonalStatus {
                       animation: true,
                       lineHeight: 12.0,
                       animationDuration: 2000,
-                      percent: i.toDouble() / (dailyMax.toDouble() * 30),
+                      percent: recentMonth[index].toDouble() /
+                          (dailyMax.toDouble() * 30),
                       linearStrokeCap: LinearStrokeCap.round,
                       progressColor: Colors.white,
                     ),
-                  )
-              ],
+                  );
+                }),
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 80),
-            height: 5,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(recentMonth.length, (index) {
-              return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(recentMonth.length, (index) {
+                return Container(
+                  width: 30,
                   child: Text(
                     months[currentDate.month - 3 + index],
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.white),
-                  ));
-            }),
-          ),
-          Container(
-              width: 240,
-              //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 80),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'This Month:',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                    Text(
-                      'DISPLEASED',
-                      style: TextStyle(fontSize: 18, color: Colors.red),
-                    )
-                  ]))
-        ]);
+                  ),
+                );
+              }),
+            ),
+            Container(
+                width: 240,
+                //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 80),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'This Month:',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      Text(
+                        'DISPLEASED',
+                        style: TextStyle(fontSize: 18, color: Colors.red),
+                      )
+                    ]))
+          ]),
+    );
   }
 } // class PersonalStatus
 
+/// 옵션
 class PersonalOptions {
-  //배경색
-  int colornum;
-  //UI(아이콘, 글자) 색
-  //UI 크기
+  bool usePreset;
+  int presetNum;
+  ColorTheme colorTheme;
+  Color textColor;
+
+  /// daily, weekly, monthly
+  List<bool> showList;
+
+  PersonalOptions({
+    Key key,
+    this.usePreset,
+    this.presetNum,
+    this.colorTheme,
+    this.textColor,
+    this.showList,
+  });
 }
 
 Widget flatbutton(

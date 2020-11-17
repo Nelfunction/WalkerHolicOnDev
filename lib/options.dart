@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:walkerholic/logic/format.dart';
 
+import 'logic/global.dart';
 import 'logic/login.dart';
 
 class MyOption extends StatefulWidget {
@@ -18,27 +19,162 @@ class _MyOptionState extends State<MyOption> {
   final StreamController ctrl;
   _MyOptionState(this.ctrl);
 
-  showPicker() {
+  Widget colorPicker() {
+    return ScrollConfiguration(
+      behavior: ScrollBehavior()
+        ..buildViewportChrome(context, null, AxisDirection.down),
+      child: CupertinoPicker(
+        //scrollController: FixedExtentScrollController(initialItem: (ctrl.stream.last ?? 0)),
+        backgroundColor: Colors.white,
+        onSelectedItemChanged: (value) {
+          if (prefs != null) {
+            prefs.setInt('myColor', value);
+          }
+          ctrl.add(ColorTheme.colorPreset[value]);
+        },
+        itemExtent: 32.0,
+        children: const [
+          Text('Pinkish'),
+          Text('Azur'),
+          Text('DayLight'),
+          Text('Forest'),
+          Text('Peach'),
+        ],
+      ),
+    );
+  }
+
+  Widget visualStatus() {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter stateSetter) {
+      return ListView(
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+          ListTile(
+              title: Text('Daily'),
+              trailing: CupertinoSwitch(
+                value: options.showList[0],
+                onChanged: (bool value) {
+                  stateSetter(() => options.showList[0] = value);
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  options.showList[0] = !options.showList[0];
+                });
+              }),
+          ListTile(
+              title: Text('Weekly'),
+              trailing: CupertinoSwitch(
+                value: options.showList[1],
+                onChanged: (bool value) {
+                  stateSetter(() => options.showList[1] = value);
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  options.showList[1] = !options.showList[1];
+                });
+              }),
+          ListTile(
+              title: Text('Monthly'),
+              trailing: CupertinoSwitch(
+                value: options.showList[2],
+                onChanged: (bool value) {
+                  stateSetter(() => options.showList[2] = value);
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  options.showList[2] = !options.showList[2];
+                });
+              }),
+          ListTile(
+              title: Text('Pedestrian Status'),
+              trailing: CupertinoSwitch(
+                value: options.showList[3],
+                onChanged: (bool value) {
+                  stateSetter(() => options.showList[3] = value);
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  options.showList[3] = !options.showList[3];
+                });
+              }),
+        ],
+      );
+    });
+  }
+
+  bottomContent({
+    String title = 'Title',
+    double size = 200.0,
+    Widget content,
+  }) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            height: 200,
-            child: CupertinoPicker(
-              //scrollController: FixedExtentScrollController(initialItem: (ctrl.stream.last ?? 0)),
-              backgroundColor: Colors.white,
-              onSelectedItemChanged: (value) {
-                ctrl.add(value);
-              },
-              itemExtent: 32.0,
-              children: const [
-                Text('Pinkish'),
-                Text('Azur'),
-                Text('DayLight'),
-              ],
-            ),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  title: Text(title,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      )),
+                  trailing: FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'Cancel');
+                      },
+                      child: Text('Close',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )))),
+              Divider(height: 1, thickness: 1),
+              Container(height: size, child: content),
+            ],
           );
         });
+  }
+
+  cupertinoBottom() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+          title: const Text('Background Theme'),
+          //message: const Text('Your options are '),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: const Text('Use Preset'),
+              onPressed: () {
+                Navigator.pop(context, 'One');
+                bottomContent(
+                  title: 'Choose Preset',
+                  content: colorPicker(),
+                );
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text('Customize'),
+              onPressed: () {
+                Navigator.pop(context, 'Two');
+                bottomContent(
+                  title: 'Customize',
+                  content: visualStatus(),
+                );
+              },
+            )
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: const Text('Cancel'),
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context, 'Cancel');
+            },
+          )),
+    );
   }
 
   accountSync() async {
@@ -67,10 +203,35 @@ class _MyOptionState extends State<MyOption> {
                         'Properties',
                         style: TextStyle(fontSize: 36, color: Colors.black87),
                       )),
+                  Divider(height: 1, thickness: 1),
                   flatbutton(
-                      onPressed: showPicker,
+                      onPressed: () {
+                        bottomContent(
+                          title: 'BackColor Theme',
+                          content: colorPicker(),
+                        );
+                      },
                       context: context,
                       text: 'BackColor Theme'),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
+                      onPressed: () {
+                        cupertinoBottom();
+                      },
+                      context: context,
+                      text: 'Background Option'),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {
+                      bottomContent(
+                        title: 'Visualize',
+                        size: 250,
+                        content: visualStatus(),
+                      );
+                    },
+                    context: context,
+                    text: 'Visualize',
+                  ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                       onPressed: () {
@@ -78,23 +239,6 @@ class _MyOptionState extends State<MyOption> {
                       },
                       context: context,
                       text: 'Google Account Sync'),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                      onPressed: () {},
-                      context: context,
-                      text: 'Background Option'),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                    onPressed: () {},
-                    context: context,
-                    text: '1',
-                  ),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                    onPressed: () {},
-                    context: context,
-                    text: '2',
-                  ),
                   Divider(height: 1, thickness: 1),
                 ],
               )),
