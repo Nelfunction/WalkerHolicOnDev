@@ -5,18 +5,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
 
 import 'dart:async';
+import 'dart:ui';
 import 'format.dart';
-
-class Global {}
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
 var myColor = StreamController.broadcast();
+StreamController<int> visualize = StreamController();
+StreamController<int> textColor = StreamController();
 SharedPreferences prefs;
+
+Color currentColor = Colors.white;
 
 //login 전역변수
 String name;
@@ -34,7 +38,7 @@ int steps = 100; // 현재 기기의 stepcount
 var gamecards = <Gamecard>[];
 
 //친구 요청 리스트
-var friend_requests= <String>[];
+var friend_requests = <String>[];
 
 //친구 요청 리스트 불러오는 함수
 Future<void> loadfriend_request_list() async {
@@ -45,21 +49,17 @@ Future<void> loadfriend_request_list() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result=documentSnapshot.data();
+      result = documentSnapshot.data();
 
       result.forEach((key, value) {
         friend_requests.add(key);
       });
-    } else {
-      
-    }
+    } else {}
   });
-
 }
 
 //친구 요청 accept 를 실행하는 함수
 acceptfriendrequest(String friendname) async {
-
   await firestore
       .collection(userid)
       .doc('friend_list')
@@ -67,9 +67,9 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-          ..collection(userid)
-              .doc('friend_list')
-          .update({friendname: friendname});
+        ..collection(userid)
+            .doc('friend_list')
+            .update({friendname: friendname});
     } else {
       firestore
           .collection(userid)
@@ -85,39 +85,30 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(friendname)
-            .doc('friend_list')
-            .update({userid: userid});
+        ..collection(friendname).doc('friend_list').update({userid: userid});
     } else {
-      firestore
-          .collection(friendname)
-          .doc('friend_list')
-          .set({userid: userid});
+      firestore.collection(friendname).doc('friend_list').set({userid: userid});
     }
   });
 
   await firestore
       .collection(userid)
       .doc('friend_request_list')
-      .update({friendname: FieldValue.delete() });
+      .update({friendname: FieldValue.delete()});
 
   await firestore
       .collection(friendname)
       .doc('friend_request_list')
-      .update({userid: FieldValue.delete() });
-
-
+      .update({userid: FieldValue.delete()});
 }
+
 //친구 요청 deny 를 실행하는 함수
 denyfriendrequest(String friendname) async {
   await firestore
       .collection(userid)
       .doc('friend_request_list')
-      .update({friendname: FieldValue.delete() });
-
+      .update({friendname: FieldValue.delete()});
 }
-
-
 
 /// 개인기록
 PersonalStatus status = PersonalStatus(
@@ -170,9 +161,9 @@ Future<bool> is_name_existed(String friendname) async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      existed= true;
+      existed = true;
     } else {
-      existed= false;
+      existed = false;
     }
   });
   return existed;
@@ -180,7 +171,6 @@ Future<bool> is_name_existed(String friendname) async {
 
 //친구 "요청" 목록에 추가하는 함수
 sendfriendrequest(String friendname) async {
-
   await firestore
       .collection(friendname)
       .doc('friend_request_list')
@@ -191,7 +181,6 @@ sendfriendrequest(String friendname) async {
           .collection(friendname)
           .doc('friend_request_list')
           .update({userid: userid});
-
     } else {
       firestore
           .collection(friendname)
@@ -199,11 +188,7 @@ sendfriendrequest(String friendname) async {
           .set({userid: userid});
     }
   });
-
-
 }
-
-
 
 /// 로컬 데이터 가져오기
 getLocaldata() async {
@@ -272,7 +257,12 @@ Future<void> loadmydata() async {
   int gamecardstep = steps;
   int character = 1;
   String myCharacter_str = "kitten.png";
-  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
+  SpriteSheet myCharacter = new SpriteSheet(
+      imageName: myCharacter_str,
+      textureWidth: 160,
+      textureHeight: 160,
+      columns: 4,
+      rows: 1);
 
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
@@ -291,9 +281,9 @@ Future<void> loadmydata() async {
         columns: 4,
         rows: 1,
       );
-      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
     } else {
-      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
     }
   });
 
@@ -306,7 +296,12 @@ Future<void> loadfrienddata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   String myCharacter_str = "kitten.png";
-  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
+  SpriteSheet myCharacter = new SpriteSheet(
+      imageName: myCharacter_str,
+      textureWidth: 160,
+      textureHeight: 160,
+      columns: 4,
+      rows: 1);
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
   Map<String, dynamic> result;

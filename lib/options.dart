@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'friend.dart';
 
@@ -54,57 +55,45 @@ class _MyOptionState extends State<MyOption> {
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           ListTile(
-              title: Text('Daily'),
-              trailing: CupertinoSwitch(
-                value: options.showList[0],
-                onChanged: (bool value) {
-                  stateSetter(() => options.showList[0] = value);
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  options.showList[0] = !options.showList[0];
-                });
-              }),
+            title: Text('Daily'),
+            trailing: CupertinoSwitch(
+              value: options.showList[0],
+              onChanged: (bool value) {
+                stateSetter(() => options.showList[0] = value);
+                visualize.add(0);
+              },
+            ),
+          ),
           ListTile(
-              title: Text('Weekly'),
-              trailing: CupertinoSwitch(
-                value: options.showList[1],
-                onChanged: (bool value) {
-                  stateSetter(() => options.showList[1] = value);
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  options.showList[1] = !options.showList[1];
-                });
-              }),
+            title: Text('Weekly'),
+            trailing: CupertinoSwitch(
+              value: options.showList[1],
+              onChanged: (bool value) {
+                stateSetter(() => options.showList[1] = value);
+                visualize.add(1);
+              },
+            ),
+          ),
           ListTile(
-              title: Text('Monthly'),
-              trailing: CupertinoSwitch(
-                value: options.showList[2],
-                onChanged: (bool value) {
-                  stateSetter(() => options.showList[2] = value);
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  options.showList[2] = !options.showList[2];
-                });
-              }),
+            title: Text('Monthly'),
+            trailing: CupertinoSwitch(
+              value: options.showList[2],
+              onChanged: (bool value) {
+                stateSetter(() => options.showList[2] = value);
+                visualize.add(2);
+              },
+            ),
+          ),
           ListTile(
-              title: Text('Pedestrian Status'),
-              trailing: CupertinoSwitch(
-                value: options.showList[3],
-                onChanged: (bool value) {
-                  stateSetter(() => options.showList[3] = value);
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  options.showList[3] = !options.showList[3];
-                });
-              }),
+            title: Text('Pedestrian Status'),
+            trailing: CupertinoSwitch(
+              value: options.showList[3],
+              onChanged: (bool value) {
+                stateSetter(() => options.showList[3] = value);
+                visualize.add(3);
+              },
+            ),
+          ),
         ],
       );
     });
@@ -163,10 +152,7 @@ class _MyOptionState extends State<MyOption> {
               child: const Text('Customize'),
               onPressed: () {
                 Navigator.pop(context, 'Two');
-                bottomContent(
-                  title: 'Customize',
-                  content: visualStatus(),
-                );
+                showRGB();
               },
             )
           ],
@@ -182,6 +168,49 @@ class _MyOptionState extends State<MyOption> {
 
   accountSync() async {
     await signInWithGoogle();
+  }
+
+  showCuDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return Friend();
+      },
+    );
+  }
+
+  Color a = Colors.limeAccent;
+  void changeColor(Color color) => setState(() => currentColor = color);
+
+  showRGB() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.all(0.0),
+          contentPadding: const EdgeInsets.all(0.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          content: SingleChildScrollView(
+            child: SlidePicker(
+              pickerColor: currentColor,
+              onColorChanged: changeColor,
+              paletteType: PaletteType.rgb,
+              enableAlpha: false,
+              displayThumbColor: true,
+              showLabel: false,
+              showIndicator: true,
+              indicatorAlignmentBegin: Alignment(-1, 0),
+              indicatorAlignmentEnd: Alignment(1, 0),
+              indicatorBorderRadius: const BorderRadius.vertical(
+                top: const Radius.circular(25.0),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -226,22 +255,6 @@ class _MyOptionState extends State<MyOption> {
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
-                      Navigator.of(context).push(CustomPageRoute(Friend()));
-                    },
-                    context: context,
-                    text: 'add_friend',
-                  ),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                    onPressed: () {
-                      Navigator.of(context).push(CustomPageRoute(Friend_request_list()));
-                    },
-                    context: context,
-                    text: 'friend_requested_list',
-                  ),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                    onPressed: () {
                       bottomContent(
                         title: 'Visualize',
                         size: 250,
@@ -250,6 +263,23 @@ class _MyOptionState extends State<MyOption> {
                     },
                     context: context,
                     text: 'Visualize',
+                  ),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {
+                      showCuDialog();
+                    },
+                    context: context,
+                    text: 'Add Friend',
+                  ),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(CustomPageRoute(Friend_request_list()));
+                    },
+                    context: context,
+                    text: 'Friend Requests',
                   ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
@@ -266,7 +296,6 @@ class _MyOptionState extends State<MyOption> {
     );
   }
 }
-
 
 class CustomPageRoute<T> extends PageRoute<T> {
   CustomPageRoute(this.child);

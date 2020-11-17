@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
             DefaultTabController(
               length: 4,
               child: Scaffold(
+                resizeToAvoidBottomPadding: false,
                 backgroundColor: Colors.transparent,
                 body: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
