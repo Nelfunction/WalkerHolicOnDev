@@ -67,6 +67,52 @@ getServerdata() async {
   status.totalCount = totalsteps;
 }
 
+///입력한 친구 이름이 파이어베이스에 있을 시
+Future<bool> is_name_existed(String friendname) async {
+  bool existed;
+  await firestore
+      .collection(friendname)
+      .doc('total_steps')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      existed= true;
+    } else {
+      existed= false;
+    }
+  });
+  return existed;
+}
+
+//친구 "요청" 목록에 추가하는 함수
+sendfriendrequest(String friendname) async {
+
+  await firestore
+      .collection(friendname)
+      .doc('friend_request_list')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      int num = documentSnapshot.get('num');
+      num++;
+      firestore
+          .collection(friendname)
+          .doc('friend_request_list')
+          .update({'num': num, 'name'+num.toString(): userid});
+
+    } else {
+      firestore
+          .collection(friendname)
+          .doc('friend_request_list')
+          .set({'num': 1, 'name1': userid});
+    }
+  });
+
+
+}
+
+
+
 /// 로컬 데이터 가져오기
 getLocaldata() async {
   prefs = await SharedPreferences.getInstance();

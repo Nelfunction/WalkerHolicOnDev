@@ -4,7 +4,11 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:walkerholic/logic/format.dart';
 
+import 'friend.dart';
+
+import 'characterOne.dart';
 import 'logic/login.dart';
+import 'logic/global.dart';
 
 class MyOption extends StatefulWidget {
   final StreamController ctrl;
@@ -85,13 +89,20 @@ class _MyOptionState extends State<MyOption> {
                       text: 'Background Option'),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(CustomPageRoute(Friend()));
+                    },
                     context: context,
-                    text: '1',
+                    text: 'add_friend',
                   ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
-                    onPressed: () {},
+                    onPressed: () {
+                      firestore
+                          .collection(userid)
+                          .doc('temp')
+                          .update({'temp2': "abcdefg"});
+                    },
                     context: context,
                     text: '2',
                   ),
@@ -102,4 +113,36 @@ class _MyOptionState extends State<MyOption> {
       ),
     );
   }
+}
+
+
+class CustomPageRoute<T> extends PageRoute<T> {
+  CustomPageRoute(this.child);
+  @override
+  // TODO: implement barrierColor
+  Color get barrierColor => Colors.deepOrange;
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  // TODO: implement opaque
+  bool get opaque => false;
+
+  final Widget child;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
 }
