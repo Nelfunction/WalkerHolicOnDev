@@ -11,6 +11,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
+
   TextStyle thumbnailStyle =
       new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(

@@ -1,6 +1,7 @@
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:intl/intl.dart';
 
 /// Class for cardview at HOME.
 class Gamecard {
@@ -69,6 +70,22 @@ class ColorTheme {
       [Color(0xff4158d0), Color(0xffc850c0), Color(0xffffcc70)],
       [0.0, 0.46, 1.0],
     ),
+    ColorTheme(
+      0,
+      1,
+      0,
+      -1,
+      [Color(0xff08aeea), Color(0xff2af598)],
+      [0.0, 1.0],
+    ),
+    ColorTheme(
+      -1,
+      1,
+      1,
+      -1,
+      [Color(0xfffbda61), Color(0xffff5acd)],
+      [0.0, 1.0],
+    ),
   ];
 } // class ColorTheme
 
@@ -93,6 +110,7 @@ class PersonalStatus {
   final DateTime startDate;
 
   DateTime currentDate;
+  List<int> recentWeek;
   List<int> recentMonth;
   int totalCount, todayCount;
 
@@ -102,6 +120,7 @@ class PersonalStatus {
     this.todayCount,
     this.totalCount,
     this.currentDate,
+    this.recentWeek,
     this.recentMonth,
   });
 
@@ -123,49 +142,123 @@ class PersonalStatus {
   }
 
   Widget dailyStatus() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 40),
-              height: 10,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: LinearProgressIndicator(
-                    value: todayCount.toDouble() / dailyMax.toDouble(),
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                    backgroundColor: Colors.white24,
-                  ))),
-          Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Today',
-                      style: TextStyle(fontSize: 22, color: Colors.white),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 40),
+                height: 10,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: LinearProgressIndicator(
+                      value: todayCount.toDouble() / dailyMax.toDouble(),
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white),
+                      backgroundColor: Colors.white24,
+                    ))),
+            Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Today',
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      ),
+                      Text(
+                        todayCount.toString() + '/' + dailyMax.toString(),
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      )
+                    ]))
+          ]),
+    );
+  }
+
+  Widget weeklyStatus() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            RotatedBox(
+              quarterTurns: -1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(recentWeek.length, (index) {
+                  return Container(
+                    height: 30,
+                    child: LinearPercentIndicator(
+                      width: 120,
+                      backgroundColor: Colors.transparent,
+                      animation: true,
+                      lineHeight: 10.0,
+                      animationDuration: 2000,
+                      percent:
+                          recentWeek[index].toDouble() / dailyMax.toDouble(),
+                      linearStrokeCap: LinearStrokeCap.round,
+                      progressColor: Colors.white,
                     ),
-                    Text(
-                      todayCount.toString() + '/' + dailyMax.toString(),
-                      style: TextStyle(fontSize: 22, color: Colors.white),
-                    )
-                  ]))
-        ]);
+                  );
+                }),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(recentWeek.length, (index) {
+                return Container(
+                  width: 30,
+                  child: Text(
+                    DateFormat('MM/dd').format(DateTime(currentDate.year,
+                        currentDate.month, currentDate.day - 6 + index)),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10, color: Colors.white),
+                  ),
+                );
+              }),
+            ),
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Recent 7 days :',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      Text(
+                        recentWeek.reduce((a, b) => a + b).toString(),
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      )
+                    ]))
+          ]),
+    );
   }
 
   Widget monthlyStatus() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: -1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int i in recentMonth)
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            RotatedBox(
+              quarterTurns: -1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(recentMonth.length, (index) {
+                  return Container(
+                    height: 30,
                     child: LinearPercentIndicator(
                       width: 120,
                       //animateFromLastPercent: true,
@@ -174,57 +267,73 @@ class PersonalStatus {
                       animation: true,
                       lineHeight: 12.0,
                       animationDuration: 2000,
-                      percent: i.toDouble() / (dailyMax.toDouble() * 30),
+                      percent: recentMonth[index].toDouble() /
+                          (dailyMax.toDouble() * 30),
                       linearStrokeCap: LinearStrokeCap.round,
                       progressColor: Colors.white,
                     ),
-                  )
-              ],
+                  );
+                }),
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 80),
-            height: 5,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(recentMonth.length, (index) {
-              return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(recentMonth.length, (index) {
+                return Container(
+                  width: 30,
                   child: Text(
                     months[currentDate.month - 3 + index],
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.white),
-                  ));
-            }),
-          ),
-          Container(
-              width: 240,
-              //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 80),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'This Month:',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                    Text(
-                      'DISPLEASED',
-                      style: TextStyle(fontSize: 18, color: Colors.red),
-                    )
-                  ]))
-        ]);
+                  ),
+                );
+              }),
+            ),
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'This Month:',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      Text(
+                        'DISPLEASED',
+                        style: TextStyle(fontSize: 18, color: Colors.red),
+                      )
+                    ]))
+          ]),
+    );
   }
 } // class PersonalStatus
 
+/// 옵션
 class PersonalOptions {
-  //배경색
-  int colornum;
-  //UI(아이콘, 글자) 색
-  //UI 크기
+  bool usePreset;
+  int presetNum;
+  ColorTheme colorTheme;
+  Color textColor;
+
+  /// daily, weekly, monthly
+  List<bool> showList;
+
+  PersonalOptions({
+    Key key,
+    this.usePreset,
+    this.presetNum,
+    this.colorTheme,
+    this.textColor,
+    this.showList,
+  });
 }
 
 Widget flatbutton(

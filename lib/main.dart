@@ -17,18 +17,17 @@ import 'logic/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Stopwatch stopwatch = new Stopwatch()..start();
+  debugPrint('=========================== A ===========================');
+
   await Firebase.initializeApp();
-  debugPrint('YYYfirebase.initialize ${stopwatch.elapsed}');
-  await signInWithGoogle();
-  debugPrint('YYYsign google ${stopwatch.elapsed}');
   await initPermission();
+  await signInWithGoogle();
+  await getServerdata();
+  await getLocaldata();
   await senddata();
-  debugPrint('YYYsendatat ${stopwatch.elapsed}');
   await loadmydata();
-  debugPrint('YYYloadmydata ${stopwatch.elapsed}');
   await loadfrienddata();
-  debugPrint('YYYloadfrienddata ${stopwatch.elapsed}');
+  await loadfriend_request_list();
 
   runApp(MyApp());
 }
@@ -42,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    //_initPermission();
     maybeStartFGS();
   }
 
@@ -65,12 +63,9 @@ class _MyAppState extends State<MyApp> {
             //Background Color
             StreamBuilder(
               stream: myColor.stream, // Replace with Bloc result
-              initialData: 0,
+              initialData: ColorTheme.colorPreset[0],
               builder: (context, snapshot) {
-                if (prefs != null) {
-                  prefs.setInt('myColor', snapshot.data);
-                }
-                return ColorTheme.colorPreset[snapshot.data].buildContainer();
+                return snapshot.data.buildContainer();
               },
             ),
             DefaultTabController(
@@ -86,7 +81,6 @@ class _MyAppState extends State<MyApp> {
                     MyOption(
                       ctrl: myColor,
                     ),
-                    //Container(child: Center(child: Text('Additional'),),)
                   ],
                 ),
                 bottomNavigationBar: Bottom(),
