@@ -46,13 +46,15 @@ Future<void> loadfriend_request_list() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       result=documentSnapshot.data();
-    } else {
 
+      result.forEach((key, value) {
+        friend_requests.add(key);
+      });
+    } else {
+      
     }
   });
-  result.forEach((key, value) {
-    friend_requests.add(key);
-  });
+
 }
 
 //친구 요청 accept 를 실행하는 함수
@@ -307,7 +309,9 @@ Future<void> loadfrienddata() async {
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
-  
+
+  Map<String, dynamic> result;
+
   await firestore
       .collection(userid)
       .doc('friend_list')
@@ -316,7 +320,6 @@ Future<void> loadfrienddata() async {
     if (documentSnapshot.exists) {
       result=documentSnapshot.data();
     } else {
-      friendnum = 0;
     }
   });
 

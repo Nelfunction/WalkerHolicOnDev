@@ -7,14 +7,12 @@ import 'package:intl/intl.dart';
 class Gamecard {
   String name;
   int cardSteps;
-  int character;
 
   var myCharacter;
 
-  Gamecard(String name, int steps, int character, var myCharacter) {
+  Gamecard(String name, int steps, var myCharacter) {
     this.name = name;
     this.cardSteps = steps;
-    this.character = character;
     this.myCharacter = myCharacter;
   }
 }
