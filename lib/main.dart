@@ -28,7 +28,8 @@ void main() async {
   await loadmydata();
   await loadfrienddata();
   await loadfriend_request_list();
-
+  debugPrint(
+      '=========================== ${gamecards.length} ===========================');
   runApp(MyApp());
 }
 
@@ -55,9 +56,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: "WalkerHolic_Sprite",
-        theme: ThemeData(
-          fontFamily: 'IBM'
-        ),
+        theme: ThemeData(fontFamily: 'IBM'),
         home: Stack(
           children: [
             //Background Color
