@@ -47,6 +47,7 @@ Future<void> loadfriend_request_list() async {
       result=documentSnapshot.data();
     } else {
 
+
     }
   });
   result.forEach((key, value) {
