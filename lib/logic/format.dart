@@ -1,3 +1,4 @@
+import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -6,10 +7,14 @@ class Gamecard {
   String name;
   int cardSteps;
   int character;
-  Gamecard(String name, int steps, int character) {
+
+  var myCharacter;
+
+  Gamecard(String name, int steps, int character, var myCharacter) {
     this.name = name;
     this.cardSteps = steps;
     this.character = character;
+    this.myCharacter = myCharacter;
   }
 }
 

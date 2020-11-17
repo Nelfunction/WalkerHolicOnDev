@@ -57,6 +57,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: "WalkerHolic_Sprite",
+        theme: ThemeData(
+          fontFamily: 'IBM'
+        ),
         home: Stack(
           children: [
             //Background Color

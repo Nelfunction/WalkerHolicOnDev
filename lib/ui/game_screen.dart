@@ -39,7 +39,7 @@ class _FullGameState extends State<FullGame> {
 
   @override
   Widget build(BuildContext context) {
-    MyGame game = MyGame(gamecard.character, input: 200);
+    MyGame game = MyGame(gamecard.myCharacter, input: 200);
 
     return Scaffold(
         body: InkWell(
