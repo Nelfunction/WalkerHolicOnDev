@@ -4,18 +4,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
 
 import 'dart:async';
+import 'dart:ui';
 import 'format.dart';
-
-class Global {}
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
 var myColor = StreamController.broadcast();
+StreamController<int> visualize = StreamController();
+StreamController<int> textColor = StreamController();
 SharedPreferences prefs;
+
+Color currentColor = Colors.white;
 
 //login 전역변수
 String name;
@@ -83,9 +87,9 @@ Future<bool> is_name_existed(String friendname) async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      existed= true;
+      existed = true;
     } else {
-      existed= false;
+      existed = false;
     }
   });
   return existed;
@@ -93,7 +97,6 @@ Future<bool> is_name_existed(String friendname) async {
 
 //친구 "요청" 목록에 추가하는 함수
 sendfriendrequest(String friendname) async {
-
   await firestore
       .collection(friendname)
       .doc('friend_request_list')
@@ -105,8 +108,7 @@ sendfriendrequest(String friendname) async {
       firestore
           .collection(friendname)
           .doc('friend_request_list')
-          .update({'num': num, 'name'+num.toString(): userid});
-
+          .update({'num': num, 'name' + num.toString(): userid});
     } else {
       firestore
           .collection(friendname)
@@ -114,11 +116,7 @@ sendfriendrequest(String friendname) async {
           .set({'num': 1, 'name1': userid});
     }
   });
-
-
 }
-
-
 
 /// 로컬 데이터 가져오기
 getLocaldata() async {
