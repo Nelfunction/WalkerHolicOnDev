@@ -37,6 +37,7 @@ PersonalStatus status = PersonalStatus(
   DateTime.now(),
   todayCount: -1,
   totalCount: -1,
+  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
   recentMonth: [222222, 272222, 75000, 111111],
   currentDate: DateTime.now(),
 );

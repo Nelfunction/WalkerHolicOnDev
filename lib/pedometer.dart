@@ -54,6 +54,12 @@ class _MyPedoState extends State<MyPedo> {
     if (!mounted) return;
   }
 
+  void setList(int index) {
+    setState(() {
+      options.showList[index] = !options.showList[index];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -72,11 +78,10 @@ class _MyPedoState extends State<MyPedo> {
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
-                  SizedBox(height: 50),
+                  SizedBox(height: 10),
                   if (options.showList[0]) status.dailyStatus(),
-                  SizedBox(height: 50),
-                  status.monthlyStatus(),
-                  SizedBox(height: 50),
+                  if (options.showList[1]) status.weeklyStatus(),
+                  if (options.showList[2]) status.monthlyStatus(),
                   Center(
                     child: Text(
                       'Pedestrian status:',
