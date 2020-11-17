@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:hive/hive.dart';
 
 import 'dart:async';
 import 'format.dart';
@@ -13,7 +14,7 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
-StreamController<int> myColor = StreamController<int>();
+var myColor = StreamController.broadcast();
 SharedPreferences prefs;
 
 //login 전역변수
@@ -36,8 +37,13 @@ PersonalStatus status = PersonalStatus(
   DateTime.now(),
   todayCount: -1,
   totalCount: -1,
-  recentMonth: [222222, 272222, 75000],
+  recentMonth: [222222, 272222, 75000, 111111],
   currentDate: DateTime.now(),
+);
+
+/// 설정값
+PersonalOptions options = PersonalOptions(
+  showList: [true, true, true, true],
 );
 
 initPermission() async {
@@ -118,16 +124,7 @@ getLocaldata() async {
   prefs = await SharedPreferences.getInstance();
 
   //배경 스트림 갱신
-  myColor.add(prefs.getInt('myColor') ?? 0);
-
-  debugPrint("1");
-  //페도미터의 최신값 steps에 넣기
-  /*
-  await stepCountStream.last.then((StepCount value) {
-    steps = value.steps;
-  });
-  */
-  debugPrint("2");
+  myColor.add(ColorTheme.colorPreset[prefs.getInt('myColor') ?? 0]);
 
   //SP에서 어제 페도미터 값 가져오기
   DateTime datetime = new DateTime(
@@ -145,7 +142,7 @@ String getdate(DateTime date) {
   return dateYMD;
 }
 
-//totalstep을 파이어베이스에서 로드하느 ㄴ함수
+//totalstep을 파이어베이스에서 로드하는 함수
 Future<int> loadtotalstep() async {
   int result;
   await FirebaseFirestore.instance
@@ -202,7 +199,6 @@ Future<void> loadmydata() async {
   });
 
   gamecards.add(Gamecard(userid, gamecardstep, character)); //gamecards에 추가
-
 }
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수

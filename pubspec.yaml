@@ -40,6 +40,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   activity_recognition_flutter: ^1.2.4+1
   foreground_service: ^2.0.1+1
+  hive: ^1.4.4+1
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,4 @@
-package com.soen.walkerholic_sprite2
+package com.capstone.walkerholic
 
 import io.flutter.embedding.android.FlutterActivity
 
