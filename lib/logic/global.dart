@@ -32,6 +32,90 @@ int steps = 100; // 현재 기기의 stepcount
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
 
+//친구 요청 리스트
+var friend_requests= <String>[];
+
+//친구 요청 리스트 불러오는 함수
+Future<void> loadfriend_request_list() async {
+  Map<String, dynamic> result;
+  await firestore
+      .collection(userid)
+      .doc('friend_request_list')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      result=documentSnapshot.data();
+    } else {
+
+    }
+  });
+  result.forEach((key, value) {
+    friend_requests.add(key);
+  });
+}
+
+//친구 요청 accept 를 실행하는 함수
+acceptfriendrequest(String friendname) async {
+
+  await firestore
+      .collection(userid)
+      .doc('friend_list')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      firestore
+          ..collection(userid)
+              .doc('friend_list')
+          .update({friendname: friendname});
+    } else {
+      firestore
+          .collection(userid)
+          .doc('friend_list')
+          .set({friendname: friendname});
+    }
+  });
+
+  await firestore
+      .collection(friendname)
+      .doc('friend_list')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      firestore
+        ..collection(friendname)
+            .doc('friend_list')
+            .update({userid: userid});
+    } else {
+      firestore
+          .collection(friendname)
+          .doc('friend_list')
+          .set({userid: userid});
+    }
+  });
+
+  await firestore
+      .collection(userid)
+      .doc('friend_request_list')
+      .update({friendname: FieldValue.delete() });
+
+  await firestore
+      .collection(friendname)
+      .doc('friend_request_list')
+      .update({userid: FieldValue.delete() });
+
+
+}
+//친구 요청 deny 를 실행하는 함수
+denyfriendrequest(String friendname) async {
+  await firestore
+      .collection(userid)
+      .doc('friend_request_list')
+      .update({friendname: FieldValue.delete() });
+
+}
+
+
+
 /// 개인기록
 PersonalStatus status = PersonalStatus(
   DateTime.now(),
@@ -100,18 +184,16 @@ sendfriendrequest(String friendname) async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      int num = documentSnapshot.get('num');
-      num++;
       firestore
           .collection(friendname)
           .doc('friend_request_list')
-          .update({'num': num, 'name'+num.toString(): userid});
+          .update({userid: userid});
 
     } else {
       firestore
           .collection(friendname)
           .doc('friend_request_list')
-          .set({'num': 1, 'name1': userid});
+          .set({userid: userid});
     }
   });
 
@@ -207,39 +289,23 @@ Future<void> loadfrienddata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   int character = 1;
-  int friendnum;
-
+  int friendnum=0;
+  Map<String, dynamic> result;
   await firestore
       .collection(userid)
       .doc('friend_list')
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      friendnum = documentSnapshot.get('num');
+      result=documentSnapshot.data();
     } else {
       friendnum = 0;
     }
   });
 
-  for (int i = 1; i <= friendnum; i++) //친구의 숫자만큼 gamecards에 추가
-  {
-    String temp = 'name' + i.toString();
-    String friendname = 'temp';
-
+  result.forEach((key, value) async{
     await firestore
-        .collection(userid)
-        .doc('friend_list')
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        friendname = documentSnapshot.get(temp);
-      } else {
-        friendname = 'null';
-      }
-    });
-
-    await firestore
-        .collection(friendname)
+        .collection(key)
         .doc(getdate(DateTime.now()))
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -251,7 +317,7 @@ Future<void> loadfrienddata() async {
     });
 
     await firestore
-        .collection(friendname)
+        .collection(key)
         .doc('character')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -262,6 +328,7 @@ Future<void> loadfrienddata() async {
       }
     });
 
-    gamecards.add(Gamecard(friendname, gamecardstep, character));
-  }
+    gamecards.add(Gamecard(key, gamecardstep, character));
+  });
+
 }

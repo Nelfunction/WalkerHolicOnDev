@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
 
 import 'friend.dart';
@@ -233,6 +234,7 @@ class _MyOptionState extends State<MyOption> {
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
+                      Navigator.of(context).push(CustomPageRoute(Friend_request_list()));
                     },
                     context: context,
                     text: 'friend_requested_list',
