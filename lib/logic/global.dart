@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flame/spritesheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -45,14 +46,15 @@ Future<void> loadfriend_request_list() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       result=documentSnapshot.data();
+
+      result.forEach((key, value) {
+        friend_requests.add(key);
+      });
     } else {
-
-
+      
     }
   });
-  result.forEach((key, value) {
-    friend_requests.add(key);
-  });
+
 }
 
 //친구 요청 accept 를 실행하는 함수
@@ -269,20 +271,34 @@ Future<void> loadmydata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   int character = 1;
+  String myCharacter_str = "kitten.png";
+  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
 
+  var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+
+  // Character+Background를 불러옴
   await firestore
       .collection(userid)
-      .doc('character')
+      .doc('Character+Background')
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      character = documentSnapshot.get('character');
+      myCharacter_str = documentSnapshot.get('character');
+      myCharacter = SpriteSheet(
+        imageName: myCharacter_str,
+        textureWidth: 160,
+        textureHeight: 160,
+        columns: 4,
+        rows: 1,
+      );
+      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
     } else {
-      character = 1;
+      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
     }
   });
 
-  gamecards.add(Gamecard(userid, gamecardstep, character)); //gamecards에 추가
+  debugPrint("##### Load My Data! #####");
+  gamecards.add(Gamecard(userid, gamecardstep, myAnimation)); //gamecards에 추가
 }
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
@@ -290,8 +306,12 @@ Future<void> loadfrienddata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   int character = 1;
-  int friendnum=0;
+  String myCharacter_str = "kitten.png";
+  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
+  var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+
   Map<String, dynamic> result;
+
   await firestore
       .collection(userid)
       .doc('friend_list')
@@ -300,7 +320,6 @@ Future<void> loadfrienddata() async {
     if (documentSnapshot.exists) {
       result=documentSnapshot.data();
     } else {
-      friendnum = 0;
     }
   });
 
@@ -319,17 +338,25 @@ Future<void> loadfrienddata() async {
 
     await firestore
         .collection(key)
-        .doc('character')
+        .doc('Character+Background')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        character = documentSnapshot.get('character');
+        myCharacter_str = documentSnapshot.get('character');
+        myCharacter = SpriteSheet(
+          imageName: myCharacter_str,
+          textureWidth: 160,
+          textureHeight: 160,
+          columns: 4,
+          rows: 1,
+        );
+        myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
       } else {
-        character = 1;
+        myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
       }
     });
 
-    gamecards.add(Gamecard(key, gamecardstep, character));
+    gamecards.add(Gamecard(key, gamecardstep, myAnimation));
   });
 
 }

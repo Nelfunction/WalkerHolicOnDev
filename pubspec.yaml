@@ -40,7 +40,10 @@ dependencies:
   permission_handler: ^5.0.1+1
   activity_recognition_flutter: ^1.2.4+1
   foreground_service: ^2.0.1+1
+  flutter_swiper: ^1.1.6
+  page_indicator: ^0.3.0
   hive: ^1.4.4+1
+
 
 dev_dependencies:
   flutter_test:
@@ -98,6 +101,9 @@ flutter:
     - assets/images/character1.png
     - assets/images/character2.png
     - assets/images/kitten.png
+    - assets/images/kittenBlack.png
+    - assets/images/kittenBlackWhite.png
+    - assets/images/kittenFlame.png
     - assets/images/cloud.png
     - assets/images/way.png
     - assets/images/sky.png
@@ -108,3 +114,8 @@ flutter:
     - assets/images/kittenIconBlackWhite.png
     - assets/images/kittenIconFlame.png
     - assets/images/kittenIconQ.png
+
+  fonts :
+    - family: IBM
+      fonts :
+        - asset: fonts/IBMPlexSansKR.ttf
