@@ -40,11 +40,8 @@ class _CharacterPageState extends State<CharacterPage> {
                   shrinkWrap: true,
                   itemCount: input.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return CharaterRow(
-                      char1: input[index][0],
-                      char2: input[index][1],
-                      char3: input[index][2],
-                      char4: input[index][3],
+                    return CharacterRow(
+                      input: input[index],
                     );
                   }),
             )
@@ -55,16 +52,24 @@ class _CharacterPageState extends State<CharacterPage> {
   }
 }
 
-class CharaterRow extends StatefulWidget {
-  final String char1, char2, char3, char4;
+// ignore: must_be_immutable
+class CharacterRow extends StatefulWidget {
 
-  const CharaterRow(
-      {this.char1 = "", this.char2 = "", this.char3 = "", this.char4 = ""});
+  final List<String> input;
 
-  _CharaterRowState createState() => _CharaterRowState();
+  String char1 , char2, char3, char4;
+
+  CharacterRow({this.input}) {
+    this.char1 = input[0];
+    this.char2 = input[1];
+    this.char3 = input[2];
+    this.char4 = input[3];
+  }
+
+  _CharacterRowState createState() => _CharacterRowState();
 }
 
-class _CharaterRowState extends State<CharaterRow> {
+class _CharacterRowState extends State<CharacterRow> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -129,7 +134,7 @@ class CustomPageRoute<T> extends PageRoute<T> {
   CustomPageRoute(this.child);
   @override
   // TODO: implement barrierColor
-  Color get barrierColor => Colors.deepPurple.withOpacity(0.01);
+  Color get barrierColor => Colors.black.withOpacity(0.01);
 
   @override
   String get barrierLabel => null;

@@ -1,13 +1,20 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'logic/global.dart';
 
 class CharacterOne extends StatelessWidget {
   final String nameChar;
   const CharacterOne({this.nameChar = ""});
 
+
   @override
   Widget build(BuildContext context) {
+
     String nameText;
     if (nameChar == "Q") {
       nameText = "???";
@@ -44,7 +51,11 @@ class CharacterOne extends StatelessWidget {
               nameText,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-            ClipRRect(
+            SizedBox(
+              height: 100,
+            ),
+            // 아래 메뉴
+           ClipRRect(
                 child: Container(
                     margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
                     decoration: BoxDecoration(
@@ -53,46 +64,43 @@ class CharacterOne extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        FlatButton(
-                          child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              width: 200,
-                              height: 50,
-                              child: Row(children: [
-                                Text("선택",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 22.0,
-                                    ))
-                              ])),
+                        Container(
+                          child: FlatButton(
+                            onPressed: () {
+                              // 선택
+                              ChooseChareter(nameChar, context);
+                            },
+                            child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                width: 200,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: Row(children: [
+                                  Text("선택",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
+                                      ))
+                                ])),
+                          ),
                         ),
                         Divider(height: 1, thickness: 1),
                         FlatButton(
+                          onPressed: () {
+                            // 나가기
+                            Navigator.of(context).pop();
+                          },
                           child: Container(
                               margin: EdgeInsets.symmetric(horizontal: 5),
                               width: 200,
                               height: 50,
-                              child: Row(children: [
-                                Text("선택",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 22.0,
-                                    ))
-                              ])),
-                        ),
-                        Divider(height: 1, thickness: 1),
-                        FlatButton(
-                          child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              width: 200,
-                              height: 50,
+                              alignment: Alignment.center,
                               child: Row(children: [
                                 Text("나가기",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: Colors.black54,
+                                      color: Colors.white,
                                       fontSize: 22.0,
                                     ))
                               ])),
@@ -104,4 +112,47 @@ class CharacterOne extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> ChooseChareter(String nowCharacter, BuildContext context)  async {
+
+   SharedPreferences sp = await SharedPreferences.getInstance();
+
+   String key = "NowCharacter";
+   sp.setString(key, nowCharacter);
+   debugPrint("Write SP, Now Character : $nowCharacter");
+
+   firestore
+       .collection(userid)
+       .doc("Character+Background")
+       .set({'character': "kitten" + nowCharacter + ".png", 'background': "green"});
+
+   String myCharacter_str;
+   SpriteSheet myCharacter;
+   var myAnimation;
+
+   await firestore
+       .collection(userid)
+       .doc('Character+Background')
+       .get()
+       .then((DocumentSnapshot documentSnapshot) {
+     if (documentSnapshot.exists) {
+       myCharacter_str = documentSnapshot.get('character');
+       myCharacter = SpriteSheet(
+         imageName: myCharacter_str,
+         textureWidth: 160,
+         textureHeight: 160,
+         columns: 4,
+         rows: 1,
+       );
+       myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+     } else {
+     }
+   });
+
+   gamecards[0].myCharacter = myAnimation;
+
+
+   Navigator.of(context).pop();
+
 }

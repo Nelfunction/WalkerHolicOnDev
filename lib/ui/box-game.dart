@@ -1,22 +1,30 @@
 import 'dart:ui';
 import 'package:flame/game.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flame/position.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flame/text_config.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyGame extends BaseGame {
   Size screenSize;
 
   Position _size = Position(150, 150);
-  int characternum = 1;
+  int characternum = 2;
 
-  MyGame(int character, {double input = 200}) {
+  String nowCharacter;
+  
+  var choosenAnimation;
+
+  MyGame(var character, {double input = 200}) {
     _size.x = input;
     _size.y = input;
-    characternum = character;
+    choosenAnimation = character;
   }
+
+
 
   void resize(Size size) {
     screenSize = size;
@@ -40,7 +48,7 @@ class MyGame extends BaseGame {
     rows: 1,
   );
 
-  static final character1 = SpriteSheet(
+  static var character1 = SpriteSheet(
     imageName: 'character1.png',
     textureWidth: 160,
     textureHeight: 160,
@@ -114,15 +122,12 @@ class MyGame extends BaseGame {
 
   @override
   void render(Canvas canvas) {
+
     debugPrint('$characternum');
     if (characternum == 1) {
       background1.getSprite().renderPosition(canvas, background_p,
           size: Position(2584 / (1080 / screenSize.height), screenSize.height));
-      kitten_ani1.getSprite().renderPosition(
-          canvas,
-          Position((screenSize.width - _size.x) / 2,
-              (screenSize.height - _size.y - 70)),
-          size: _size);
+
     } else if (characternum == 2) {
       sky_sprite.getSprite().renderPosition(canvas, sky_p,
           size: Position(270 / (320 / screenSize.height), screenSize.height));
@@ -132,25 +137,24 @@ class MyGame extends BaseGame {
           size: Position(630 / (320 / screenSize.height), screenSize.height));
       way_sprite.getSprite().renderPosition(canvas, way_p,
           size: Position(630 / (320 / screenSize.height), screenSize.height));
-
-      kitten_ani2.getSprite().renderPosition(
-          canvas,
-          Position((screenSize.width - _size.x) / 2,
-              (screenSize.height - _size.y - 70)),
-          size: _size);
     }
+
+    // 캐릭터 렌더링하는 부분
+    choosenAnimation.getSprite().renderPosition(
+        canvas,
+        Position((screenSize.width - _size.x) / 2,
+            (screenSize.height - _size.y - 70)),
+        size: _size);
   }
 
   @override
   void update(double t) {
     if (characternum == 1) {
-      kitten_ani1.update(t);
       background_p.x -= 5;
       if (background_p.x < -(1920 / (1080 / screenSize.height))) {
         background_p.x = 0;
       }
     } else if (characternum == 2) {
-      kitten_ani2.update(t);
       cloud_p.x -= 1;
       mountain_p.x -= 2;
       way_p.x -= 5;
@@ -164,5 +168,6 @@ class MyGame extends BaseGame {
         way_p.x = 0;
       }
     }
+    choosenAnimation.update(t);
   }
 }

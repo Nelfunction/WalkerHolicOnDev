@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'ui/game_screen.dart';
 
 import 'logic/format.dart';
@@ -10,6 +11,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
+
   TextStyle thumbnailStyle =
       new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(
@@ -57,12 +59,21 @@ class _MyHomeState extends State<MyHome> {
           buttonColor: Colors.black),
       home: Scaffold(
         backgroundColor: Colors.transparent,
-        body: ListView.builder(
+        body: Swiper(
           scrollDirection: Axis.horizontal,
           itemCount:  gamecards.length ,
           itemBuilder: (context, index) {
             return cardview(gamecards[index]);
           },
+          //autoplay: true,
+          pagination: new SwiperPagination(
+              margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
+              builder: new DotSwiperPaginationBuilder(
+                  color: Colors.white30,
+                  activeColor: Colors.white,
+                  size: 10.0,
+                  activeSize: 10.0)),
+          control: new SwiperControl(color: Colors.white),
         ),
       ),
     );
@@ -82,7 +93,7 @@ class _MyHomeState extends State<MyHome> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: new AssetImage('assets/images/pixel_background' +
-                          gamecard.character.toString() +
+                          "2" +
                           '.jpg'),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(12),

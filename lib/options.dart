@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -273,7 +274,10 @@ class _MyOptionState extends State<MyOption> {
                   ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(CustomPageRoute(Friend_request_list()));
+                    },
                     context: context,
                     text: 'Friend Requests',
                   ),
@@ -291,4 +295,35 @@ class _MyOptionState extends State<MyOption> {
       ),
     );
   }
+}
+
+class CustomPageRoute<T> extends PageRoute<T> {
+  CustomPageRoute(this.child);
+  @override
+  // TODO: implement barrierColor
+  Color get barrierColor => Colors.black.withOpacity(0.01);
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  // TODO: implement opaque
+  bool get opaque => false;
+
+  final Widget child;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
 }
