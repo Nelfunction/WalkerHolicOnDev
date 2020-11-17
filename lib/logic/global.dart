@@ -293,7 +293,6 @@ Future<void> loadmydata() async {
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
 Future<void> loadfrienddata() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(
