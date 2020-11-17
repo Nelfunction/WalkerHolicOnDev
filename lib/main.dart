@@ -26,7 +26,6 @@ void main() async {
   await getLocaldata();
   await senddata();
   await loadmydata();
-  await loadfrienddata();
   await loadfriend_request_list();
 
   runApp(MyApp());
