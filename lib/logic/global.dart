@@ -67,7 +67,7 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(userid)
+          .collection(userid)
             .doc('friend_list')
             .update({friendname: friendname});
     } else {
@@ -85,7 +85,7 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(friendname).doc('friend_list').update({userid: userid});
+        .collection(friendname).doc('friend_list').update({userid: userid});
     } else {
       firestore.collection(friendname).doc('friend_list').set({userid: userid});
     }
@@ -194,6 +194,8 @@ sendfriendrequest(String friendname) async {
 getLocaldata() async {
   prefs = await SharedPreferences.getInstance();
 
+
+
   //배경 스트림 갱신
   myColor.add(ColorTheme.colorPreset[prefs.getInt('myColor') ?? 0]);
 
@@ -251,7 +253,7 @@ senddata() {
       .set({'total_steps': totalsteps + steps - psteps});
 }
 
-//cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
+//cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
@@ -304,6 +306,7 @@ Future<void> loadfrienddata() async {
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
   Map<String, dynamic> result;
+  var list = [];
 
   await firestore
       .collection(userid)
@@ -311,45 +314,53 @@ Future<void> loadfrienddata() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result=documentSnapshot.data();
-      result.forEach((key, value) async{
-        await firestore
-            .collection(key)
-            .doc(getdate(DateTime.now()))
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            gamecardstep = documentSnapshot.get('steps');
-          } else {
-            gamecardstep = 0;
-          }
-        });
+      result = documentSnapshot.data();
+      result.forEach((k, v) => list.add(k));
 
-        await firestore
-            .collection(key)
-            .doc('Character+Background')
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            myCharacter_str = documentSnapshot.get('character');
-            myCharacter = SpriteSheet(
-              imageName: myCharacter_str,
-              textureWidth: 160,
-              textureHeight: 160,
-              columns: 4,
-              rows: 1,
-            );
-            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-          } else {
-            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-          }
-        });
-
-        gamecards.add(Gamecard(key, gamecardstep, myAnimation));
-      });
-    } else {
+    }
+    else {
     }
   });
+
+  for(int i=0;i<list.length;i++)
+    {
+
+      String key=list[i];
+      await firestore
+          .collection(key)
+          .doc(getdate(DateTime.now()))
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          gamecardstep = documentSnapshot.get('steps');
+        } else {
+          gamecardstep = 0;
+        }
+      });
+      await firestore
+          .collection(key)
+          .doc('Character+Background')
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          myCharacter_str = documentSnapshot.get('character');
+          myCharacter = SpriteSheet(
+            imageName: myCharacter_str,
+            textureWidth: 160,
+            textureHeight: 160,
+            columns: 4,
+            rows: 1,
+          );
+          myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+        } else {
+          myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+        }
+      });
+
+      gamecards.add(Gamecard(key, gamecardstep, myAnimation));
+
+
+    }
 
 
 
