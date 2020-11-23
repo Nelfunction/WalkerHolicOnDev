@@ -67,9 +67,9 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(userid)
-            .doc('friend_list')
-            .update({friendname: friendname});
+          .collection(userid)
+          .doc('friend_list')
+          .update({friendname: friendname});
     } else {
       firestore
           .collection(userid)
@@ -85,7 +85,9 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(friendname).doc('friend_list').update({userid: userid});
+          .collection(friendname)
+          .doc('friend_list')
+          .update({userid: userid});
     } else {
       firestore.collection(friendname).doc('friend_list').set({userid: userid});
     }
@@ -251,7 +253,7 @@ senddata() {
       .set({'total_steps': totalsteps + steps - psteps});
 }
 
-//cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
+//cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
@@ -304,6 +306,7 @@ Future<void> loadfrienddata() async {
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
   Map<String, dynamic> result;
+  var list = [];
 
   await firestore
       .collection(userid)
@@ -312,28 +315,23 @@ Future<void> loadfrienddata() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       result = documentSnapshot.data();
+      result.forEach((k, v) => list.add(k));
     } else {}
   });
-  var list = [];
-  result.forEach((k, v) => list.add(k));
 
-  for (int i = 0; i < result.length; i++) {
+  for (int i = 0; i < list.length; i++) {
     String key = list[i];
     await firestore
         .collection(key)
         .doc(getdate(DateTime.now()))
         .get()
-        .then((DocumentSnapshot documentSnapshot1) {
-      if (documentSnapshot1.exists) {
-        gamecardstep = documentSnapshot1.get('steps');
-        debugPrint('YYYYYYYYYYY$gamecardstep');
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        gamecardstep = documentSnapshot.get('steps');
       } else {
-        gamecardstep = documentSnapshot1.get('steps');
-        debugPrint('XXXXXXXXXXXX$gamecardstep');
+        gamecardstep = 0;
       }
     });
-
-    debugPrint('ZZZZZZZZZZZ$gamecardstep');
     await firestore
         .collection(key)
         .doc('Character+Background')
@@ -355,6 +353,5 @@ Future<void> loadfrienddata() async {
     });
 
     gamecards.add(Gamecard(key, gamecardstep, myAnimation));
-    debugPrint('KKKKKKKKK$gamecardstep');
   }
 }
