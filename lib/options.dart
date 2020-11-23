@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:walkerholic/bloc/provider.dart';
 import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -48,7 +50,7 @@ class _MyOptionState extends State<MyOption> {
     );
   }
 
-  Widget visualStatus() {
+  Widget visualStatus(Property provider) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter stateSetter) {
       return ListView(
@@ -57,40 +59,36 @@ class _MyOptionState extends State<MyOption> {
           ListTile(
             title: Text('Daily'),
             trailing: CupertinoSwitch(
-              value: options.showList[0],
+              value: provider.visualize[0],
               onChanged: (bool value) {
-                stateSetter(() => options.showList[0] = value);
-                visualize.add(0);
+                stateSetter(() => provider.setVisualize(0));
               },
             ),
           ),
           ListTile(
             title: Text('Weekly'),
             trailing: CupertinoSwitch(
-              value: options.showList[1],
+              value: provider.visualize[1],
               onChanged: (bool value) {
-                stateSetter(() => options.showList[1] = value);
-                visualize.add(1);
+                stateSetter(() => provider.setVisualize(1));
               },
             ),
           ),
           ListTile(
             title: Text('Monthly'),
             trailing: CupertinoSwitch(
-              value: options.showList[2],
+              value: provider.visualize[2],
               onChanged: (bool value) {
-                stateSetter(() => options.showList[2] = value);
-                visualize.add(2);
+                stateSetter(() => provider.setVisualize(2));
               },
             ),
           ),
           ListTile(
             title: Text('Pedestrian Status'),
             trailing: CupertinoSwitch(
-              value: options.showList[3],
+              value: provider.visualize[3],
               onChanged: (bool value) {
-                stateSetter(() => options.showList[3] = value);
-                visualize.add(3);
+                stateSetter(() => provider.setVisualize(3));
               },
             ),
           ),
@@ -215,6 +213,8 @@ class _MyOptionState extends State<MyOption> {
 
   @override
   Widget build(BuildContext context) {
+    final visualize = Provider.of<Property>(context);
+
     return Center(
       child: ClipRRect(
         child: BackdropFilter(
@@ -258,7 +258,7 @@ class _MyOptionState extends State<MyOption> {
                       bottomContent(
                         title: 'Visualize',
                         size: 250,
-                        content: visualStatus(),
+                        content: visualStatus(visualize),
                       );
                     },
                     context: context,
@@ -275,8 +275,11 @@ class _MyOptionState extends State<MyOption> {
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
-                      Navigator.of(context)
-                          .push(CustomPageRoute(Friend_request_list()));
+                      bottomContent(
+                        title: 'Friend Requests',
+                        size: 250,
+                        content: Friend_request_list(),
+                      );
                     },
                     context: context,
                     text: 'Friend Requests',

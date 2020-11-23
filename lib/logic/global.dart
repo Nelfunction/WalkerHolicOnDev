@@ -31,8 +31,8 @@ String id = 'temp';
 
 /// pedo 전역변수
 int totalsteps = 1000; // 앱을 시작한 순간 서버에 기록되어 있는 총 걸음 수
-int psteps = 10; // 전날 기기의 stepcount
-int steps = 100; // 현재 기기의 stepcount
+int psteps = 0; // 전날 기기의 stepcount
+int steps = 53; // 현재 기기의 stepcount
 
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
@@ -311,46 +311,50 @@ Future<void> loadfrienddata() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result=documentSnapshot.data();
-      result.forEach((key, value) async{
-        await firestore
-            .collection(key)
-            .doc(getdate(DateTime.now()))
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            gamecardstep = documentSnapshot.get('steps');
-          } else {
-            gamecardstep = 0;
-          }
-        });
-
-        await firestore
-            .collection(key)
-            .doc('Character+Background')
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            myCharacter_str = documentSnapshot.get('character');
-            myCharacter = SpriteSheet(
-              imageName: myCharacter_str,
-              textureWidth: 160,
-              textureHeight: 160,
-              columns: 4,
-              rows: 1,
-            );
-            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-          } else {
-            myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-          }
-        });
-
-        gamecards.add(Gamecard(key, gamecardstep, myAnimation));
-      });
-    } else {
-    }
+      result = documentSnapshot.data();
+    } else {}
   });
+  var list = [];
+  result.forEach((k, v) => list.add(k));
 
+  for (int i = 0; i < result.length; i++) {
+    String key = list[i];
+    await firestore
+        .collection(key)
+        .doc(getdate(DateTime.now()))
+        .get()
+        .then((DocumentSnapshot documentSnapshot1) {
+      if (documentSnapshot1.exists) {
+        gamecardstep = documentSnapshot1.get('steps');
+        debugPrint('YYYYYYYYYYY$gamecardstep');
+      } else {
+        gamecardstep = documentSnapshot1.get('steps');
+        debugPrint('XXXXXXXXXXXX$gamecardstep');
+      }
+    });
 
+    debugPrint('ZZZZZZZZZZZ$gamecardstep');
+    await firestore
+        .collection(key)
+        .doc('Character+Background')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        myCharacter_str = documentSnapshot.get('character');
+        myCharacter = SpriteSheet(
+          imageName: myCharacter_str,
+          textureWidth: 160,
+          textureHeight: 160,
+          columns: 4,
+          rows: 1,
+        );
+        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+      } else {
+        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+      }
+    });
 
+    gamecards.add(Gamecard(key, gamecardstep, myAnimation));
+    debugPrint('KKKKKKKKK$gamecardstep');
+  }
 }

@@ -44,6 +44,7 @@ dependencies:
   page_indicator: ^0.3.0
   hive: ^1.4.4+1
   flutter_colorpicker: ^0.3.4
+  provider: ^3.0.0+1
 
 
 dev_dependencies:

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 import 'characterPage.dart';
 import 'pedometer.dart';
 import 'options.dart';
 
+import 'bloc/provider.dart';
 import 'ui/bottom.dart';
 import 'logic/format.dart';
 import 'logic/global.dart';
@@ -54,39 +56,42 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "WalkerHolic_Sprite",
-        theme: ThemeData(fontFamily: 'IBM'),
-        home: Stack(
-          children: [
-            //Background Color
-            StreamBuilder(
-              stream: myColor.stream, // Replace with Bloc result
-              initialData: ColorTheme.colorPreset[0],
-              builder: (context, snapshot) {
-                return snapshot.data.buildContainer();
-              },
-            ),
-            DefaultTabController(
-              length: 4,
-              child: Scaffold(
-                resizeToAvoidBottomPadding: false,
-                backgroundColor: Colors.transparent,
-                body: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: <Widget>[
-                    MyHome(),
-                    CharacterPage(),
-                    MyPedo(),
-                    MyOption(
-                      ctrl: myColor,
-                    ),
-                  ],
-                ),
-                bottomNavigationBar: Bottom(),
+    return ChangeNotifierProvider<Property>(
+      create: (_) => Property([true, true, true, true]),
+      child: MaterialApp(
+          title: "WalkerHolic_Sprite",
+          theme: ThemeData(fontFamily: 'IBM'),
+          home: Stack(
+            children: [
+              //Background Color
+              StreamBuilder(
+                stream: myColor.stream, // Replace with Bloc result
+                initialData: ColorTheme.colorPreset[0],
+                builder: (context, snapshot) {
+                  return snapshot.data.buildContainer();
+                },
               ),
-            )
-          ],
-        ));
+              DefaultTabController(
+                length: 4,
+                child: Scaffold(
+                  resizeToAvoidBottomPadding: false,
+                  backgroundColor: Colors.transparent,
+                  body: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      MyHome(),
+                      CharacterPage(),
+                      MyPedo(),
+                      MyOption(
+                        ctrl: myColor,
+                      ),
+                    ],
+                  ),
+                  bottomNavigationBar: Bottom(),
+                ),
+              )
+            ],
+          )),
+    );
   }
 }

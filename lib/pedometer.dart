@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:provider/provider.dart';
+import 'bloc/provider.dart';
 import 'logic/format.dart';
 import 'logic/global.dart';
 
@@ -70,6 +73,7 @@ class _MyPedoState extends State<MyPedo> {
 
   @override
   Widget build(BuildContext context) {
+    final visualize = Provider.of<Property>(context);
     return MaterialApp(
       theme: ThemeData(
           accentColor: Colors.white,
@@ -100,10 +104,10 @@ class _MyPedoState extends State<MyPedo> {
                   ListView(
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
-                  if (options.showList[0]) status.dailyStatus(),
-                  if (options.showList[1]) status.weeklyStatus(),
-                  if (options.showList[2]) status.monthlyStatus(),
-                  if (options.showList[3]) ...[
+                  if (visualize.visualize[0]) status.dailyStatus(),
+                  if (visualize.visualize[1]) status.weeklyStatus(),
+                  if (visualize.visualize[2]) status.monthlyStatus(),
+                  if (visualize.visualize[3]) ...[
                     Center(
                       child: Text(
                         'Pedestrian status:',
