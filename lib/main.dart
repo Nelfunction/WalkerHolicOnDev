@@ -35,11 +35,27 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  _MyAppState createState() => _MyAppState();
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Property 정보
+    return ChangeNotifierProvider<Property>(
+      create: (_) => Property(
+        true,
+        0,
+        [true, true, true, true],
+        ColorTheme.colorPreset[0],
+      ),
+      child: Body(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class Body extends StatefulWidget {
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   // Variables for background color
   @override
   void initState() {
@@ -51,47 +67,37 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
-    myColor.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Property>(
-      create: (_) => Property([true, true, true, true]),
-      child: MaterialApp(
-          title: "WalkerHolic_Sprite",
-          theme: ThemeData(fontFamily: 'IBM'),
-          home: Stack(
-            children: [
-              //Background Color
-              StreamBuilder(
-                stream: myColor.stream, // Replace with Bloc result
-                initialData: ColorTheme.colorPreset[0],
-                builder: (context, snapshot) {
-                  return snapshot.data.buildContainer();
-                },
-              ),
-              DefaultTabController(
-                length: 4,
-                child: Scaffold(
-                  resizeToAvoidBottomPadding: false,
-                  backgroundColor: Colors.transparent,
-                  body: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      MyHome(),
-                      CharacterPage(),
-                      MyPedo(),
-                      MyOption(
-                        ctrl: myColor,
-                      ),
-                    ],
-                  ),
-                  bottomNavigationBar: Bottom(),
+    final property = Provider.of<Property>(context);
+    return MaterialApp(
+        title: "WalkerHolic_Sprite",
+        theme: ThemeData(fontFamily: 'IBM'),
+        home: Stack(
+          children: [
+            if (property.presentUsed)
+              ColorTheme.colorPreset[property.presetNum].buildContainer(),
+            if (!property.presentUsed) property.colortheme.buildContainer(),
+            DefaultTabController(
+              length: 4,
+              child: Scaffold(
+                resizeToAvoidBottomPadding: false,
+                backgroundColor: Colors.transparent,
+                body: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    MyHome(),
+                    CharacterPage(),
+                    MyPedo(),
+                    MyOption(),
+                  ],
                 ),
-              )
-            ],
-          )),
-    );
+                bottomNavigationBar: Bottom(),
+              ),
+            )
+          ],
+        ));
   }
 }

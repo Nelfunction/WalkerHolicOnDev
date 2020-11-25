@@ -53,27 +53,12 @@ class _MyPedoState extends State<MyPedo> {
         .onError(onPedestrianStatusError);
 
     stepCountStream.listen(onStepCount);
-    visualize.stream.listen(setList);
     if (!mounted) return;
   }
 
-  void setList(int index) {
-    setState(() {
-      options.showList[index] = options.showList[index];
-    });
-  }
-
-  void changeColor(Color color) => setState(() => currentColor = color);
-
-  List<Widget> temp = [
-    status.dailyStatus(),
-    status.weeklyStatus(),
-    status.monthlyStatus(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final visualize = Provider.of<Property>(context);
+    final property = Provider.of<Property>(context);
     return MaterialApp(
       theme: ThemeData(
           accentColor: Colors.white,
@@ -87,27 +72,13 @@ class _MyPedoState extends State<MyPedo> {
             SizedBox(height: 50),
             status.totalStatus(),
             Expanded(
-              child:
-                  /*ListView.builder(
-              itemCount: temp.length,
-              itemBuilder: (context, index) {
-                if (options.showList[index]) {
-                  return temp[index];
-                } else {
-                  return SizedBox(
-                    height: 10,
-                  );
-                }
-              },
-            )*/
-
-                  ListView(
+              child: ListView(
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
-                  if (visualize.visualize[0]) status.dailyStatus(),
-                  if (visualize.visualize[1]) status.weeklyStatus(),
-                  if (visualize.visualize[2]) status.monthlyStatus(),
-                  if (visualize.visualize[3]) ...[
+                  if (property.visualize[0]) status.dailyStatus(),
+                  if (property.visualize[1]) status.weeklyStatus(),
+                  if (property.visualize[2]) status.monthlyStatus(),
+                  if (property.visualize[3]) ...[
                     Center(
                       child: Text(
                         'Pedestrian status:',

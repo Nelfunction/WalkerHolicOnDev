@@ -15,9 +15,6 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
-var myColor = StreamController.broadcast();
-StreamController<int> visualize = StreamController();
-StreamController<int> textColor = StreamController();
 SharedPreferences prefs;
 
 Color currentColor = Colors.white;
@@ -39,6 +36,16 @@ var gamecards = <Gamecard>[];
 
 //친구 요청 리스트
 var friend_requests = <String>[];
+
+/// 개인기록
+PersonalStatus status = PersonalStatus(
+  DateTime.now(),
+  todayCount: -1,
+  totalCount: -1,
+  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
+  recentMonth: [222222, 272222, 75000, 111111],
+  currentDate: DateTime.now(),
+);
 
 //친구 요청 리스트 불러오는 함수
 Future<void> loadfriend_request_list() async {
@@ -112,21 +119,6 @@ denyfriendrequest(String friendname) async {
       .update({friendname: FieldValue.delete()});
 }
 
-/// 개인기록
-PersonalStatus status = PersonalStatus(
-  DateTime.now(),
-  todayCount: -1,
-  totalCount: -1,
-  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
-  recentMonth: [222222, 272222, 75000, 111111],
-  currentDate: DateTime.now(),
-);
-
-/// 설정값
-PersonalOptions options = PersonalOptions(
-  showList: [true, true, true, true],
-);
-
 initPermission() async {
   if (await Permission.activityRecognition.request().isGranted) {
     debugPrint("PERMISSION OK");
@@ -195,9 +187,6 @@ sendfriendrequest(String friendname) async {
 /// 로컬 데이터 가져오기
 getLocaldata() async {
   prefs = await SharedPreferences.getInstance();
-
-  //배경 스트림 갱신
-  myColor.add(ColorTheme.colorPreset[prefs.getInt('myColor') ?? 0]);
 
   //SP에서 어제 페도미터 값 가져오기
   DateTime datetime = new DateTime(
