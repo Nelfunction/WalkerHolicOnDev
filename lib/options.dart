@@ -9,6 +9,7 @@ import 'package:walkerholic/logic/format.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'friend.dart';
+import 'attendance.dart';
 
 import 'logic/login.dart';
 import 'logic/global.dart';
@@ -331,6 +332,17 @@ class _MyOptionState extends State<MyOption> {
                   ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AttendancePage()),
+                      );
+                    },
+                    context: context,
+                    text: 'Attendance',
+                  ),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
                       onPressed: () {
                         accountSync();
                       },
@@ -375,3 +387,4 @@ class CustomPageRoute<T> extends PageRoute<T> {
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
 }
+

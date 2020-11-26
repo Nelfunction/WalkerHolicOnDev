@@ -116,6 +116,9 @@ flutter:
     - assets/images/kittenIconBlackWhite.png
     - assets/images/kittenIconFlame.png
     - assets/images/kittenIconQ.png
+    - assets/images/box.png
+    - assets/images/night.png
+    - assets/images/check.png
 
   fonts :
     - family: IBM

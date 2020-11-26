@@ -30,6 +30,7 @@ void main() async {
   await loadmydata();
   await loadfrienddata();
   await loadfriend_request_list();
+  await attendance(); //출석관련 함수-global.dart에 있음
   debugPrint(
       '=========================== ${gamecards.length} ===========================');
   runApp(MyApp());
