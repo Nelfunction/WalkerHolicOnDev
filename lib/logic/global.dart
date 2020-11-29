@@ -33,6 +33,20 @@ int steps = 100; // 현재 기기의 stepcount
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
 
+// 게임 캐릭터 전역변수
+
+List<List<String>> globalCharacterList = [
+  ["", "BlackWhite", "Black", "Flame"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"]
+];
+
+List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
+
+
+
 //친구 요청 리스트
 var friend_requests= <String>[];
 

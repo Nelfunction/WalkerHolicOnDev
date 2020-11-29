@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
+import 'package:walkerholic/randomBox.dart';
 
 import 'friend.dart';
 
@@ -258,6 +259,14 @@ class _MyOptionState extends State<MyOption> {
                       },
                       context: context,
                       text: 'Google Account Sync'),
+                      Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {
+                      Navigator.of(context).push(CustomPageRoute(RandomBox()));
+                    },
+                    context: context,
+                    text: 'RandomBox',
+                  ),
                   Divider(height: 1, thickness: 1),
                 ],
               )),

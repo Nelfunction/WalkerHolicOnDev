@@ -114,7 +114,7 @@ flutter:
     - assets/images/kittenIconBlackWhite.png
     - assets/images/kittenIconFlame.png
     - assets/images/kittenIconQ.png
-
+    - assets/images/kittenRandomSprite.png
   fonts :
     - family: IBM
       fonts :

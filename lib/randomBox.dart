@@ -1,27 +1,31 @@
-import 'dart:ui';
+import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/spritesheet.dart';
+import 'package:flame/widgets/animation_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'logic/global.dart';
 
-class CharacterOne extends StatelessWidget {
-  final String nameChar;
-  const CharacterOne({this.nameChar = ""});
+class RandomBox extends StatefulWidget {
+  @override
+  _RandomBoxState createState() => _RandomBoxState();
+}
 
+class _RandomBoxState extends State<RandomBox> {
+
+  String randomName = "Now Opening...";
+  int flag = 99;
+
+  static final kittenRandomSprite = SpriteSheet(
+    imageName: 'kittenRandomSprite.png',
+    textureWidth: 110,
+    textureHeight: 110,
+    columns: 8,
+    rows: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
-
-    String nameText;
-    if (nameChar == "Q") {
-      nameText = "???";
-    } else {
-      nameText = nameChar + ' Cat';
-    }
-
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(.85),
       body: Container(
@@ -41,14 +45,11 @@ class CharacterOne extends StatelessWidget {
               child: SizedBox(
                 width: 200,
                 height: 200,
-                child: Image.asset(
-                  "assets/images/kittenIcon" + nameChar + ".png",
-                  fit: BoxFit.cover,
-                ),
+                child : AnimationOrNot()
               ),
             ),
             Text(
-              nameText,
+              randomName,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             // 아래 메뉴
@@ -65,8 +66,7 @@ class CharacterOne extends StatelessWidget {
                         Container(
                           child: FlatButton(
                             onPressed: () {
-                              // 선택
-                              ChooseChareter(nameChar, context);
+                              ChangeFlag();
                             },
                             child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 5),
@@ -74,7 +74,7 @@ class CharacterOne extends StatelessWidget {
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Row(children: [
-                                  Text("선택",
+                                  Text("Choose",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
@@ -95,7 +95,7 @@ class CharacterOne extends StatelessWidget {
                               height: 50,
                               alignment: Alignment.center,
                               child: Row(children: [
-                                Text("나가기",
+                                Text("Quit",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -110,47 +110,27 @@ class CharacterOne extends StatelessWidget {
       ),
     );
   }
-}
 
-Future<void> ChooseChareter(String nowCharacter, BuildContext context)  async {
+  void ChangeFlag() {
+    flag = Random().nextInt(globalCharacters.length - 1);
+    randomName = globalCharacters[flag] + " Cat";
+    setState(() {
+      debugPrint("Random Box : Now Flag is $flag");
+    });
+  }
 
-   SharedPreferences sp = await SharedPreferences.getInstance();
-
-   String key = "NowCharacter";
-   sp.setString(key, nowCharacter);
-   debugPrint("Write SP, Now Character : $nowCharacter");
-
-   firestore
-       .collection(userid)
-       .doc("Character+Background")
-       .set({'character': "kitten" + nowCharacter + ".png", 'background': "green"});
-
-   String myCharacter_str;
-   SpriteSheet myCharacter;
-   var myAnimation;
-
-   await firestore
-       .collection(userid)
-       .doc('Character+Background')
-       .get()
-       .then((DocumentSnapshot documentSnapshot) {
-     if (documentSnapshot.exists) {
-       myCharacter_str = documentSnapshot.get('character');
-       myCharacter = SpriteSheet(
-         imageName: myCharacter_str,
-         textureWidth: 160,
-         textureHeight: 160,
-         columns: 4,
-         rows: 1,
-       );
-       myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-     } else {
-     }
-   });
-
-   gamecards[0].myCharacter = myAnimation;
-
-
-   Navigator.of(context).pop();
-
+  Widget AnimationOrNot() {
+    if(flag == 99) {
+      // animation
+      return AnimationWidget(
+        animation: kittenRandomSprite.createAnimation(0, stepTime:0.1),
+        playing: true,
+        );
+    } else {
+      return Image.asset(
+                  "assets/images/kittenIcon" + globalCharacters[flag] + ".png",
+                  fit: BoxFit.cover,
+                );
+    }
+  }
 }

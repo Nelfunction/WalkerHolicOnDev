@@ -29,6 +29,8 @@ void main() async {
   await loadfrienddata();
   await loadfriend_request_list();
 
+  debugPrint("AAAAAAAAAAAAAAA : ${gamecards.length}");
+
   runApp(MyApp());
 }
 
