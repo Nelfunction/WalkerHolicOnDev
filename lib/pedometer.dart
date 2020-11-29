@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:pedometer/pedometer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:provider/provider.dart';
+import 'bloc/provider.dart';
 import 'logic/format.dart';
 import 'logic/global.dart';
 
@@ -50,18 +53,12 @@ class _MyPedoState extends State<MyPedo> {
         .onError(onPedestrianStatusError);
 
     stepCountStream.listen(onStepCount);
-
     if (!mounted) return;
-  }
-
-  void setList(int index) {
-    setState(() {
-      options.showList[index] = !options.showList[index];
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final property = Provider.of<Property>(context);
     return MaterialApp(
       theme: ThemeData(
           accentColor: Colors.white,
@@ -78,33 +75,34 @@ class _MyPedoState extends State<MyPedo> {
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 children: <Widget>[
-                  SizedBox(height: 10),
-                  if (options.showList[0]) status.dailyStatus(),
-                  if (options.showList[1]) status.weeklyStatus(),
-                  if (options.showList[2]) status.monthlyStatus(),
-                  Center(
-                    child: Text(
-                      'Pedestrian status:',
-                      style: TextStyle(fontSize: 30, color: Colors.white),
+                  if (property.visualize[0]) status.dailyStatus(),
+                  if (property.visualize[1]) status.weeklyStatus(),
+                  if (property.visualize[2]) status.monthlyStatus(),
+                  if (property.visualize[3]) ...[
+                    Center(
+                      child: Text(
+                        'Pedestrian status:',
+                        style: TextStyle(fontSize: 30, color: Colors.white),
+                      ),
                     ),
-                  ),
-                  Icon(
-                    _status == 'walking'
-                        ? Icons.directions_walk
-                        : _status == 'stopped'
-                            ? Icons.accessibility_new
-                            : Icons.error,
-                    size: 100,
-                    color: Colors.white,
-                  ),
-                  Center(
-                    child: Text(
-                      _status,
-                      style: _status == 'walking' || _status == 'stopped'
-                          ? TextStyle(fontSize: 40, color: Colors.white)
-                          : TextStyle(fontSize: 40, color: Colors.red),
+                    Icon(
+                      _status == 'walking'
+                          ? Icons.directions_walk
+                          : _status == 'stopped'
+                              ? Icons.accessibility_new
+                              : Icons.error,
+                      size: 100,
+                      color: Colors.white,
                     ),
-                  )
+                    Center(
+                      child: Text(
+                        _status,
+                        style: _status == 'walking' || _status == 'stopped'
+                            ? TextStyle(fontSize: 40, color: Colors.white)
+                            : TextStyle(fontSize: 40, color: Colors.red),
+                      ),
+                    )
+                  ],
                 ],
               ),
             ),

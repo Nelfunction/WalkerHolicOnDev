@@ -11,10 +11,8 @@ class CharacterOne extends StatelessWidget {
   final String nameChar;
   const CharacterOne({this.nameChar = ""});
 
-
   @override
   Widget build(BuildContext context) {
-
     String nameText;
     if (nameChar == "Q") {
       nameText = "???";
@@ -52,7 +50,7 @@ class CharacterOne extends StatelessWidget {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             // 아래 메뉴
-           ClipRRect(
+            ClipRRect(
                 child: Container(
                     margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
                     decoration: BoxDecoration(
@@ -74,11 +72,11 @@ class CharacterOne extends StatelessWidget {
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Row(children: [
-                                  Text("선택",
+                                  Text("Select",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20.0,
+                                        fontSize: 22.0,
                                       ))
                                 ])),
                           ),
@@ -95,7 +93,7 @@ class CharacterOne extends StatelessWidget {
                               height: 50,
                               alignment: Alignment.center,
                               child: Row(children: [
-                                Text("나가기",
+                                Text("Quit",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -112,45 +110,39 @@ class CharacterOne extends StatelessWidget {
   }
 }
 
-Future<void> ChooseChareter(String nowCharacter, BuildContext context)  async {
+Future<void> ChooseChareter(String nowCharacter, BuildContext context) async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
 
-   SharedPreferences sp = await SharedPreferences.getInstance();
+  String key = "NowCharacter";
+  sp.setString(key, nowCharacter);
+  debugPrint("Write SP, Now Character : $nowCharacter");
 
-   String key = "NowCharacter";
-   sp.setString(key, nowCharacter);
-   debugPrint("Write SP, Now Character : $nowCharacter");
+  firestore.collection(userid).doc("Character+Background").set(
+      {'character': "kitten" + nowCharacter + ".png", 'background': "green"});
 
-   firestore
-       .collection(userid)
-       .doc("Character+Background")
-       .set({'character': "kitten" + nowCharacter + ".png", 'background': "green"});
+  String myCharacter_str;
+  SpriteSheet myCharacter;
+  var myAnimation;
 
-   String myCharacter_str;
-   SpriteSheet myCharacter;
-   var myAnimation;
+  await firestore
+      .collection(userid)
+      .doc('Character+Background')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      myCharacter_str = documentSnapshot.get('character');
+      myCharacter = SpriteSheet(
+        imageName: myCharacter_str,
+        textureWidth: 160,
+        textureHeight: 160,
+        columns: 4,
+        rows: 1,
+      );
+      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+    } else {}
+  });
 
-   await firestore
-       .collection(userid)
-       .doc('Character+Background')
-       .get()
-       .then((DocumentSnapshot documentSnapshot) {
-     if (documentSnapshot.exists) {
-       myCharacter_str = documentSnapshot.get('character');
-       myCharacter = SpriteSheet(
-         imageName: myCharacter_str,
-         textureWidth: 160,
-         textureHeight: 160,
-         columns: 4,
-         rows: 1,
-       );
-       myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
-     } else {
-     }
-   });
+  gamecards[0].myCharacter = myAnimation;
 
-   gamecards[0].myCharacter = myAnimation;
-
-
-   Navigator.of(context).pop();
-
+  Navigator.of(context).pop();
 }

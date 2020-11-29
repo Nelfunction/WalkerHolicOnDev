@@ -5,18 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
 
 import 'dart:async';
+import 'dart:ui';
 import 'format.dart';
-
-class Global {}
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
-var myColor = StreamController.broadcast();
 SharedPreferences prefs;
+
+Color currentColor = Colors.white;
 
 //login 전역변수
 String name;
@@ -27,8 +28,8 @@ String id = 'temp';
 
 /// pedo 전역변수
 int totalsteps = 1000; // 앱을 시작한 순간 서버에 기록되어 있는 총 걸음 수
-int psteps = 10; // 전날 기기의 stepcount
-int steps = 100; // 현재 기기의 stepcount
+int psteps = 0; // 전날 기기의 stepcount
+int steps = 53; // 현재 기기의 stepcount
 
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
@@ -48,7 +49,79 @@ List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
 
 
 //친구 요청 리스트
-var friend_requests= <String>[];
+var friend_requests = <String>[];
+
+//출석 체크 전역 변수
+String lastday='';
+int days=1;
+
+
+/// 개인기록
+PersonalStatus status = PersonalStatus(
+  DateTime.now(),
+  todayCount: -1,
+  totalCount: -1,
+  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
+  recentMonth: [222222, 272222, 75000, 111111],
+  currentDate: DateTime.now(),
+);
+
+
+//출석체크 함수
+Future<void> attendance() async {
+  await firestore
+      .collection(userid)
+      .doc('attendance')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      lastday=documentSnapshot.get('lastday');
+      days=documentSnapshot.get('days');
+
+      if(getdate(DateTime.now()).toString()==lastday){  // 오늘 이미 출석체크를 했다면
+
+      }
+      else //오늘 이미 출석체크한게 아니면
+        {
+        if(getmonth(DateTime.now()).toString()==documentSnapshot.get('month')){ // 아직 한달이 안지났다면
+          days=days+1;
+          lastday=getdate(DateTime.now()).toString();
+          firestore
+              .collection(userid)
+              .doc('attendance')
+              .set({"days": days, "lastday": lastday, "month":getmonth(DateTime.now()).toString()});
+
+
+          if((days-4)%8==0){  //선물을 주는 날이 되었다면?
+            //가챠박스 1 증가
+          }
+
+        }
+        else{ //한달이 지났다면
+          days=1;
+          lastday=getdate(DateTime.now()).toString();
+          firestore
+              .collection(userid)
+              .doc('attendance')
+              .set({"days": days, "lastday": lastday, "month":getmonth(DateTime.now()).toString()});
+
+        }
+
+      }
+
+
+
+
+    } else {
+      firestore
+          .collection(userid)
+          .doc('attendance')
+          .set({"days": 1, "lastday": getdate(DateTime.now()).toString(), "month":getmonth(DateTime.now()).toString()});
+    }
+  });
+
+}
+
 
 //친구 요청 리스트 불러오는 함수
 Future<void> loadfriend_request_list() async {
@@ -59,21 +132,17 @@ Future<void> loadfriend_request_list() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result=documentSnapshot.data();
+      result = documentSnapshot.data();
 
       result.forEach((key, value) {
         friend_requests.add(key);
       });
-    } else {
-      
-    }
+    } else {}
   });
-
 }
 
 //친구 요청 accept 를 실행하는 함수
 acceptfriendrequest(String friendname) async {
-
   await firestore
       .collection(userid)
       .doc('friend_list')
@@ -81,8 +150,8 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-          ..collection(userid)
-              .doc('friend_list')
+          .collection(userid)
+          .doc('friend_list')
           .update({friendname: friendname});
     } else {
       firestore
@@ -99,54 +168,32 @@ acceptfriendrequest(String friendname) async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       firestore
-        ..collection(friendname)
-            .doc('friend_list')
-            .update({userid: userid});
-    } else {
-      firestore
           .collection(friendname)
           .doc('friend_list')
-          .set({userid: userid});
+          .update({userid: userid});
+    } else {
+      firestore.collection(friendname).doc('friend_list').set({userid: userid});
     }
   });
 
   await firestore
       .collection(userid)
       .doc('friend_request_list')
-      .update({friendname: FieldValue.delete() });
+      .update({friendname: FieldValue.delete()});
 
   await firestore
       .collection(friendname)
       .doc('friend_request_list')
-      .update({userid: FieldValue.delete() });
-
-
+      .update({userid: FieldValue.delete()});
 }
+
 //친구 요청 deny 를 실행하는 함수
 denyfriendrequest(String friendname) async {
   await firestore
       .collection(userid)
       .doc('friend_request_list')
-      .update({friendname: FieldValue.delete() });
-
+      .update({friendname: FieldValue.delete()});
 }
-
-
-
-/// 개인기록
-PersonalStatus status = PersonalStatus(
-  DateTime.now(),
-  todayCount: -1,
-  totalCount: -1,
-  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
-  recentMonth: [222222, 272222, 75000, 111111],
-  currentDate: DateTime.now(),
-);
-
-/// 설정값
-PersonalOptions options = PersonalOptions(
-  showList: [true, true, true, true],
-);
 
 initPermission() async {
   if (await Permission.activityRecognition.request().isGranted) {
@@ -184,9 +231,9 @@ Future<bool> is_name_existed(String friendname) async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      existed= true;
+      existed = true;
     } else {
-      existed= false;
+      existed = false;
     }
   });
   return existed;
@@ -194,7 +241,6 @@ Future<bool> is_name_existed(String friendname) async {
 
 //친구 "요청" 목록에 추가하는 함수
 sendfriendrequest(String friendname) async {
-
   await firestore
       .collection(friendname)
       .doc('friend_request_list')
@@ -205,7 +251,6 @@ sendfriendrequest(String friendname) async {
           .collection(friendname)
           .doc('friend_request_list')
           .update({userid: userid});
-
     } else {
       firestore
           .collection(friendname)
@@ -213,18 +258,11 @@ sendfriendrequest(String friendname) async {
           .set({userid: userid});
     }
   });
-
-
 }
-
-
 
 /// 로컬 데이터 가져오기
 getLocaldata() async {
   prefs = await SharedPreferences.getInstance();
-
-  //배경 스트림 갱신
-  myColor.add(ColorTheme.colorPreset[prefs.getInt('myColor') ?? 0]);
 
   //SP에서 어제 페도미터 값 가져오기
   DateTime datetime = new DateTime(
@@ -239,6 +277,12 @@ getLocaldata() async {
 
 String getdate(DateTime date) {
   var dateYMD = "${date.year}-${date.month}-${date.day}";
+  return dateYMD;
+}
+
+//년-월을 반환하는 함수
+String getmonth(DateTime date) {
+  var dateYMD = "${date.year}-${date.month}";
   return dateYMD;
 }
 
@@ -280,13 +324,18 @@ senddata() {
       .set({'total_steps': totalsteps + steps - psteps});
 }
 
-//cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
+//cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
   int character = 1;
   String myCharacter_str = "kitten.png";
-  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
+  SpriteSheet myCharacter = new SpriteSheet(
+      imageName: myCharacter_str,
+      textureWidth: 160,
+      textureHeight: 160,
+      columns: 4,
+      rows: 1);
 
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
@@ -305,9 +354,9 @@ Future<void> loadmydata() async {
         columns: 4,
         rows: 1,
       );
-      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
     } else {
-      myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
     }
   });
 
@@ -317,14 +366,18 @@ Future<void> loadmydata() async {
 
 //cloud firestore 친구 목록에서부터 친구들의 오늘의 steps을 gamecards에 넣는 함수
 Future<void> loadfrienddata() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   int gamecardstep = steps;
-  int character = 1;
   String myCharacter_str = "kitten.png";
-  SpriteSheet myCharacter = new SpriteSheet(imageName: myCharacter_str, textureWidth: 160, textureHeight: 160, columns: 4, rows: 1);
+  SpriteSheet myCharacter = new SpriteSheet(
+      imageName: myCharacter_str,
+      textureWidth: 160,
+      textureHeight: 160,
+      columns: 4,
+      rows: 1);
   var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
 
   Map<String, dynamic> result;
+  var list = [];
 
   await firestore
       .collection(userid)
@@ -332,12 +385,13 @@ Future<void> loadfrienddata() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result=documentSnapshot.data();
-    } else {
-    }
+      result = documentSnapshot.data();
+      result.forEach((k, v) => list.add(k));
+    } else {}
   });
 
-  result.forEach((key, value) async{
+  for (int i = 0; i < list.length; i++) {
+    String key = list[i];
     await firestore
         .collection(key)
         .doc(getdate(DateTime.now()))
@@ -349,7 +403,6 @@ Future<void> loadfrienddata() async {
         gamecardstep = 0;
       }
     });
-
     await firestore
         .collection(key)
         .doc('Character+Background')
@@ -364,13 +417,12 @@ Future<void> loadfrienddata() async {
           columns: 4,
           rows: 1,
         );
-        myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
       } else {
-        myAnimation = myCharacter.createAnimation(0,stepTime: 0.1);
+        myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
       }
     });
 
     gamecards.add(Gamecard(key, gamecardstep, myAnimation));
-  });
-
+  }
 }

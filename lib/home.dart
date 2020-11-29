@@ -36,18 +36,8 @@ class _MyHomeState extends State<MyHome> {
   TextEditingController controller = new TextEditingController();
 
 
-/*
-  void initState() {
-    super.initState();
-    loadfrienddata().then((result) {
-      // If we need to rebuild the widget with the resulting data,
-      // make sure to use `setState`
-      setState(() {
 
-      });
-    });
-  }
-*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +55,6 @@ class _MyHomeState extends State<MyHome> {
           itemBuilder: (context, index) {
             return cardview(gamecards[index]);
           },
-          //autoplay: true,
           pagination: new SwiperPagination(
               margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
               builder: new DotSwiperPaginationBuilder(
@@ -74,6 +63,8 @@ class _MyHomeState extends State<MyHome> {
                   size: 10.0,
                   activeSize: 10.0)),
           control: new SwiperControl(color: Colors.white),
+          //autoplay: true,
+
         ),
       ),
     );

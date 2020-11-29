@@ -43,6 +43,8 @@ dependencies:
   flutter_swiper: ^1.1.6
   page_indicator: ^0.3.0
   hive: ^1.4.4+1
+  flutter_colorpicker: ^0.3.4
+  provider: ^3.0.0+1
 
 
 dev_dependencies:
@@ -115,6 +117,10 @@ flutter:
     - assets/images/kittenIconFlame.png
     - assets/images/kittenIconQ.png
     - assets/images/kittenRandomSprite.png
+    - assets/images/box.png
+    - assets/images/night.png
+    - assets/images/check.png
+
   fonts :
     - family: IBM
       fonts :
