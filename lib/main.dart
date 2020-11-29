@@ -19,6 +19,8 @@ import 'logic/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  randomAnimation = kittenRandomSprite.createAnimation(0, stepTime:0.1);
+
   debugPrint('=========================== A ===========================');
 
   await Firebase.initializeApp();

@@ -46,7 +46,17 @@ List<List<String>> globalCharacterList = [
 
 List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
 
+// 랜덤박스 에니메이션
 
+final kittenRandomSprite = SpriteSheet(
+    imageName: 'kittenRandomSprite.png',
+    textureWidth: 110,
+    textureHeight: 110,
+    columns: 8,
+    rows: 1,
+);
+
+var randomAnimation;
 
 //친구 요청 리스트
 var friend_requests = <String>[];

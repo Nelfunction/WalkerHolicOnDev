@@ -16,13 +16,7 @@ class _RandomBoxState extends State<RandomBox> {
   String randomName = "Now Opening...";
   int flag = 99;
 
-  static final kittenRandomSprite = SpriteSheet(
-    imageName: 'kittenRandomSprite.png',
-    textureWidth: 110,
-    textureHeight: 110,
-    columns: 8,
-    rows: 1,
-  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +117,7 @@ class _RandomBoxState extends State<RandomBox> {
     if(flag == 99) {
       // animation
       return AnimationWidget(
-        animation: kittenRandomSprite.createAnimation(0, stepTime:0.1),
+        animation: randomAnimation,
         playing: true,
         );
     } else {
