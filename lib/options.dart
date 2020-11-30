@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:walkerholic/bloc/provider.dart';
 import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
+import 'package:walkerholic/randomBox.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'friend.dart';
+import 'attendance.dart';
 
 import 'logic/login.dart';
 import 'logic/global.dart';
@@ -305,11 +307,30 @@ class _MyOptionState extends State<MyOption> {
                   ),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AttendancePage()),
+                      );
+                    },
+                    context: context,
+                    text: 'Attendance',
+                  ),
+                  Divider(height: 1, thickness: 1),
+                  flatbutton(
                       onPressed: () {
                         accountSync();
                       },
                       context: context,
                       text: 'Google Account Sync'),
+                      Divider(height: 1, thickness: 1),
+                  flatbutton(
+                    onPressed: () {
+                      Navigator.of(context).push(CustomPageRoute(RandomBox()));
+                    },
+                    context: context,
+                    text: 'RandomBox',
+                  ),
                   Divider(height: 1, thickness: 1),
                 ],
               )),
@@ -349,3 +370,4 @@ class CustomPageRoute<T> extends PageRoute<T> {
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
 }
+

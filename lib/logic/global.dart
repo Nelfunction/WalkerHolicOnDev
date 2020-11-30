@@ -34,8 +34,37 @@ int steps = 53; // 현재 기기의 stepcount
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
 
+// 게임 캐릭터 전역변수
+
+List<List<String>> globalCharacterList = [
+  ["", "BlackWhite", "Black", "Flame"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"],
+  ["Q", "Q", "Q", "Q"]
+];
+
+List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
+
+// 랜덤박스 에니메이션
+
+final kittenRandomSprite = SpriteSheet(
+    imageName: 'kittenRandomSprite.png',
+    textureWidth: 110,
+    textureHeight: 110,
+    columns: 8,
+    rows: 1,
+);
+
+var randomAnimation;
+
 //친구 요청 리스트
 var friend_requests = <String>[];
+
+//출석 체크 전역 변수
+String lastday='';
+int days=1;
+
 
 /// 개인기록
 PersonalStatus status = PersonalStatus(
@@ -46,6 +75,63 @@ PersonalStatus status = PersonalStatus(
   recentMonth: [222222, 272222, 75000, 111111],
   currentDate: DateTime.now(),
 );
+
+
+//출석체크 함수
+Future<void> attendance() async {
+  await firestore
+      .collection(userid)
+      .doc('attendance')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      lastday=documentSnapshot.get('lastday');
+      days=documentSnapshot.get('days');
+
+      if(getdate(DateTime.now()).toString()==lastday){  // 오늘 이미 출석체크를 했다면
+
+      }
+      else //오늘 이미 출석체크한게 아니면
+        {
+        if(getmonth(DateTime.now()).toString()==documentSnapshot.get('month')){ // 아직 한달이 안지났다면
+          days=days+1;
+          lastday=getdate(DateTime.now()).toString();
+          firestore
+              .collection(userid)
+              .doc('attendance')
+              .set({"days": days, "lastday": lastday, "month":getmonth(DateTime.now()).toString()});
+
+
+          if((days-4)%8==0){  //선물을 주는 날이 되었다면?
+            //가챠박스 1 증가
+          }
+
+        }
+        else{ //한달이 지났다면
+          days=1;
+          lastday=getdate(DateTime.now()).toString();
+          firestore
+              .collection(userid)
+              .doc('attendance')
+              .set({"days": days, "lastday": lastday, "month":getmonth(DateTime.now()).toString()});
+
+        }
+
+      }
+
+
+
+
+    } else {
+      firestore
+          .collection(userid)
+          .doc('attendance')
+          .set({"days": 1, "lastday": getdate(DateTime.now()).toString(), "month":getmonth(DateTime.now()).toString()});
+    }
+  });
+
+}
+
 
 //친구 요청 리스트 불러오는 함수
 Future<void> loadfriend_request_list() async {
@@ -201,6 +287,12 @@ getLocaldata() async {
 
 String getdate(DateTime date) {
   var dateYMD = "${date.year}-${date.month}-${date.day}";
+  return dateYMD;
+}
+
+//년-월을 반환하는 함수
+String getmonth(DateTime date) {
+  var dateYMD = "${date.year}-${date.month}";
   return dateYMD;
 }
 

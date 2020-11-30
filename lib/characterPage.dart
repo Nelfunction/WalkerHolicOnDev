@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'characterOne.dart';
+import 'logic/global.dart';
 
 class CharacterPage extends StatefulWidget {
   @override
@@ -10,15 +11,6 @@ class CharacterPage extends StatefulWidget {
 class _CharacterPageState extends State<CharacterPage> {
   // 개같이 대충 코딩한 부분임.
   // input이 입력받은 데이터임.
-  List<List<String>> input = [
-    ["", "BlackWhite", "Black", "Flame"],
-    ["Q", "Q", "Q", "Q"],
-    ["Q", "Q", "Q", "Q"],
-    ["Q", "Q", "Q", "Q"],
-    ["Q", "Q", "Q", "Q"],
-    ["Q", "Q", "Q", "Q"],
-    ["Q", "Q", "Q", "Q"]
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +30,10 @@ class _CharacterPageState extends State<CharacterPage> {
                   physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.all(10),
                   shrinkWrap: true,
-                  itemCount: input.length,
+                  itemCount: globalCharacterList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return CharacterRow(
-                      input: input[index],
+                      globalCharacterList: globalCharacterList[index],
                     );
                   }),
             )
@@ -55,15 +47,15 @@ class _CharacterPageState extends State<CharacterPage> {
 // ignore: must_be_immutable
 class CharacterRow extends StatefulWidget {
 
-  final List<String> input;
+  final List<String> globalCharacterList;
 
   String char1 , char2, char3, char4;
 
-  CharacterRow({this.input}) {
-    this.char1 = input[0];
-    this.char2 = input[1];
-    this.char3 = input[2];
-    this.char4 = input[3];
+  CharacterRow({this.globalCharacterList}) {
+    this.char1 = globalCharacterList[0];
+    this.char2 = globalCharacterList[1];
+    this.char3 = globalCharacterList[2];
+    this.char4 = globalCharacterList[3];
   }
 
   _CharacterRowState createState() => _CharacterRowState();
