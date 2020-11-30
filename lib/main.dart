@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'home.dart';
 import 'characterPage.dart';
 import 'pedometer.dart';
@@ -20,6 +23,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   debugPrint('=========================== A ===========================');
+
+  /// Hive init test
+  await Hive.initFlutter();
+  await Hive.openBox('Property');
 
   await Firebase.initializeApp();
   await initPermission();
@@ -39,12 +46,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Property 정보
+    var property = Hive.box('Property');
+
     return ChangeNotifierProvider<Property>(
       create: (_) => Property(
-        true,
-        0,
-        [true, true, true, true],
-        ColorTheme.colorPreset[0],
+        (property.get('presetUsed') ?? true),
+        (property.get('presetNum') ?? 0),
+        (property.get('visualize') ?? [true, true, true, true]),
+        (property.get('colorTheme') ?? ColorTheme()),
       ),
       child: Body(),
     );

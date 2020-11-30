@@ -43,6 +43,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   page_indicator: ^0.3.0
   hive: ^1.4.4+1
+  hive_flutter: ^0.3.0+2
   flutter_colorpicker: ^0.3.4
   provider: ^3.0.0+1
 

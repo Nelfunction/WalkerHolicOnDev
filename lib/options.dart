@@ -28,12 +28,6 @@ class _MyOptionState extends State<MyOption> {
             FixedExtentScrollController(initialItem: (provider.presetNum ?? 0)),
         backgroundColor: Colors.white,
         onSelectedItemChanged: (value) {
-          /*
-          if (prefs != null) {
-            prefs.setInt('myColor', value);
-          }
-          ctrl.add(ColorTheme.colorPreset[value]);
-          */
           provider.setPreset(value);
         },
         itemExtent: 32.0,
@@ -55,41 +49,19 @@ class _MyOptionState extends State<MyOption> {
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           ListTile(
-            title: Text('Daily'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[0],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(0));
-              },
-            ),
-          ),
+              title: Text('Color 1'),
+              trailing: RaisedButton(
+                  color: provider.colortheme.colors[0],
+                  onPressed: () {
+                    stateSetter(() => showRGB(provider, 0));
+                  })),
           ListTile(
-            title: Text('Weekly'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[1],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(1));
-              },
-            ),
-          ),
-          ListTile(
-            title: Text('Monthly'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[2],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(2));
-              },
-            ),
-          ),
-          ListTile(
-            title: Text('Pedestrian Status'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[3],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(3));
-              },
-            ),
-          ),
+              title: Text('Color 2'),
+              trailing: RaisedButton(
+                  color: provider.colortheme.colors[1],
+                  onPressed: () {
+                    stateSetter(() => showRGB(provider, 1));
+                  })),
         ],
       );
     });
@@ -195,7 +167,10 @@ class _MyOptionState extends State<MyOption> {
               child: const Text('Customize'),
               onPressed: () {
                 Navigator.pop(context, 'Two');
-                showRGB();
+                bottomContent(
+                  title: 'Customize',
+                  content: customPicker(provider),
+                );
               },
             )
           ],
@@ -222,10 +197,7 @@ class _MyOptionState extends State<MyOption> {
     );
   }
 
-  Color a = Colors.limeAccent;
-  void changeColor(Color color) => setState(() => currentColor = color);
-
-  showRGB() {
+  showRGB(Property provider, int n) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -237,8 +209,10 @@ class _MyOptionState extends State<MyOption> {
           ),
           content: SingleChildScrollView(
             child: SlidePicker(
-              pickerColor: currentColor,
-              onColorChanged: changeColor,
+              pickerColor: provider.colortheme.colors[n],
+              onColorChanged: (color) {
+                provider.setColor(color, n);
+              },
               paletteType: PaletteType.rgb,
               enableAlpha: false,
               displayThumbColor: true,
