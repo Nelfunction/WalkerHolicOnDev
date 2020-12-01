@@ -11,12 +11,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MyGame extends BaseGame {
   Size screenSize;
 
+  Position character_p;
+
   Position _size = Position(150, 150);
   int characternum = 2;
 
   String nowCharacter;
-  
+
   var choosenAnimation;
+
+  // 고양이가 점프할 높이
+  int jumpHeightMax = 200;
+  int nowJump = 0;
+  bool goUp = true;
+  double accelator = 1;
+
+  bool isJump = false;
 
   MyGame(var character, {double input = 200}) {
     _size.x = input;
@@ -24,11 +34,11 @@ class MyGame extends BaseGame {
     choosenAnimation = character;
   }
 
-
-
   void resize(Size size) {
     screenSize = size;
     super.resize(size);
+    character_p = new Position(((screenSize.width - _size.x) / 2),
+        ((screenSize.height - _size.y - 70)));
   }
 
   // Create Animation with SpriteSheet.
@@ -122,12 +132,9 @@ class MyGame extends BaseGame {
 
   @override
   void render(Canvas canvas) {
-
-    debugPrint('$characternum');
     if (characternum == 1) {
       background1.getSprite().renderPosition(canvas, background_p,
           size: Position(2584 / (1080 / screenSize.height), screenSize.height));
-
     } else if (characternum == 2) {
       sky_sprite.getSprite().renderPosition(canvas, sky_p,
           size: Position(270 / (320 / screenSize.height), screenSize.height));
@@ -140,11 +147,9 @@ class MyGame extends BaseGame {
     }
 
     // 캐릭터 렌더링하는 부분
-    choosenAnimation.getSprite().renderPosition(
-        canvas,
-        Position((screenSize.width - _size.x) / 2,
-            (screenSize.height - _size.y - 70)),
-        size: _size);
+    choosenAnimation
+        .getSprite()
+        .renderPosition(canvas, character_p, size: _size);
   }
 
   @override
@@ -169,5 +174,26 @@ class MyGame extends BaseGame {
       }
     }
     choosenAnimation.update(t);
+
+    if (isJump) {
+      if (goUp) {
+        // 위로 올라가야 함.
+        character_p.y -= accelator;
+        accelator += 0.7;
+
+        if (character_p.y <= screenSize.height - _size.y - 70 - jumpHeightMax) {
+          goUp = false;
+        }
+      } else {
+        character_p.y += accelator;
+        accelator -= 0.7;
+
+        if (character_p.y >= screenSize.height - _size.y - 70) {
+          character_p.y = screenSize.height - _size.y - 70;
+          goUp = true;
+          isJump = false;
+        }
+      }
+    }
   }
 }

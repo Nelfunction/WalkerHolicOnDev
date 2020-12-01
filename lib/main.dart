@@ -33,6 +33,8 @@ void main() async {
   await initstep(); //step을 최초 stream으로부터 불러옴
   await Firebase.initializeApp();
   await initPermission();
+  debugPrint('=========================== B ===========================');
+
   await signInWithGoogle();
 
   await getLocaldata();// sp에서 어제 페도미터를 가져와 pstep 저장

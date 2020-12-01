@@ -32,23 +32,20 @@ int psteps = 0; // 전날 기기의 stepcount
 int steps = 53; // 현재 기기의 stepcount
 int datastep=0;
 
-
-
-void initStepCount(StepCount event) { //스텝을 최초에 불러옴
+void initStepCount(StepCount event) {
+  //스텝을 최초에 불러옴
   /// Handle step count changed
   steps = event.steps;
 }
 
-Future<void> initstep() async { //스텝을 최초에 불러옴
+Future<void> initstep() async {
+  //스텝을 최초에 불러옴
   Stream<StepCount> initstepCountStream;
   initstepCountStream = await Pedometer.stepCountStream;
 
   /// Listen to streams and handle errors
   initstepCountStream.listen(initStepCount);
-
 }
-
-
 
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
@@ -374,7 +371,7 @@ Future<void> loadmydata() async {
       columns: 4,
       rows: 1);
 
-  var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+  var myAnimation = myCharacter.createAnimation(0, stepTime: 1);
 
   // Character+Background를 불러옴
   await firestore
