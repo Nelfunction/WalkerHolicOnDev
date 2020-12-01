@@ -20,6 +20,7 @@ import 'logic/pedoForeground.dart';
 import 'logic/login.dart';
 
 void main() async {
+  Stopwatch stopwatch = new Stopwatch()..start();
   WidgetsFlutterBinding.ensureInitialized();
 
   randomAnimation = kittenRandomSprite.createAnimation(0, stepTime: 0.1);
@@ -44,6 +45,11 @@ void main() async {
   await loadfrienddata();
   await loadfriend_request_list();
   await attendance(); //출석관련 함수-global.dart에 있음
+  print('1 executed in ${stopwatch.elapsed}');
+  await loadrecentweeks();
+  print('2 executed in ${stopwatch.elapsed}');
+  await loadrecentmonths();
+  print('3 executed in ${stopwatch.elapsed}');
   debugPrint(
       '=========================== ${gamecards.length} ===========================');
   runApp(MyApp());

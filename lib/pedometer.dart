@@ -28,8 +28,9 @@ class _MyPedoState extends State<MyPedo> {
     setState(() {
       steps = event.steps;
       status.todayCount = steps - psteps;
+
       gamecards[0].cardSteps=status.todayCount;
-      status.totalCount = totalsteps + steps - psteps-datastep;
+      status.totalCount = totalsteps+status.todayCount-tempstep;
     });
   }
 
