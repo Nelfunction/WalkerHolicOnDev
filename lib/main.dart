@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
         (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true, true]),
         (Color(property.get('textColor') ?? 0xffffffff)),
-        (property.get('number') ?? 100),
+        (property.get('number') ?? 100) +randomBoxNumber,
       ),
       child: Body(),
     );
