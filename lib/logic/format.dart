@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -315,10 +317,14 @@ class PersonalStatus {
                         ),
                       ),
                       Text(
-                        'DISPLEASED',
+                        (recentMonth[3] > recentmonthstepmax * 0.6)
+                            ? 'SATISFIED'
+                            : 'DISPLEASED',
                         style: TextStyle(
-                          fontSize: 18,
-                        ),
+                            fontSize: 18,
+                            color: (recentMonth[3] > recentmonthstepmax * 0.6)
+                                ? Colors.green
+                                : Colors.red),
                       )
                     ]))
           ]),
@@ -365,5 +371,93 @@ Widget flatbutton(
                 fontSize: 22.0,
               ))
         ])),
+  );
+}
+
+Widget friendStatus(BuildContext context) {
+  double max = gamecards
+      .reduce((a, b) => a.cardSteps > b.cardSteps ? a : b)
+      .cardSteps
+      .toDouble();
+  int mine = gamecards[0].cardSteps;
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: List.generate(gamecards.length, (index) {
+            return Container(
+              alignment: Alignment.topRight,
+              height: 30,
+              width: 80,
+              child: Text(
+                gamecards[index].name,
+                style: TextStyle(fontSize: 12),
+              ),
+            );
+          }),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          width: 5,
+          //height: 50,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: List.generate(gamecards.length, (index) {
+            return Container(
+              alignment: Alignment.topCenter,
+              height: 30,
+              child: Stack(children: <Widget>[
+                LinearPercentIndicator(
+                  width: MediaQuery.of(context).size.width - 200,
+                  //animateFromLastPercent: true,
+                  restartAnimation: true,
+                  backgroundColor: Colors.transparent,
+                  animation: true,
+                  lineHeight: 12.0,
+                  animationDuration: 2000,
+                  percent:
+                      (gamecards[index].cardSteps.toDouble() + 1) / (max + 2),
+                  linearStrokeCap: LinearStrokeCap.round,
+                  progressColor: (mine > gamecards[index].cardSteps)
+                      ? Colors.red
+                      : (mine == gamecards[index].cardSteps)
+                          ? Colors.white
+                          : Colors.green,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  margin: EdgeInsets.fromLTRB(
+                      (MediaQuery.of(context).size.width - 220) *
+                              (gamecards[index].cardSteps + 1) /
+                              (max + 2) +
+                          20,
+                      0,
+                      0,
+                      0),
+                  height: 30,
+                  //width: 40,
+                  child: Text(
+                    gamecards[index].cardSteps.toString(),
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ]),
+            );
+          }),
+        ),
+      ],
+    ),
   );
 }
