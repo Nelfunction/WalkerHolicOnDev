@@ -46,6 +46,7 @@ dependencies:
   hive_flutter: ^0.3.0+2
   flutter_colorpicker: ^0.3.4
   provider: ^3.0.0+1
+  flutter_native_splash: ^0.1.9
 
 
 dev_dependencies:
