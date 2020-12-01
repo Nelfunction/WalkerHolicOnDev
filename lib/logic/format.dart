@@ -1,5 +1,6 @@
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 
@@ -19,23 +20,33 @@ class Gamecard {
 
 /// Class for background Color Theme.
 /// Contains 3 presets and widget-build option.
+@HiveType(typeId: 0)
 class ColorTheme {
   // Numbers for Alignment. Range: -1 ~ 1
-  double beginX, beginY, endX, endY;
+  @HiveField(0)
+  List<double> align;
   // List for Colors.
+  @HiveField(1)
   List<Color> colors;
   // Gradient blend points.
+  @HiveField(2)
   List<double> stops;
+  @HiveField(3)
+  Color textColor;
 
-  ColorTheme(
-      this.beginX, this.beginY, this.endX, this.endY, this.colors, this.stops);
+  ColorTheme({
+    this.align = const [-1.0, -1.0, 1.0, 1.0],
+    this.colors = const [Color(0xffffade1), Color(0xf03be8bf)],
+    this.stops = const [0.0, 1.0],
+    this.textColor,
+  });
 
   Widget buildContainer() {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment(beginX, beginY),
-          end: Alignment(endX, endY),
+          begin: Alignment(align[0], align[1]),
+          end: Alignment(align[2], align[3]),
           colors: colors,
           stops: stops,
         ),
@@ -45,44 +56,29 @@ class ColorTheme {
 
   static List<ColorTheme> colorPreset = [
     ColorTheme(
-      -1.1,
-      -0.3,
-      1.4,
-      0.6,
-      [Color(0xffffade1), Color(0xf03be8bf)],
-      [0.0, 1.0],
+      align: [-1.1, -0.3, 1.4, 0.6],
+      colors: [Color(0xffffade1), Color(0xf03be8bf)],
+      stops: [0.0, 1.0],
     ),
     ColorTheme(
-      -1,
-      1,
-      1.18,
-      -0.68,
-      [Color(0xff9dffff), Color(0xffbe8fff)],
-      [0.2, 1.0],
+      align: [-1, 1, 1.18, -0.68],
+      colors: [Color(0xff9dffff), Color(0xffbe8fff)],
+      stops: [0.2, 1.0],
     ),
     ColorTheme(
-      -1,
-      1,
-      1,
-      -1,
-      [Color(0xff4158d0), Color(0xffc850c0), Color(0xffffcc70)],
-      [0.0, 0.46, 1.0],
+      align: [-1, 1, 1, -1],
+      colors: [Color(0xff4158d0), Color(0xffc850c0), Color(0xffffcc70)],
+      stops: [0.0, 0.46, 1.0],
     ),
     ColorTheme(
-      0,
-      1,
-      0,
-      -1,
-      [Color(0xff08aeea), Color(0xff2af598)],
-      [0.0, 1.0],
+      align: [0, 1, 0, -1],
+      colors: [Color(0xff08aeea), Color(0xff2af598)],
+      stops: [0.0, 1.0],
     ),
     ColorTheme(
-      -1,
-      1,
-      1,
-      -1,
-      [Color(0xfffbda61), Color(0xffff5acd)],
-      [0.0, 1.0],
+      align: [-1, 1, 1, -1],
+      colors: [Color(0xfffbda61), Color(0xffff5acd)],
+      stops: [0.0, 1.0],
     ),
   ];
 } // class ColorTheme

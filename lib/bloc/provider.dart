@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'bloc.dart';
+import 'package:hive/hive.dart';
+import 'dart:io';
 import '../logic/format.dart';
 
 /*
@@ -44,9 +45,9 @@ class Property extends ChangeNotifier {
     notifyListeners(); // 값이 변할 때마다 플러터 프레임워크에 알려줍니다.
   }
 
-  void setColor(ColorTheme n) {
-    _presetUsed = true;
-    _colortheme = n;
+  void setColor(Color color, int n) {
+    _presetUsed = false;
+    _colortheme.colors[n] = color;
     notifyListeners(); // 값이 변할 때마다 플러터 프레임워크에 알려줍니다.
   }
 }

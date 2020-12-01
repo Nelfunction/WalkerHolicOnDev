@@ -6,9 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
-
 import 'dart:async';
 import 'dart:ui';
+
 import 'format.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
