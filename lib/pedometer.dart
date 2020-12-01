@@ -61,10 +61,19 @@ class _MyPedoState extends State<MyPedo> {
     final property = Provider.of<Property>(context);
     return MaterialApp(
       theme: ThemeData(
-          accentColor: Colors.white,
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            splashColor: Colors.red.withOpacity(0.25),
-          )),
+        textTheme: TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle(),
+        ).apply(bodyColor: property.textColor),
+        iconTheme: IconThemeData(color: property.textColor),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          //foregroundColor: Colors.white,
+          backgroundColor: Colors.white54,
+          //focusColor: Colors.white,
+          //hoverColor: Colors.white,
+          //splashColor: Colors.white,
+        ),
+      ),
       home: Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(
@@ -80,10 +89,8 @@ class _MyPedoState extends State<MyPedo> {
                   if (property.visualize[2]) status.monthlyStatus(),
                   if (property.visualize[3]) ...[
                     Center(
-                      child: Text(
-                        'Pedestrian status:',
-                        style: TextStyle(fontSize: 30, color: Colors.white),
-                      ),
+                      child: Text('Pedestrian status:',
+                          style: TextStyle(fontSize: 30)),
                     ),
                     Icon(
                       _status == 'walking'
@@ -92,14 +99,13 @@ class _MyPedoState extends State<MyPedo> {
                               ? Icons.accessibility_new
                               : Icons.error,
                       size: 100,
-                      color: Colors.white,
                     ),
                     Center(
                       child: Text(
                         _status,
                         style: _status == 'walking' || _status == 'stopped'
-                            ? TextStyle(fontSize: 40, color: Colors.white)
-                            : TextStyle(fontSize: 40, color: Colors.red),
+                            ? TextStyle(fontSize: 40)
+                            : TextStyle(fontSize: 40),
                       ),
                     )
                   ],

@@ -11,6 +11,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'friend.dart';
 import 'attendance.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'logic/login.dart';
 import 'logic/global.dart';
@@ -21,101 +23,6 @@ class MyOption extends StatefulWidget {
 }
 
 class _MyOptionState extends State<MyOption> {
-  Widget colorPicker(Property provider) {
-    return ScrollConfiguration(
-      behavior: ScrollBehavior()
-        ..buildViewportChrome(context, null, AxisDirection.down),
-      child: CupertinoPicker(
-        scrollController:
-            FixedExtentScrollController(initialItem: (provider.presetNum ?? 0)),
-        backgroundColor: Colors.white,
-        onSelectedItemChanged: (value) {
-          provider.setPreset(value);
-        },
-        itemExtent: 32.0,
-        children: const [
-          Text('Pinkish'),
-          Text('Azur'),
-          Text('DayLight'),
-          Text('Forest'),
-          Text('Peach'),
-        ],
-      ),
-    );
-  }
-
-  Widget customPicker(Property provider) {
-    return StatefulBuilder(
-        builder: (BuildContext context, StateSetter stateSetter) {
-      return ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          ListTile(
-              title: Text('Color 1'),
-              trailing: RaisedButton(
-                  color: provider.colortheme.colors[0],
-                  onPressed: () {
-                    stateSetter(() => showRGB(provider, 0));
-                  })),
-          ListTile(
-              title: Text('Color 2'),
-              trailing: RaisedButton(
-                  color: provider.colortheme.colors[1],
-                  onPressed: () {
-                    stateSetter(() => showRGB(provider, 1));
-                  })),
-        ],
-      );
-    });
-  }
-
-  Widget visualStatus(Property provider) {
-    return StatefulBuilder(
-        builder: (BuildContext context, StateSetter stateSetter) {
-      return ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          ListTile(
-            title: Text('Daily'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[0],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(0));
-              },
-            ),
-          ),
-          ListTile(
-            title: Text('Weekly'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[1],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(1));
-              },
-            ),
-          ),
-          ListTile(
-            title: Text('Monthly'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[2],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(2));
-              },
-            ),
-          ),
-          ListTile(
-            title: Text('Pedestrian Status'),
-            trailing: CupertinoSwitch(
-              value: provider.visualize[3],
-              onChanged: (bool value) {
-                stateSetter(() => provider.setVisualize(3));
-              },
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
   bottomContent({
     String title = 'Title',
     double size = 200.0,
@@ -148,31 +55,172 @@ class _MyOptionState extends State<MyOption> {
         });
   }
 
+  Widget visualStatus(Property provider) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter stateSetter) {
+      return ListView(
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+          ListTile(
+            title: Text('Daily'),
+            trailing: CupertinoSwitch(
+              value: provider.visualize[0],
+              onChanged: (bool value) {
+                stateSetter(() => provider.setVisualize(0));
+                Hive.box('Property').put('visualize', provider.visualize);
+              },
+            ),
+          ),
+          ListTile(
+            title: Text('Weekly'),
+            trailing: CupertinoSwitch(
+              value: provider.visualize[1],
+              onChanged: (bool value) {
+                stateSetter(() => provider.setVisualize(1));
+                Hive.box('Property').put('visualize', provider.visualize);
+              },
+            ),
+          ),
+          ListTile(
+            title: Text('Monthly'),
+            trailing: CupertinoSwitch(
+              value: provider.visualize[2],
+              onChanged: (bool value) {
+                stateSetter(() => provider.setVisualize(2));
+                Hive.box('Property').put('visualize', provider.visualize);
+              },
+            ),
+          ),
+          ListTile(
+            title: Text('Pedestrian Status'),
+            trailing: CupertinoSwitch(
+              value: provider.visualize[3],
+              onChanged: (bool value) {
+                stateSetter(() => provider.setVisualize(3));
+                Hive.box('Property').put('visualize', provider.visualize);
+              },
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  colorThemeBackground({Property provider}) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  title: Text('Background Color',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      )),
+                  trailing: FlatButton(
+                      onPressed: () {
+                        Hive.box('Property')
+                            .put('presetNum', provider.presetNum);
+                        Navigator.pop(context, 'Cancel');
+                      },
+                      child: Text('Close',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )))),
+              Divider(height: 1, thickness: 1),
+              Container(
+                  height: 200,
+                  child: ScrollConfiguration(
+                    behavior: ScrollBehavior()
+                      ..buildViewportChrome(context, null, AxisDirection.down),
+                    child: CupertinoPicker(
+                      scrollController: FixedExtentScrollController(
+                          initialItem: (provider.presetNum ?? 0)),
+                      backgroundColor: Colors.white,
+                      onSelectedItemChanged: (value) {
+                        provider.setPreset(value);
+                      },
+                      itemExtent: 32.0,
+                      children: const [
+                        Text('Pinkish'),
+                        Text('Azur'),
+                        Text('DayLight'),
+                        Text('Forest'),
+                        Text('Peach'),
+                      ],
+                    ),
+                  )),
+            ],
+          );
+        });
+  }
+
+  colorThemeText({Property provider}) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  title: Text('Text Color', style: TextStyle(fontSize: 20.0)),
+                  trailing: FlatButton(
+                      onPressed: () {
+                        Hive.box('Property')
+                            .put('textColor', provider.textColor.value);
+                        Navigator.pop(context, 'Cancel');
+                      },
+                      child: Text('Close',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          )))),
+              Divider(height: 1, thickness: 1),
+              Container(
+                  //height: 235,
+                  child: StatefulBuilder(
+                      builder: (BuildContext context, StateSetter stateSetter) {
+                return SlidePicker(
+                  pickerColor: provider.textColor,
+                  onColorChanged: (color) {
+                    stateSetter(() => provider.setColor(color));
+                  },
+                  sliderSize: Size(MediaQuery.of(context).size.width - 20, 50),
+                  indicatorSize: Size(MediaQuery.of(context).size.width, 50),
+                  paletteType: PaletteType.hsv,
+                  enableAlpha: false,
+                  displayThumbColor: true,
+                  showLabel: false,
+                  showIndicator: true,
+                  indicatorAlignmentBegin: Alignment(-1, 0),
+                  indicatorAlignmentEnd: Alignment(1, 0),
+                );
+              })),
+            ],
+          );
+        });
+  }
+
   cupertinoBottom(Property provider) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
-          title: const Text('Background Theme'),
+          title: const Text('Color Theme'),
           //message: const Text('Your options are '),
           actions: <Widget>[
             CupertinoActionSheetAction(
-              child: const Text('Use Preset'),
+              child: const Text('Background'),
               onPressed: () {
                 Navigator.pop(context, 'One');
-                bottomContent(
-                  title: 'Choose Preset',
-                  content: colorPicker(provider),
-                );
+                colorThemeBackground(provider: provider);
               },
             ),
             CupertinoActionSheetAction(
-              child: const Text('Customize'),
+              child: const Text('Text'),
               onPressed: () {
                 Navigator.pop(context, 'Two');
-                bottomContent(
-                  title: 'Customize',
-                  content: customPicker(provider),
-                );
+                colorThemeText(provider: provider);
               },
             )
           ],
@@ -199,43 +247,9 @@ class _MyOptionState extends State<MyOption> {
     );
   }
 
-  showRGB(Property provider, int n) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.all(0.0),
-          contentPadding: const EdgeInsets.all(0.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          content: SingleChildScrollView(
-            child: SlidePicker(
-              pickerColor: provider.colortheme.colors[n],
-              onColorChanged: (color) {
-                provider.setColor(color, n);
-              },
-              paletteType: PaletteType.rgb,
-              enableAlpha: false,
-              displayThumbColor: true,
-              showLabel: false,
-              showIndicator: true,
-              indicatorAlignmentBegin: Alignment(-1, 0),
-              indicatorAlignmentEnd: Alignment(1, 0),
-              indicatorBorderRadius: const BorderRadius.vertical(
-                top: const Radius.circular(25.0),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<Property>(context);
-
     return Center(
       child: ClipRRect(
         child: BackdropFilter(
@@ -259,20 +273,10 @@ class _MyOptionState extends State<MyOption> {
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                       onPressed: () {
-                        bottomContent(
-                          title: 'BackColor Theme',
-                          content: colorPicker(provider),
-                        );
-                      },
-                      context: context,
-                      text: 'BackColor Theme'),
-                  Divider(height: 1, thickness: 1),
-                  flatbutton(
-                      onPressed: () {
                         cupertinoBottom(provider);
                       },
                       context: context,
-                      text: 'Background Option'),
+                      text: 'Color Theme'),
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
@@ -310,7 +314,8 @@ class _MyOptionState extends State<MyOption> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AttendancePage()),
+                        MaterialPageRoute(
+                            builder: (context) => AttendancePage()),
                       );
                     },
                     context: context,
@@ -323,7 +328,7 @@ class _MyOptionState extends State<MyOption> {
                       },
                       context: context,
                       text: 'Google Account Sync'),
-                      Divider(height: 1, thickness: 1),
+                  Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
                       Navigator.of(context).push(CustomPageRoute(RandomBox()));
@@ -370,4 +375,3 @@ class CustomPageRoute<T> extends PageRoute<T> {
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
 }
-

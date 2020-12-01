@@ -20,23 +20,18 @@ class Gamecard {
 
 /// Class for background Color Theme.
 /// Contains 3 presets and widget-build option.
-@HiveType(typeId: 0)
 class ColorTheme {
   // Numbers for Alignment. Range: -1 ~ 1
-  @HiveField(0)
   List<double> align;
   // List for Colors.
-  @HiveField(1)
   List<Color> colors;
   // Gradient blend points.
-  @HiveField(2)
   List<double> stops;
-  @HiveField(3)
   Color textColor;
 
   ColorTheme({
     this.align = const [-1.0, -1.0, 1.0, 1.0],
-    this.colors = const [Color(0xffffade1), Color(0xf03be8bf)],
+    this.colors,
     this.stops = const [0.0, 1.0],
     this.textColor,
   });
@@ -126,11 +121,11 @@ class PersonalStatus {
             children: <Widget>[
               Text(
                 'Total',
-                style: TextStyle(fontSize: 36, color: Colors.white),
+                style: TextStyle(fontSize: 36),
               ),
               Text(
                 totalCount.toString(),
-                style: TextStyle(fontSize: 36, color: Colors.white),
+                style: TextStyle(fontSize: 36),
               )
             ]));
   }
@@ -159,11 +154,15 @@ class PersonalStatus {
                     children: <Widget>[
                       Text(
                         'Today',
-                        style: TextStyle(fontSize: 22, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 22,
+                        ),
                       ),
                       Text(
                         todayCount.toString() + '/' + dailyMax.toString(),
-                        style: TextStyle(fontSize: 22, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 22,
+                        ),
                       )
                     ]))
           ]),
@@ -216,7 +215,9 @@ class PersonalStatus {
                     DateFormat('MM/dd').format(DateTime(currentDate.year,
                         currentDate.month, currentDate.day - 6 + index)),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 10, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 10,
+                    ),
                   ),
                 );
               }),
@@ -228,11 +229,15 @@ class PersonalStatus {
                     children: <Widget>[
                       Text(
                         'Recent 7 days :',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         recentWeek.reduce((a, b) => a + b).toString(),
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       )
                     ]))
           ]),
@@ -284,9 +289,11 @@ class PersonalStatus {
                 return Container(
                   width: 30,
                   child: Text(
-                    months[currentDate.month - 3 + index],
+                    months[(currentDate.month - 4 + index) % 12],
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
                   ),
                 );
               }),
@@ -298,11 +305,15 @@ class PersonalStatus {
                     children: <Widget>[
                       Text(
                         'This Month:',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         'DISPLEASED',
-                        style: TextStyle(fontSize: 18, color: Colors.red),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       )
                     ]))
           ]),

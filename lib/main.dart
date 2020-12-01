@@ -22,7 +22,7 @@ import 'logic/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  randomAnimation = kittenRandomSprite.createAnimation(0, stepTime:0.1);
+  randomAnimation = kittenRandomSprite.createAnimation(0, stepTime: 0.1);
 
   debugPrint('=========================== A ===========================');
 
@@ -53,10 +53,9 @@ class MyApp extends StatelessWidget {
 
     return ChangeNotifierProvider<Property>(
       create: (_) => Property(
-        (property.get('presetUsed') ?? true),
-        (property.get('presetNum') ?? 0),
+        (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true]),
-        (property.get('colorTheme') ?? ColorTheme()),
+        (Color(property.get('textColor')) ?? Color(0xffffffff)),
       ),
       child: Body(),
     );
@@ -89,9 +88,7 @@ class _BodyState extends State<Body> {
         theme: ThemeData(fontFamily: 'IBM'),
         home: Stack(
           children: [
-            if (property.presentUsed)
-              ColorTheme.colorPreset[property.presetNum].buildContainer(),
-            if (!property.presentUsed) property.colortheme.buildContainer(),
+            ColorTheme.colorPreset[property.presetNum].buildContainer(),
             DefaultTabController(
               length: 4,
               child: Scaffold(
