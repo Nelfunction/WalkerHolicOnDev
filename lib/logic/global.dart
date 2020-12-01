@@ -652,7 +652,9 @@ Future<void> loadfrienddata() async {
     } else {}
   });
 
-  for (int i = 0; i < list.length; i++) {
+  int length=min(10,list.length);
+
+  for (int i = 0; i < length; i++) {
     String key = list[i];
     await firestore
         .collection(key)
