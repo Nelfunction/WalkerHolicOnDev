@@ -22,6 +22,7 @@ import 'logic/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 랜덤박스 에니메이션 초기화
   randomAnimation = kittenRandomSprite.createAnimation(0, stepTime: 0.1);
 
   debugPrint('=========================== A ===========================');
@@ -29,6 +30,7 @@ void main() async {
   /// Hive init test
   await Hive.initFlutter();
   await Hive.openBox('Property');
+  await Hive.openBox('BoolCharacter');
 
   await initstep(); //step을 최초 stream으로부터 불러옴
   await Firebase.initializeApp();
@@ -37,7 +39,7 @@ void main() async {
 
   await signInWithGoogle();
 
-  await getLocaldata();// sp에서 어제 페도미터를 가져와 pstep 저장
+  await getLocaldata(); // sp에서 어제 페도미터를 가져와 pstep 저장
   await senddata();
   await loadmydata();
   await getServerdata(); //파이어베이스의 토탈스탭 불러옴
@@ -54,12 +56,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Property 정보
     var property = Hive.box('Property');
+    var character = Hive.box('BoolCharacter');
+
+    character.put('bool', globalCharacterListBool);
 
     return ChangeNotifierProvider<Property>(
       create: (_) => Property(
         (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true]),
         (Color(property.get('textColor') ?? 0xffffffff)),
+        (property.get('number') ?? 10),
       ),
       child: Body(),
     );
