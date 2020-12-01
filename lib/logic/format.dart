@@ -4,6 +4,8 @@ import 'package:hive/hive.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 
+import 'global.dart';
+
 /// Class for cardview at HOME.
 class Gamecard {
   String name;
@@ -190,7 +192,7 @@ class PersonalStatus {
                       lineHeight: 10.0,
                       animationDuration: 2000,
                       percent:
-                          recentWeek[index].toDouble() / dailyMax.toDouble(),
+                          recentWeek[index].toDouble() / recentweekstepmax.toDouble(),
                       linearStrokeCap: LinearStrokeCap.round,
                       progressColor: Colors.white,
                     ),
@@ -267,7 +269,7 @@ class PersonalStatus {
                       lineHeight: 12.0,
                       animationDuration: 2000,
                       percent: recentMonth[index].toDouble() /
-                          (dailyMax.toDouble() * 30),
+                          recentmonthstepmax.toDouble(),
                       linearStrokeCap: LinearStrokeCap.round,
                       progressColor: Colors.white,
                     ),
