@@ -17,6 +17,8 @@ Stream<StepCount> stepCountStream;
 Stream<PedestrianStatus> pedestrianStatusStream;
 SharedPreferences prefs;
 
+
+
 Color currentColor = Colors.white;
 
 //login 전역변수
@@ -77,7 +79,7 @@ final kittenRandomSprite = SpriteSheet(
 );
 
 // 랜덤박스 개수
-int randomBoxNumber = 1;
+int randomBoxNumber = 0;
 
 var randomAnimation;
 
@@ -553,6 +555,36 @@ senddata() async {
       .collection(userid)
       .doc(getdate(DateTime.now()).toString())
       .set({'time': DateTime.now(), 'steps': steps - psteps});
+
+  if(steps-psteps>=10000){ //만보이상이면 하루에 한번 가챠박스 증정
+    await firestore
+        .collection(userid)
+        .doc("lastday")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if(documentSnapshot.get('time')==getdate(DateTime.now()))
+          {
+
+          }
+        else
+          {
+            debugPrint('+++++++++++++++++++');
+            randomBoxNumber++;
+          }
+
+      } else {
+        debugPrint('+++++++++++++++++++');
+        randomBoxNumber++;
+      }
+    });
+
+    await firestore
+        .collection(userid)
+        .doc("lastday")
+        .set({'time': getdate(DateTime.now()), 'steps': steps - psteps});
+
+  }
 
   debugPrint('CCCCCCCCCCCCCCCCCCCCCC');
   await firestore
