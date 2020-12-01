@@ -44,15 +44,11 @@ class _FullGameState extends State<FullGame> {
     return Scaffold(
         body: InkWell(
       onTap: () {
-        return Navigator.of(context).pop();
+        game.isJump = true;
       },
       child: Stack(
         children: [
-          WillPopScope(
-              child: game.widget,
-              onWillPop: () async {
-                return false;
-              }),
+          game.widget,
           Positioned(
             child: Text(
               gamecard.name,

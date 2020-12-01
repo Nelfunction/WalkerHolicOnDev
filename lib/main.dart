@@ -33,7 +33,11 @@ void main() async {
   await initstep(); //step을 최초 stream으로부터 불러옴
   await Firebase.initializeApp();
   await initPermission();
+  debugPrint('=========================== B ===========================');
+
   await signInWithGoogle();
+  debugPrint('=========================== C ===========================');
+
   await getServerdata();
   await getLocaldata();
   await senddata();

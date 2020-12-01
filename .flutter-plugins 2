@@ -1,0 +1,23 @@
+# This is a generated file; do not edit or check into version control.
+activity_recognition_flutter=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/activity_recognition_flutter-1.2.4+1/
+audioplayers=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/audioplayers-0.15.1/
+cloud_firestore=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.14.3/
+cloud_firestore_web=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-0.2.1/
+firebase_auth=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.18.3/
+firebase_auth_web=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-0.3.2/
+firebase_core=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.5.2/
+firebase_core_web=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.2.1/
+foreground_service=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/foreground_service-2.0.1+1/
+google_sign_in=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-4.5.6/
+google_sign_in_web=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.9.2/
+path_provider=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-1.6.24/
+path_provider_linux=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-0.0.1+2/
+path_provider_macos=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-0.0.4+6/
+path_provider_windows=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-0.0.4+3/
+pedometer=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/pedometer-2.0.2/
+permission_handler=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler-5.0.1+1/
+shared_preferences=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.12+4/
+shared_preferences_linux=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-0.0.2+4/
+shared_preferences_macos=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-0.0.1+11/
+shared_preferences_web=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-0.1.2+7/
+shared_preferences_windows=/Users/sunghyunyoo/Desktop/Develop/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-0.0.1+3/
