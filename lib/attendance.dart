@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'logic/format.dart';
 import 'logic/global.dart';
 
 class AttendancePage extends StatefulWidget {
+  int presetNum;
+
+  AttendancePage(int pressNum) {
+    this.presetNum = pressNum;
+  }
+
   @override
-  _AttendancePageState createState() => _AttendancePageState();
+  _AttendancePageState createState() => _AttendancePageState(presetNum);
 }
 
 class _AttendancePageState extends State<AttendancePage> {
+  int presetNumState;
+
+  _AttendancePageState(int presetNumState) {
+    this.presetNumState = presetNumState;
+  }
   List<List<String>> input = [
     ["1", "2", "3", "4"],
     ["5", "6", "7", "8"],
@@ -20,40 +32,38 @@ class _AttendancePageState extends State<AttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return MaterialApp(
       title: 'Attendance',
-      home: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/night.png"), fit: BoxFit.cover)),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-              child: Container(
-                child: Column(
-                  children: [
-                    SizedBox(height: 70),
-                    Text(
-                      getmonth(DateTime.now()).toString()+' Attendance',
-                      style: TextStyle(fontSize: 30, color: Colors.white),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          padding: EdgeInsets.all(10),
-                          shrinkWrap: true,
-                          itemCount: input.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return AttendanceRow(
-                              input: input[index],
-                            );
-                          }),
-                    )
-                  ],
-                ),
-              )),
+      home: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            ColorTheme.colorPreset[presetNumState].buildContainer(),
+            Center(
+                child: Container(
+              child: Column(
+                children: [
+                  SizedBox(height: 70),
+                  Text(
+                    getmonth(DateTime.now()).toString() + ' Attendance',
+                    style: TextStyle(fontSize: 30, color: Colors.white),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.all(10),
+                        shrinkWrap: true,
+                        itemCount: input.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return AttendanceRow(
+                            input: input[index],
+                          );
+                        }),
+                  )
+                ],
+              ),
+            )),
+          ],
         ),
       ),
     );
@@ -62,10 +72,9 @@ class _AttendancePageState extends State<AttendancePage> {
 
 // ignore: must_be_immutable
 class AttendanceRow extends StatefulWidget {
-
   final List<String> input;
 
-  String char1 , char2, char3, char4;
+  String char1, char2, char3, char4;
 
   AttendanceRow({this.input}) {
     this.char1 = input[0];
@@ -81,7 +90,6 @@ class _AttendanceRowState extends State<AttendanceRow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       padding: EdgeInsets.symmetric(horizontal: 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,13 +110,14 @@ class AttendanceContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String nameText = "Day "+nameChar;
-    if ((int.parse(nameChar))<=days) { //이미 출석체크한 날이면
+    String nameText = "Day " + nameChar;
+    if ((int.parse(nameChar)) <= days) {
+      //이미 출석체크한 날이면
       return Column(
         children: [
           InkWell(
-            onTap: () { //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
-
+            onTap: () {
+              //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
             },
             child: Container(
               decoration: BoxDecoration(
@@ -132,12 +141,13 @@ class AttendanceContainer extends StatelessWidget {
         ],
       );
     }
-    if ((int.parse(nameChar)-4)%8==0) { //선물을 받을 날이면
+    if ((int.parse(nameChar) - 4) % 8 == 0) {
+      //선물을 받을 날이면
       return Column(
         children: [
           InkWell(
-            onTap: () { //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
-
+            onTap: () {
+              //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
             },
             child: Container(
               decoration: BoxDecoration(
@@ -160,17 +170,13 @@ class AttendanceContainer extends StatelessWidget {
           )
         ],
       );
-
-
-
-
-
-    } else { //그외 빈공간
+    } else {
+      //그외 빈공간
       return Column(
         children: [
           InkWell(
-            onTap: () { //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
-
+            onTap: () {
+              //일단 자동으로 선물을 주는걸로 생각해 따로 터치기능은 구현하지 않음
             },
             child: Container(
               decoration: BoxDecoration(
@@ -192,10 +198,6 @@ class AttendanceContainer extends StatelessWidget {
           )
         ],
       );
-
-
     }
-
-
   }
 }

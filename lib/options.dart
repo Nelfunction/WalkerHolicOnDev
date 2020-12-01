@@ -335,7 +335,8 @@ class _MyOptionState extends State<MyOption> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AttendancePage()),
+                            builder: (context) =>
+                                AttendancePage(provider.presetNum)),
                       );
                     },
                     context: context,

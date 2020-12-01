@@ -75,7 +75,7 @@ class MySplashApp extends StatelessWidget {
                 ),
                 Image.asset("assets/images/kittenIcon.png"),
                 SizedBox(
-                  height: 40,
+                  height: 30,
                 ),
                 Text(
                   "Walker",
