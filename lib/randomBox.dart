@@ -12,11 +12,8 @@ class RandomBox extends StatefulWidget {
 }
 
 class _RandomBoxState extends State<RandomBox> {
-
   String randomName = "Now Opening...";
   int flag = 99;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +33,20 @@ class _RandomBoxState extends State<RandomBox> {
               ),
               margin: EdgeInsets.fromLTRB(5, 150, 5, 5),
               padding: EdgeInsets.all(10),
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child : AnimationOrNot()
-              ),
+              child: SizedBox(width: 200, height: 200, child: AnimationOrNot()),
             ),
             Text(
               randomName,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             // 아래 메뉴
-           ClipRRect(
+            ClipRRect(
                 child: Container(
                     margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Colors.black,
-                      border: Border.all(color:Colors.white, width:4)
-                    ),
+                        borderRadius: BorderRadius.circular(24.0),
+                        color: Colors.black,
+                        border: Border.all(color: Colors.white, width: 4)),
                     child: Column(
                       children: [
                         Container(
@@ -77,7 +69,11 @@ class _RandomBoxState extends State<RandomBox> {
                                 ])),
                           ),
                         ),
-                        Divider(height: 1, thickness: 1, color: Colors.white,),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Colors.white,
+                        ),
                         FlatButton(
                           onPressed: () {
                             // 나가기
@@ -108,23 +104,24 @@ class _RandomBoxState extends State<RandomBox> {
   void ChangeFlag() {
     flag = Random().nextInt(globalCharacters.length - 1);
     randomName = globalCharacters[flag] + " Cat";
+    randomBoxNumber--;
     setState(() {
       debugPrint("Random Box : Now Flag is $flag");
     });
   }
 
   Widget AnimationOrNot() {
-    if(flag == 99) {
+    if (flag == 99) {
       // animation
       return AnimationWidget(
         animation: randomAnimation,
         playing: true,
-        );
+      );
     } else {
       return Image.asset(
-                  "assets/images/kittenIcon" + globalCharacters[flag] + ".png",
-                  fit: BoxFit.cover,
-                );
+        "assets/images/kittenIcon" + globalCharacters[flag] + ".png",
+        fit: BoxFit.cover,
+      );
     }
   }
 }
