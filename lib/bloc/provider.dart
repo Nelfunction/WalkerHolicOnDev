@@ -5,12 +5,27 @@ class Property extends ChangeNotifier {
   List<bool> _visualize;
   Color _textColor;
 
+  //randombox
+  int _number;
+
   Property(
     this._presetNum,
     this._visualize,
     this._textColor,
+    this._number,
   );
 
+  void minusNumber() {
+    _number--;
+    notifyListeners();
+  }
+
+  void plusNumber() {
+    _number++;
+    notifyListeners();
+  }
+
+  int get number => _number;
   int get presetNum => _presetNum;
   Color get textColor => _textColor;
   List<bool> get visualize => _visualize;

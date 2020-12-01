@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'characterOne.dart';
 import 'logic/global.dart';
@@ -33,8 +34,8 @@ class _CharacterPageState extends State<CharacterPage> {
                   itemCount: globalCharacterList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return CharacterRow(
-                      globalCharacterList: globalCharacterList[index],
-                    );
+                        globalCharacterList: globalCharacterList[index],
+                        index: index);
                   }),
             )
           ],
@@ -46,16 +47,20 @@ class _CharacterPageState extends State<CharacterPage> {
 
 // ignore: must_be_immutable
 class CharacterRow extends StatefulWidget {
-
+  int index;
   final List<String> globalCharacterList;
 
-  String char1 , char2, char3, char4;
+  List<List<bool>> temp = Hive.box('BoolCharacter').get('bool');
+  List<String> characters = ["Q", "Q", "Q", "Q"];
 
-  CharacterRow({this.globalCharacterList}) {
-    this.char1 = globalCharacterList[0];
-    this.char2 = globalCharacterList[1];
-    this.char3 = globalCharacterList[2];
-    this.char4 = globalCharacterList[3];
+  CharacterRow({this.globalCharacterList, this.index}) {
+    for (int i = 0; i < 4; i++) {
+      if (temp[index][i] == true) {
+        this.characters[i] = globalCharacterList[i];
+      } else {
+        this.characters[i] = "Q";
+      }
+    }
   }
 
   _CharacterRowState createState() => _CharacterRowState();
@@ -69,10 +74,10 @@ class _CharacterRowState extends State<CharacterRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CharacterContainer(nameChar: widget.char1),
-          CharacterContainer(nameChar: widget.char2),
-          CharacterContainer(nameChar: widget.char3),
-          CharacterContainer(nameChar: widget.char4),
+          CharacterContainer(nameChar: widget.characters[0]),
+          CharacterContainer(nameChar: widget.characters[1]),
+          CharacterContainer(nameChar: widget.characters[2]),
+          CharacterContainer(nameChar: widget.characters[3]),
         ],
       ),
     );
@@ -96,7 +101,9 @@ class CharacterContainer extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(CustomPageRoute(CharacterOne(nameChar: nameChar,)));
+            Navigator.of(context).push(CustomPageRoute(CharacterOne(
+              nameChar: nameChar,
+            )));
           },
           child: Container(
             decoration: BoxDecoration(
@@ -109,7 +116,8 @@ class CharacterContainer extends StatelessWidget {
             child: SizedBox(
               width: 40,
               height: 40,
-              child: Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
+              child:
+                  Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
             ),
           ),
         ),
@@ -130,7 +138,7 @@ class CustomPageRoute<T> extends PageRoute<T> {
 
   @override
   String get barrierLabel => null;
-  
+
   @override
   // TODO: implement opaque
   bool get opaque => false;

@@ -121,6 +121,10 @@ flutter:
     - assets/images/box.png
     - assets/images/night.png
     - assets/images/check.png
+    - assets/images/light.png
+    - assets/images/bridge.png
+    - assets/images/nightsky.png
+    - assets/images/river.png
 
   fonts :
     - family: IBM

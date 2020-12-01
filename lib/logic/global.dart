@@ -65,6 +65,14 @@ List<List<String>> globalCharacterList = [
   ["Q", "Q", "Q", "Q"]
 ];
 
+List<List<bool>> globalCharacterListBool = [
+  [false, false, false, false],
+  [false, false, false, false],
+  [false, false, false, false],
+  [false, false, false, false],
+  [false, false, false, false]
+];
+
 List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
 
 // 랜덤박스 에니메이션
@@ -78,7 +86,7 @@ final kittenRandomSprite = SpriteSheet(
 );
 
 // 랜덤박스 개수
-int randomBoxNumber = 0;
+int randomBoxNumber = 1;
 
 var randomAnimation;
 
@@ -465,7 +473,7 @@ getServerdata() async {
       totalsteps = 0;
     }
   });
-  status.totalCount = totalsteps -steps+psteps;
+  status.totalCount = totalsteps - steps + psteps;
 }
 
 ///입력한 친구 이름이 파이어베이스에 있을 시
@@ -532,8 +540,6 @@ String getmonth(DateTime date) {
   return dateYMD;
 }
 
-
-
 //데이터를 파이어베이스로 전송하는 함수, 앱 실행시, 23:59분마다 실행할 예정, 새로고침버튼도 고려중
 senddata() async {
   debugPrint('steps: $steps');
@@ -559,9 +565,8 @@ senddata() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       datastep = documentSnapshot.get('steps');
-
     } else {
-      datastep=0;
+      datastep = 0;
     }
   });
   debugPrint('datasteps: $datastep');
@@ -584,7 +589,7 @@ senddata() async {
 
 //cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
-  int gamecardstep = steps-psteps;
+  int gamecardstep = steps - psteps;
   int character = 1;
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(
