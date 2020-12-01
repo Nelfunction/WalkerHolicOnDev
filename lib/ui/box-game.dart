@@ -14,7 +14,7 @@ class MyGame extends BaseGame {
   Position character_p;
 
   Position _size = Position(150, 150);
-  int characternum = 3;
+  int background_code;
 
   String nowCharacter;
 
@@ -24,14 +24,15 @@ class MyGame extends BaseGame {
   int jumpHeightMax = 200;
   int nowJump = 0;
   bool goUp = true;
-  double accelator = 1;
+  double accelator = 15;
 
   bool isJump = false;
 
-  MyGame(var character, {double input = 200}) {
+  MyGame(var character, int background_code, {double input = 200}) {
     _size.x = input;
     _size.y = input;
     choosenAnimation = character;
+    this.background_code = background_code;
   }
 
   void resize(Size size) {
@@ -160,10 +161,11 @@ class MyGame extends BaseGame {
 
   @override
   void render(Canvas canvas) {
-    if (characternum == 1) {
+    debugPrint("==================== $background_code");
+    if (background_code == 1) {
       background1.getSprite().renderPosition(canvas, background_p,
           size: Position(2584 / (1080 / screenSize.height), screenSize.height));
-    } else if (characternum == 2) {
+    } else if (background_code == 2) {
       sky_sprite.getSprite().renderPosition(canvas, sky_p,
           size: Position(270 / (320 / screenSize.height), screenSize.height));
       cloud_sprite.getSprite().renderPosition(canvas, cloud_p,
@@ -172,7 +174,7 @@ class MyGame extends BaseGame {
           size: Position(630 / (320 / screenSize.height), screenSize.height));
       way_sprite.getSprite().renderPosition(canvas, way_p,
           size: Position(630 / (320 / screenSize.height), screenSize.height));
-    } else if (characternum == 3) {
+    } else if (background_code == 3) {
       nightsky_sprite.getSprite().renderPosition(canvas, sky_p,
           size: Position(270 / (320 / screenSize.height), screenSize.height));
       river_sprite.getSprite().renderPosition(canvas, cloud_p,
@@ -191,12 +193,12 @@ class MyGame extends BaseGame {
 
   @override
   void update(double t) {
-    if (characternum == 1) {
+    if (background_code == 1) {
       background_p.x -= 5;
       if (background_p.x < -(1920 / (1080 / screenSize.height))) {
         background_p.x = 0;
       }
-    } else if (characternum == 2) {
+    } else if (background_code == 2) {
       cloud_p.x -= 1;
       mountain_p.x -= 2;
       way_p.x -= 5;
@@ -209,7 +211,7 @@ class MyGame extends BaseGame {
       if (way_p.x < -(360 / (320 / screenSize.height))) {
         way_p.x = 0;
       }
-    } else if (characternum == 3) {
+    } else if (background_code == 3) {
       cloud_p.x -= 2;
       mountain_p.x -= 2;
       way_p.x -= 5;

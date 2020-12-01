@@ -15,10 +15,13 @@ class Gamecard {
 
   var myCharacter;
 
-  Gamecard(String name, int steps, var myCharacter) {
+  int background;
+
+  Gamecard(String name, int steps, var myCharacter, int background) {
     this.name = name;
     this.cardSteps = steps;
     this.myCharacter = myCharacter;
+    this.background = background;
   }
 }
 
