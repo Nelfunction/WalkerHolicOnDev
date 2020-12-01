@@ -31,6 +31,24 @@ int totalsteps = 1000; // 앱을 시작한 순간 서버에 기록되어 있는 
 int psteps = 0; // 전날 기기의 stepcount
 int steps = 53; // 현재 기기의 stepcount
 
+
+
+void initStepCount(StepCount event) { //스텝을 최초에 불러옴
+  /// Handle step count changed
+  steps = event.steps;
+}
+
+Future<void> initstep() async { //스텝을 최초에 불러옴
+  Stream<StepCount> initstepCountStream;
+  initstepCountStream = await Pedometer.stepCountStream;
+
+  /// Listen to streams and handle errors
+  initstepCountStream.listen(initStepCount);
+
+}
+
+
+
 //gamecard 전역변수
 var gamecards = <Gamecard>[];
 
@@ -281,6 +299,10 @@ getLocaldata() async {
     psteps = 0;
   }
   status.todayCount = steps - psteps;
+
+  debugPrint('YYYYYYYYYYYtodaycount = ${status.todayCount} ');
+  debugPrint('YYYYYYYYYYYsteps = ${steps} ');
+  debugPrint('YYYYYYYYYYYYYYYYYYpsteps = ${psteps} ');
 }
 
 String getdate(DateTime date) {
