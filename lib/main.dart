@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
         (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true, true]),
         (Color(property.get('textColor') ?? 0xffffffff)),
-        (property.get('number') ?? 100) +randomBoxNumber,
+        (property.get('number') ?? 100) + randomBoxNumber,
       ),
       child: Body(),
     );
@@ -150,6 +150,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     final property = Provider.of<Property>(context);
+    Hive.box('Property').put('number', property.number);
     return MaterialApp(
         title: "WalkerHolic_Sprite",
         theme: ThemeData(fontFamily: 'IBM'),
