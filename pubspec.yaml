@@ -132,3 +132,6 @@ flutter:
     - family: IBM
       fonts :
         - asset: fonts/IBMPlexSansKR.ttf
+    - family: LAB
+      fonts :
+        - asset: fonts/LAB.ttf

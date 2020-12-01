@@ -1,9 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -20,6 +17,8 @@ import 'logic/pedoForeground.dart';
 import 'logic/login.dart';
 
 void main() async {
+  runApp(MySplashApp());
+
   Stopwatch stopwatch = new Stopwatch()..start();
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -57,6 +56,51 @@ void main() async {
   runApp(MyApp());
 }
 
+class MySplashApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'LAB'),
+      home: Scaffold(
+          body: Stack(
+        children: [
+          ColorTheme.colorPreset[3].buildContainer(),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 40,
+                ),
+                Image.asset("assets/images/kittenIcon.png"),
+                SizedBox(
+                  height: 40,
+                ),
+                Text(
+                  "Walker",
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Holic",
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      )),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -64,14 +108,21 @@ class MyApp extends StatelessWidget {
     var property = Hive.box('Property');
     var character = Hive.box('BoolCharacter');
 
-    character.put('bool', globalCharacterListBool);
+    globalCharacterListBool = (character.get('bool') ??
+        [
+          [true, false, false, false],
+          [false, false, false, false],
+          [false, false, false, false]
+        ]);
+
+    //character.put('bool', character.get('bool') ?? globalCharacterListBool);
 
     return ChangeNotifierProvider<Property>(
       create: (_) => Property(
         (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true]),
         (Color(property.get('textColor') ?? 0xffffffff)),
-        (property.get('number') ?? 10),
+        (property.get('number') ?? 100),
       ),
       child: Body(),
     );

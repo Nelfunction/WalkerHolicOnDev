@@ -77,7 +77,7 @@ class CharacterRow extends StatefulWidget {
   int index;
   final List<String> globalCharacterList;
 
-  List<List<bool>> temp = Hive.box('BoolCharacter').get('bool');
+  List<dynamic> temp = globalCharacterListBool;
   List<String> characters = ["Q", "Q", "Q", "Q"];
 
   CharacterRow({this.globalCharacterList, this.index}) {

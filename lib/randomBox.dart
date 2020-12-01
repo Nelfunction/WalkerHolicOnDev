@@ -117,13 +117,12 @@ class _RandomBoxState extends State<RandomBox> {
   }
 
   Future<void> ChangeFlag() async {
-    flag = Random().nextInt(globalCharacters.length - 1);
+    flag = Random().nextInt(globalCharacters.length);
     randomName = globalCharacters[flag] + " Cat";
     property.minusNumber();
     Hive.box('Property').put('number', property.number);
 
-    List<List<bool>> temp;
-    temp = Hive.box('boolCharacter').get('bool');
+    List<dynamic> temp = globalCharacterListBool;
     temp[0][flag] = true;
     Hive.box('BoolCharacter').put('bool', temp);
     setState(() {
