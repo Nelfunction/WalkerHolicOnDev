@@ -8,7 +8,6 @@ class AttendancePage extends StatefulWidget {
 }
 
 class _AttendancePageState extends State<AttendancePage> {
-  // characterPage를 활용해서 날먹했음 ㅋㅋ 성현 ㄳㄳ
   List<List<String>> input = [
     ["1", "2", "3", "4"],
     ["5", "6", "7", "8"],

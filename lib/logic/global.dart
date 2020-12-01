@@ -107,6 +107,7 @@ Future<void> attendance() async {
 
           if ((days - 4) % 8 == 0) {
             //선물을 주는 날이 되었다면?
+            randomBoxNumber++;
             //가챠박스 1 증가
           }
         } else {
