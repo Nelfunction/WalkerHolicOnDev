@@ -18,16 +18,18 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-          child: Container(
-        child: Column(
-          children: [
-            SizedBox(height: 70),
-            Text(
-              'Characters',
-              style: TextStyle(fontSize: 36, color: Colors.white),
-            ),
-            Expanded(
-              child: ListView.builder(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'Characters',
+                style: TextStyle(fontSize: 34, color: Colors.white),
+              ),
+              ListView.builder(
                   physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.all(10),
                   shrinkWrap: true,
@@ -37,10 +39,34 @@ class _CharacterPageState extends State<CharacterPage> {
                         globalCharacterList: globalCharacterList[index],
                         index: index);
                   }),
-            )
-          ],
+              Text(
+                'Backgrounds',
+                style: TextStyle(fontSize: 34, color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BackgroundContainer(
+                      nameChar: "pixel_background1",
+                      name: "City",
+                    ),
+                    BackgroundContainer(
+                      nameChar: "pixel_background2",
+                      name: "Field",
+                    ),
+                    BackgroundContainer(
+                      nameChar: "pixel_background3",
+                      name: "Night",
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
@@ -107,10 +133,9 @@ class CharacterContainer extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white, width: 4),
-              color: Color.fromARGB(100, 255, 255, 255),
-            ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 4),
+                color: Colors.white.withAlpha(100)),
             margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
             padding: EdgeInsets.all(10),
             child: SizedBox(
@@ -123,6 +148,48 @@ class CharacterContainer extends StatelessWidget {
         ),
         Text(
           nameText,
+          style: TextStyle(fontSize: 10, color: Colors.white),
+        )
+      ],
+    );
+  }
+}
+
+// ignore: must_be_immutable
+
+class BackgroundContainer extends StatelessWidget {
+  final String nameChar;
+  final String name;
+  const BackgroundContainer({this.nameChar, this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            // 배경 설정하기!
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white, width: 4),
+              color: Colors.white.withAlpha(100),
+            ),
+            margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            padding: EdgeInsets.all(1),
+            child: SizedBox(
+              width: 90,
+              height: 140,
+              child: Image.asset(
+                "assets/images/" + nameChar + ".jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Text(
+          name,
           style: TextStyle(fontSize: 10, color: Colors.white),
         )
       ],
