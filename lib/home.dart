@@ -77,8 +77,9 @@ class _MyHomeState extends State<MyHome> {
               Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: new AssetImage(
-                          'assets/images/pixel_background' + "2" + '.jpg'),
+                      image: new AssetImage('assets/images/pixel_background' +
+                          gamecard.background.toString() +
+                          '.jpg'),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.transparent, width: 150),

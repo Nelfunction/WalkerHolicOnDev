@@ -13,10 +13,13 @@ class Gamecard {
 
   var myCharacter;
 
-  Gamecard(String name, int steps, var myCharacter) {
+  int background;
+
+  Gamecard(String name, int steps, var myCharacter, int background) {
     this.name = name;
     this.cardSteps = steps;
     this.myCharacter = myCharacter;
+    this.background = background;
   }
 }
 
@@ -191,8 +194,8 @@ class PersonalStatus {
                       animation: true,
                       lineHeight: 10.0,
                       animationDuration: 2000,
-                      percent:
-                          recentWeek[index].toDouble() / recentweekstepmax.toDouble(),
+                      percent: recentWeek[index].toDouble() /
+                          recentweekstepmax.toDouble(),
                       linearStrokeCap: LinearStrokeCap.round,
                       progressColor: Colors.white,
                     ),

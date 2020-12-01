@@ -7,19 +7,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'logic/global.dart';
 
-class CharacterOne extends StatelessWidget {
+class BackgroundOne extends StatelessWidget {
   final String nameChar;
-  const CharacterOne({this.nameChar = ""});
+  final String name;
+  const BackgroundOne({this.nameChar, this.name});
+
+  int codeReturn(String nameChar) {
+    if (nameChar == "pixel_background1") {
+      return 1;
+    } else if (nameChar == "pixel_background2") {
+      return 2;
+    } else {
+      return 3;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    String nameText;
-    if (nameChar == "Q") {
-      nameText = "???";
-    } else {
-      nameText = nameChar + ' Cat';
-    }
-
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(.85),
       body: Container(
@@ -31,28 +35,28 @@ class CharacterOne extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white, width: 4),
+                border: Border.all(color: Colors.white, width: 1),
                 color: Colors.white,
               ),
-              margin: EdgeInsets.fromLTRB(5, 150, 5, 5),
+              margin: EdgeInsets.fromLTRB(5, 80, 5, 5),
               padding: EdgeInsets.all(10),
               child: SizedBox(
-                width: 200,
-                height: 200,
+                width: 270,
+                height: 400,
                 child: Image.asset(
-                  "assets/images/kittenIcon" + nameChar + ".png",
+                  "assets/images/" + nameChar + ".jpg",
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             Text(
-              nameText,
+              name,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             // 아래 메뉴
             ClipRRect(
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
+                    margin: EdgeInsets.fromLTRB(30, 20, 30, 40),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24.0),
                         color: Colors.black,
@@ -63,7 +67,7 @@ class CharacterOne extends StatelessWidget {
                           child: FlatButton(
                             onPressed: () {
                               // 선택
-                              ChooseChareter(nameChar, context);
+                              ChooseBackground(codeReturn(nameChar), context);
                             },
                             child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 5),
@@ -113,34 +117,32 @@ class CharacterOne extends StatelessWidget {
   }
 }
 
-Future<void> ChooseChareter(String nowCharacter, BuildContext context) async {
+Future<void> ChooseBackground(int nowBackground, BuildContext context) async {
   SharedPreferences sp = await SharedPreferences.getInstance();
 
-  String key = "NowCharacter";
-  sp.setString(key, nowCharacter);
-  debugPrint("Write SP, Now Character : $nowCharacter");
+  String key = "background";
+  sp.setInt(key, nowBackground);
+  debugPrint("Write SP, Now Character : $nowBackground");
 
-  int background_value;
+  String character_value;
   await firestore
       .collection(userid)
       .doc('Character+Background')
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      background_value = documentSnapshot.get('background');
+      character_value = documentSnapshot.get('character');
     } else {
-      background_value = 2;
+      character_value = "";
     }
   });
 
-  firestore.collection(userid).doc("Character+Background").set({
-    'character': "kitten" + nowCharacter + ".png",
-    'background': background_value
-  });
+  firestore
+      .collection(userid)
+      .doc("Character+Background")
+      .set({'character': character_value, 'background': nowBackground});
 
-  String myCharacter_str;
-  SpriteSheet myCharacter;
-  var myAnimation;
+  int background_int;
 
   await firestore
       .collection(userid)
@@ -148,19 +150,13 @@ Future<void> ChooseChareter(String nowCharacter, BuildContext context) async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      myCharacter_str = documentSnapshot.get('character');
-      myCharacter = SpriteSheet(
-        imageName: myCharacter_str,
-        textureWidth: 160,
-        textureHeight: 160,
-        columns: 4,
-        rows: 1,
-      );
-      myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
-    } else {}
+      background_int = documentSnapshot.get('background');
+    } else {
+      background_int = 1;
+    }
   });
 
-  gamecards[0].myCharacter = myAnimation;
+  gamecards[0].background = background_int;
 
   Navigator.of(context).pop();
 }

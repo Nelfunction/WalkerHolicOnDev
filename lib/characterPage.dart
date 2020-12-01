@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import 'backgroundOne.dart';
 import 'characterOne.dart';
 import 'logic/global.dart';
 
@@ -168,7 +169,10 @@ class BackgroundContainer extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            // 배경 설정하기!
+            Navigator.of(context).push(CustomPageRoute(BackgroundOne(
+              nameChar: nameChar,
+              name: name,
+            ))); // 배경 설정하기!
           },
           child: Container(
             decoration: BoxDecoration(
