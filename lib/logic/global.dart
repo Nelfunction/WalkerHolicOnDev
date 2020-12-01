@@ -61,13 +61,9 @@ List<List<String>> globalCharacterList = [
   ["", "BlackWhite", "Black", "Flame"],
   ["Q", "Q", "Q", "Q"],
   ["Q", "Q", "Q", "Q"],
-  ["Q", "Q", "Q", "Q"],
-  ["Q", "Q", "Q", "Q"]
 ];
 
 List<List<bool>> globalCharacterListBool = [
-  [false, false, false, false],
-  [false, false, false, false],
   [false, false, false, false],
   [false, false, false, false],
   [false, false, false, false]
