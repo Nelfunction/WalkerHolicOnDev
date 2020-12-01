@@ -11,7 +11,6 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-
   TextStyle thumbnailStyle =
       new TextStyle(fontSize: 20, fontWeight: FontWeight.w600, shadows: [
     Shadow(
@@ -35,10 +34,6 @@ class _MyHomeState extends State<MyHome> {
   //MyGame game = MyGame();
   TextEditingController controller = new TextEditingController();
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,7 +46,7 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: Colors.transparent,
         body: Swiper(
           scrollDirection: Axis.horizontal,
-          itemCount:  gamecards.length ,
+          itemCount: gamecards.length,
           itemBuilder: (context, index) {
             return cardview(gamecards[index]);
           },
@@ -61,10 +56,9 @@ class _MyHomeState extends State<MyHome> {
                   color: Colors.white30,
                   activeColor: Colors.white,
                   size: 10.0,
-                  activeSize: 10.0)),
+                  activeSize: 12.0)),
           control: new SwiperControl(color: Colors.white),
           //autoplay: true,
-
         ),
       ),
     );
@@ -83,9 +77,8 @@ class _MyHomeState extends State<MyHome> {
               Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: new AssetImage('assets/images/pixel_background' +
-                          "2" +
-                          '.jpg'),
+                      image: new AssetImage(
+                          'assets/images/pixel_background' + "2" + '.jpg'),
                       fit: BoxFit.cover),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.transparent, width: 150),
