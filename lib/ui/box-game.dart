@@ -232,14 +232,14 @@ class MyGame extends BaseGame {
       if (goUp) {
         // 위로 올라가야 함.
         character_p.y -= accelator;
-        accelator += 0.7;
+        accelator += 0.4;
 
         if (character_p.y <= screenSize.height - _size.y - 70 - jumpHeightMax) {
           goUp = false;
         }
       } else {
         character_p.y += accelator;
-        accelator -= 0.7;
+        accelator -= 0.4;
 
         if (character_p.y >= screenSize.height - _size.y - 70) {
           character_p.y = screenSize.height - _size.y - 70;
