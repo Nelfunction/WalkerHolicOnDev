@@ -24,7 +24,7 @@ class MyGame extends BaseGame {
   int jumpHeightMax = 200;
   int nowJump = 0;
   bool goUp = true;
-  double accelator = 0;
+  double accelator = 1;
 
   bool isJump = false;
 
