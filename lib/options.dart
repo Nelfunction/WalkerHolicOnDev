@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:walkerholic/bloc/provider.dart';
 import 'package:walkerholic/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
@@ -247,6 +248,15 @@ class _MyOptionState extends State<MyOption> {
     );
   }
 
+  Future<int> get_RandomBoxnNumber() async {
+    int result;
+
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    result = sp.getInt("randomBoxKey");
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<Property>(context);
@@ -329,28 +339,53 @@ class _MyOptionState extends State<MyOption> {
                       context: context,
                       text: 'Google Account Sync'),
                   Divider(height: 1, thickness: 1),
-                  flatbutton(
-                    onPressed: () {
-                      if (randomBoxNumber > 0) {
-                        Navigator.of(context)
-                            .push(CustomPageRoute(RandomBox()));
-                      } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: SizedBox(
-                            height: 30,
-                            child: Center(
-                              child: Text(
-                                "Not Enough RandomBox! :(",
-                                style: TextStyle(fontSize: 16),
+                  Container(
+                    child: SizedBox(
+                      height: 50,
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "RandomBox",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 22.0,
+                                ),
                               ),
-                            ),
+                              Text(
+                                "${provider.number}",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 22.0,
+                                ),
+                              )
+                            ],
                           ),
-                          backgroundColor: Colors.black.withOpacity(0.5),
-                        ));
-                      }
-                    },
-                    context: context,
-                    text: 'RandomBox',
+                        ),
+                        onTap: () {
+                          if (provider.number > 0) {
+                            Navigator.of(context)
+                                .push(CustomPageRoute(RandomBox(provider)));
+                          } else {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: SizedBox(
+                                height: 30,
+                                child: Center(
+                                  child: Text(
+                                    "Not Enough RandomBox! :(",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              backgroundColor: Colors.black.withOpacity(0.5),
+                            ));
+                          }
+                        },
+                      ),
+                    ),
                   ),
                   Divider(height: 1, thickness: 1),
                 ],

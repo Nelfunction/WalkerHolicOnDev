@@ -3,17 +3,29 @@ import 'dart:math';
 import 'package:flame/spritesheet.dart';
 import 'package:flame/widgets/animation_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:walkerholic/bloc/provider.dart';
 
 import 'logic/global.dart';
 
 class RandomBox extends StatefulWidget {
+  Property property;
+  RandomBox(this.property);
   @override
-  _RandomBoxState createState() => _RandomBoxState();
+  _RandomBoxState createState() => _RandomBoxState(property);
 }
 
 class _RandomBoxState extends State<RandomBox> {
   String randomName = "Now Opening...";
   int flag = 99;
+
+  Property property;
+
+  _RandomBoxState(this.property);
+
+  bool onetime = true;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +64,10 @@ class _RandomBoxState extends State<RandomBox> {
                         Container(
                           child: FlatButton(
                             onPressed: () {
-                              ChangeFlag();
+                              if (onetime) {
+                                ChangeFlag();
+                                onetime = false;
+                              }
                             },
                             child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 5),
@@ -101,10 +116,16 @@ class _RandomBoxState extends State<RandomBox> {
     );
   }
 
-  void ChangeFlag() {
+  Future<void> ChangeFlag() async {
     flag = Random().nextInt(globalCharacters.length - 1);
     randomName = globalCharacters[flag] + " Cat";
-    randomBoxNumber--;
+    property.minusNumber();
+    Hive.box('Property').put('number', property.number);
+
+    List<List<bool>> temp;
+    temp = Hive.box('boolCharacter').get('bool');
+    temp[0][flag] = true;
+    Hive.box('BoolCharacter').put('bool', temp);
     setState(() {
       debugPrint("Random Box : Now Flag is $flag");
     });

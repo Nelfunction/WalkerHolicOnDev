@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:ui';
+import 'dart:math';
 
 import 'format.dart';
 
@@ -30,7 +31,11 @@ String id = 'temp';
 int totalsteps = 1000; // 앱을 시작한 순간 서버에 기록되어 있는 총 걸음 수
 int psteps = 0; // 전날 기기의 stepcount
 int steps = 53; // 현재 기기의 stepcount
-int datastep=0;
+int datastep=0;// 오늘 이미 파이어베이스에 저장된 스탭수
+int tempstep=0; //현재 기기의 stepcount를 고정하여 저장
+
+int recentweekstepmax=10000;// 최근 7일의 걸음수의 평균
+int recentmonthstepmax=100000;// 최근 7일의 걸음수의 평균
 
 void initStepCount(StepCount event) {
   //스텝을 최초에 불러옴
@@ -56,8 +61,12 @@ List<List<String>> globalCharacterList = [
   ["", "BlackWhite", "Black", "Flame"],
   ["Q", "Q", "Q", "Q"],
   ["Q", "Q", "Q", "Q"],
-  ["Q", "Q", "Q", "Q"],
-  ["Q", "Q", "Q", "Q"]
+];
+
+List<List<bool>> globalCharacterListBool = [
+  [false, false, false, false],
+  [false, false, false, false],
+  [false, false, false, false]
 ];
 
 List<String> globalCharacters = ["", "BlackWhite", "Black", "Flame"];
@@ -73,7 +82,7 @@ final kittenRandomSprite = SpriteSheet(
 );
 
 // 랜덤박스 개수
-int randomBoxNumber = 0;
+int randomBoxNumber = 1;
 
 var randomAnimation;
 
@@ -89,7 +98,7 @@ PersonalStatus status = PersonalStatus(
   DateTime.now(),
   todayCount: -1,
   totalCount: -1,
-  recentWeek: [2000, 7012, 4942, 3000, 4010, 10000, 1997],
+  recentWeek: [2000, 7012, 0, 3000, 4010, 10000, 1997],
   recentMonth: [222222, 272222, 75000, 111111],
   currentDate: DateTime.now(),
 );
@@ -145,6 +154,223 @@ Future<void> attendance() async {
       });
     }
   });
+}
+
+//최근 7일(오늘포함)하여 steps를 불러오는 함수
+Future<void> loadrecentweeks() async {
+    recentweekstepmax=1;
+
+      int daystep=0;
+      for(int i=0;i<7;i++)
+        {
+          var tempdate= getdate(new DateTime(
+              DateTime.now().year, DateTime.now().month, DateTime.now().day - 6+i));
+
+          await firestore
+              .collection(userid)
+              .doc(tempdate.toString())
+              .get()
+              .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) {
+              daystep = documentSnapshot.get('steps');
+            } else {
+              daystep = 0;
+            }
+          });
+
+          status.recentWeek[i]=daystep;
+          recentweekstepmax=max(recentweekstepmax,daystep)+1;
+
+
+        }
+
+
+}
+
+//최근 네달(요번 달 포함)하여 steps를 불러오는 함수
+Future<void> loadrecentmonths() async {
+  recentmonthstepmax=1;
+  int monthstep=0;
+  int daystep=0;
+  int month=DateTime.now().month;
+  int tempnum=DateTime.now().day;
+
+    for (int i = 0; i < tempnum; i++) {
+      var tempdate = getdate(new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - i));
+
+      await firestore
+          .collection(userid)
+          .doc(tempdate.toString())
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          daystep = documentSnapshot.get('steps');
+        } else {
+          daystep = 0;
+        }
+      });
+      monthstep += daystep;
+    }
+    status.recentMonth[3] = monthstep;
+    recentmonthstepmax = max(recentmonthstepmax, monthstep) + 1;
+    bool load=false;
+
+     monthstep=0;
+    int tempnum2 = DateTime.now().subtract(Duration(days: tempnum)).day;
+    await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum))))
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      monthstep = documentSnapshot.get('steps');
+      load=false;
+    } else {
+      monthstep = 0;
+      load=true;
+    }
+    });
+
+    if(load) {
+      for (int i = 0; i < tempnum2; i++) {
+        var tempdate = getdate(new DateTime(DateTime
+            .now()
+            .year, DateTime
+            .now()
+            .month, DateTime
+            .now()
+            .day - tempnum - i));
+
+        await firestore
+            .collection(userid)
+            .doc(tempdate.toString())
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            daystep = documentSnapshot.get('steps');
+          } else {
+            daystep = 0;
+          }
+        });
+        monthstep += daystep;
+      }
+    }
+      status.recentMonth[2] = monthstep;
+      recentmonthstepmax = max(recentmonthstepmax, monthstep) + 1;
+
+
+  await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum))))
+      .set({'steps': monthstep});
+
+  debugPrint("11111111 ${getmonth(DateTime.now().subtract(Duration(days:tempnum)))}");
+
+  int tempnum3 =  DateTime.now().subtract(Duration(days: tempnum+tempnum2)).day;
+  monthstep=0;
+
+  await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum+tempnum2))))
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      monthstep = documentSnapshot.get('steps');
+      load=false;
+    } else {
+      monthstep = 0;
+      load=true;
+    }
+  });
+
+  if(load) {
+    for (int i = 0; i < tempnum3; i++) {
+      var tempdate = getdate(new DateTime(DateTime
+          .now()
+          .year, DateTime
+          .now()
+          .month, DateTime
+          .now()
+          .day - tempnum - tempnum2 - i));
+
+      await firestore
+          .collection(userid)
+          .doc(tempdate.toString())
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          daystep = documentSnapshot.get('steps');
+        } else {
+          daystep = 0;
+        }
+      });
+      monthstep += daystep;
+    }
+  }
+  status.recentMonth[1] = monthstep;
+  recentmonthstepmax = max(recentmonthstepmax, monthstep) + 1;
+
+  await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum+tempnum2))))
+      .set({'steps': monthstep});
+
+  debugPrint("22222222 ${getmonth(DateTime.now().subtract(Duration(days:tempnum-tempnum2)))}");
+
+  int tempnum4 =  DateTime.now().subtract(Duration(days: tempnum+tempnum2+tempnum3)).day;
+
+
+  await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum+tempnum2+tempnum3))))
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      monthstep = documentSnapshot.get('steps');
+      load=false;
+    } else {
+      monthstep = 0;
+      load=true;
+    }
+  });
+
+  if(load) {
+    for (int i = 0; i < tempnum4; i++) {
+      var tempdate = getdate(new DateTime(DateTime
+          .now()
+          .year, DateTime
+          .now()
+          .month, DateTime
+          .now()
+          .day - tempnum - tempnum2 - tempnum3 - i));
+
+      await firestore
+          .collection(userid)
+          .doc(tempdate.toString())
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          daystep = documentSnapshot.get('steps');
+        } else {
+          daystep = 0;
+        }
+      });
+      monthstep += daystep;
+    }
+  }
+  status.recentMonth[0] = monthstep;
+  recentmonthstepmax = max(recentmonthstepmax, monthstep) + 1;
+
+  await firestore
+      .collection(userid)
+      .doc(getmonth(DateTime.now().subtract(Duration(days:tempnum+tempnum2+tempnum3))))
+      .set({'steps': monthstep});
+  debugPrint("333333333 ${getmonth(DateTime.now().subtract(Duration(days:tempnum+tempnum2+tempnum3)))}");
+
+
+
+
+
 }
 
 //친구 요청 리스트 불러오는 함수
@@ -243,7 +469,7 @@ getServerdata() async {
       totalsteps = 0;
     }
   });
-  status.totalCount = totalsteps -steps+psteps;
+  status.totalCount = totalsteps - steps + psteps;
 }
 
 ///입력한 친구 이름이 파이어베이스에 있을 시
@@ -310,8 +536,6 @@ String getmonth(DateTime date) {
   return dateYMD;
 }
 
-
-
 //데이터를 파이어베이스로 전송하는 함수, 앱 실행시, 23:59분마다 실행할 예정, 새로고침버튼도 고려중
 senddata() async {
   debugPrint('steps: $steps');
@@ -337,9 +561,8 @@ senddata() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       datastep = documentSnapshot.get('steps');
-
     } else {
-      datastep=0;
+      datastep = 0;
     }
   });
   debugPrint('datasteps: $datastep');
@@ -356,12 +579,13 @@ senddata() async {
       .doc('total_steps')
       .set({'total_steps': totalsteps + steps - psteps - datastep});
   debugPrint('DDDDDDDD');
+  tempstep=steps;
 
 }
 
 //cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
-  int gamecardstep = steps-psteps;
+  int gamecardstep = steps - psteps;
   int character = 1;
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(
@@ -424,7 +648,9 @@ Future<void> loadfrienddata() async {
     } else {}
   });
 
-  for (int i = 0; i < list.length; i++) {
+  int length=min(10,list.length);
+
+  for (int i = 0; i < length; i++) {
     String key = list[i];
     await firestore
         .collection(key)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'characterOne.dart';
 import 'logic/global.dart';
@@ -17,45 +18,75 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-          child: Container(
-        child: Column(
-          children: [
-            SizedBox(height: 70),
-            Text(
-              'Characters',
-              style: TextStyle(fontSize: 36, color: Colors.white),
-            ),
-            Expanded(
-              child: ListView.builder(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'Characters',
+                style: TextStyle(fontSize: 34, color: Colors.white),
+              ),
+              ListView.builder(
                   physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.all(10),
                   shrinkWrap: true,
                   itemCount: globalCharacterList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return CharacterRow(
-                      globalCharacterList: globalCharacterList[index],
-                    );
+                        globalCharacterList: globalCharacterList[index],
+                        index: index);
                   }),
-            )
-          ],
+              Text(
+                'Backgrounds',
+                style: TextStyle(fontSize: 34, color: Colors.white),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BackgroundContainer(
+                      nameChar: "pixel_background1",
+                      name: "City",
+                    ),
+                    BackgroundContainer(
+                      nameChar: "pixel_background2",
+                      name: "Field",
+                    ),
+                    BackgroundContainer(
+                      nameChar: "pixel_background3",
+                      name: "Night",
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
 
 // ignore: must_be_immutable
 class CharacterRow extends StatefulWidget {
-
+  int index;
   final List<String> globalCharacterList;
 
-  String char1 , char2, char3, char4;
+  List<List<bool>> temp = Hive.box('BoolCharacter').get('bool');
+  List<String> characters = ["Q", "Q", "Q", "Q"];
 
-  CharacterRow({this.globalCharacterList}) {
-    this.char1 = globalCharacterList[0];
-    this.char2 = globalCharacterList[1];
-    this.char3 = globalCharacterList[2];
-    this.char4 = globalCharacterList[3];
+  CharacterRow({this.globalCharacterList, this.index}) {
+    for (int i = 0; i < 4; i++) {
+      if (temp[index][i] == true) {
+        this.characters[i] = globalCharacterList[i];
+      } else {
+        this.characters[i] = "Q";
+      }
+    }
   }
 
   _CharacterRowState createState() => _CharacterRowState();
@@ -69,10 +100,10 @@ class _CharacterRowState extends State<CharacterRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CharacterContainer(nameChar: widget.char1),
-          CharacterContainer(nameChar: widget.char2),
-          CharacterContainer(nameChar: widget.char3),
-          CharacterContainer(nameChar: widget.char4),
+          CharacterContainer(nameChar: widget.characters[0]),
+          CharacterContainer(nameChar: widget.characters[1]),
+          CharacterContainer(nameChar: widget.characters[2]),
+          CharacterContainer(nameChar: widget.characters[3]),
         ],
       ),
     );
@@ -96,25 +127,69 @@ class CharacterContainer extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(CustomPageRoute(CharacterOne(nameChar: nameChar,)));
+            Navigator.of(context).push(CustomPageRoute(CharacterOne(
+              nameChar: nameChar,
+            )));
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white, width: 4),
-              color: Color.fromARGB(100, 255, 255, 255),
-            ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 4),
+                color: Colors.white.withAlpha(100)),
             margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
             padding: EdgeInsets.all(10),
             child: SizedBox(
               width: 40,
               height: 40,
-              child: Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
+              child:
+                  Image.asset("assets/images/kittenIcon" + nameChar + ".png"),
             ),
           ),
         ),
         Text(
           nameText,
+          style: TextStyle(fontSize: 10, color: Colors.white),
+        )
+      ],
+    );
+  }
+}
+
+// ignore: must_be_immutable
+
+class BackgroundContainer extends StatelessWidget {
+  final String nameChar;
+  final String name;
+  const BackgroundContainer({this.nameChar, this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            // 배경 설정하기!
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white, width: 4),
+              color: Colors.white.withAlpha(100),
+            ),
+            margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            padding: EdgeInsets.all(1),
+            child: SizedBox(
+              width: 90,
+              height: 140,
+              child: Image.asset(
+                "assets/images/" + nameChar + ".jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Text(
+          name,
           style: TextStyle(fontSize: 10, color: Colors.white),
         )
       ],
@@ -130,7 +205,7 @@ class CustomPageRoute<T> extends PageRoute<T> {
 
   @override
   String get barrierLabel => null;
-  
+
   @override
   // TODO: implement opaque
   bool get opaque => false;
