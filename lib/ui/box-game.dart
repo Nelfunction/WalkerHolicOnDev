@@ -126,8 +126,8 @@ class MyGame extends BaseGame {
     imageName: 'light.png',
     textureWidth: 630,
     textureHeight: 320,
-    columns: 1,
-    rows: 3,
+    columns: 3,
+    rows: 1,
   );
 
   final kitten_ani1 = character1.createAnimation(0, stepTime: 0.1);
@@ -143,7 +143,7 @@ class MyGame extends BaseGame {
   final nightsky_sprite = nightsky.createAnimation(0, stepTime: 0.05);
   final bridge_sprite = bridge.createAnimation(0, stepTime: 0.05);
   final river_sprite = river.createAnimation(0, stepTime: 0.05);
-  final light_sprite = light.createAnimation(0, stepTime: 0.05);
+  final light_sprite = light.createAnimation(0, stepTime: 0.4);
 
   final TextConfig config = TextConfig(
       fontSize: 30.0, fontFamily: 'Awesome Font', color: Colors.white);
