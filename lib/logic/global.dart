@@ -345,7 +345,7 @@ Future<void> loadmydata() async {
       columns: 4,
       rows: 1);
 
-  var myAnimation = myCharacter.createAnimation(0, stepTime: 0.1);
+  var myAnimation = myCharacter.createAnimation(0, stepTime: 1);
 
   // Character+Background를 불러옴
   await firestore
