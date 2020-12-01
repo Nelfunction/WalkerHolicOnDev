@@ -14,7 +14,7 @@ class MyGame extends BaseGame {
   Position character_p;
 
   Position _size = Position(150, 150);
-  int characternum = 2;
+  int characternum = 3;
 
   String nowCharacter;
 
@@ -44,14 +44,6 @@ class MyGame extends BaseGame {
   // Create Animation with SpriteSheet.
   static final myBackground1 = SpriteSheet(
     imageName: 'pixel_background1.jpg',
-    textureWidth: 2584,
-    textureHeight: 1080,
-    columns: 1,
-    rows: 1,
-  );
-
-  static final myBackground2 = SpriteSheet(
-    imageName: 'pixel_background2.jpg',
     textureWidth: 2584,
     textureHeight: 1080,
     columns: 1,
@@ -106,16 +98,52 @@ class MyGame extends BaseGame {
     rows: 1,
   );
 
-  final kitten_ani1 = character1.createAnimation(0, stepTime: 0.1);
-  final background1 = myBackground1.createAnimation(0, stepTime: 0.05);
+  static final nightsky = SpriteSheet(
+    imageName: 'nightsky.png',
+    textureWidth: 270,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
 
+  static final bridge = SpriteSheet(
+    imageName: 'bridge.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
+  static final river = SpriteSheet(
+    imageName: 'river.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 1,
+  );
+
+  static final light = SpriteSheet(
+    imageName: 'light.png',
+    textureWidth: 630,
+    textureHeight: 320,
+    columns: 1,
+    rows: 3,
+  );
+
+  final kitten_ani1 = character1.createAnimation(0, stepTime: 0.1);
   final kitten_ani2 = character2.createAnimation(0, stepTime: 0.1);
-  final background2 = myBackground2.createAnimation(0, stepTime: 0.05);
+
+  final background1 = myBackground1.createAnimation(0, stepTime: 0.05);
 
   final sky_sprite = sky.createAnimation(0, stepTime: 0.05);
   final way_sprite = way.createAnimation(0, stepTime: 0.05);
   final cloud_sprite = cloud.createAnimation(0, stepTime: 0.05);
   final mountain_sprite = mountain.createAnimation(0, stepTime: 0.05);
+
+  final nightsky_sprite = nightsky.createAnimation(0, stepTime: 0.05);
+  final bridge_sprite = bridge.createAnimation(0, stepTime: 0.05);
+  final river_sprite = river.createAnimation(0, stepTime: 0.05);
+  final light_sprite = light.createAnimation(0, stepTime: 0.05);
 
   final TextConfig config = TextConfig(
       fontSize: 30.0, fontFamily: 'Awesome Font', color: Colors.white);
@@ -143,6 +171,15 @@ class MyGame extends BaseGame {
       mountain_sprite.getSprite().renderPosition(canvas, mountain_p,
           size: Position(630 / (320 / screenSize.height), screenSize.height));
       way_sprite.getSprite().renderPosition(canvas, way_p,
+          size: Position(630 / (320 / screenSize.height), screenSize.height));
+    } else if (characternum == 3) {
+      nightsky_sprite.getSprite().renderPosition(canvas, sky_p,
+          size: Position(270 / (320 / screenSize.height), screenSize.height));
+      river_sprite.getSprite().renderPosition(canvas, cloud_p,
+          size: Position(630 / (320 / screenSize.height), screenSize.height));
+      light_sprite.getSprite().renderPosition(canvas, mountain_p,
+          size: Position(630 / (320 / screenSize.height), screenSize.height));
+      bridge_sprite.getSprite().renderPosition(canvas, way_p,
           size: Position(630 / (320 / screenSize.height), screenSize.height));
     }
 
@@ -172,6 +209,20 @@ class MyGame extends BaseGame {
       if (way_p.x < -(360 / (320 / screenSize.height))) {
         way_p.x = 0;
       }
+    } else if (characternum == 3) {
+      cloud_p.x -= 2;
+      mountain_p.x -= 2;
+      way_p.x -= 5;
+      if (cloud_p.x < -(360 / (320 / screenSize.height))) {
+        cloud_p.x = 0;
+      }
+      if (mountain_p.x < -(360 / (320 / screenSize.height))) {
+        mountain_p.x = 0;
+      }
+      if (way_p.x < -(360 / (320 / screenSize.height))) {
+        way_p.x = 0;
+      }
+      light_sprite.update(t);
     }
     choosenAnimation.update(t);
 
