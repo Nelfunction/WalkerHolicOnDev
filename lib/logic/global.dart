@@ -30,6 +30,7 @@ String id = 'temp';
 int totalsteps = 1000; // 앱을 시작한 순간 서버에 기록되어 있는 총 걸음 수
 int psteps = 0; // 전날 기기의 stepcount
 int steps = 53; // 현재 기기의 stepcount
+int datastep=0;
 
 
 
@@ -245,7 +246,7 @@ getServerdata() async {
       totalsteps = 0;
     }
   });
-  status.totalCount = totalsteps;
+  status.totalCount = totalsteps -steps+psteps;
 }
 
 ///입력한 친구 이름이 파이어베이스에 있을 시
@@ -299,10 +300,6 @@ getLocaldata() async {
     psteps = 0;
   }
   status.todayCount = steps - psteps;
-
-  debugPrint('YYYYYYYYYYYtodaycount = ${status.todayCount} ');
-  debugPrint('YYYYYYYYYYYsteps = ${steps} ');
-  debugPrint('YYYYYYYYYYYYYYYYYYpsteps = ${psteps} ');
 }
 
 String getdate(DateTime date) {
@@ -316,48 +313,58 @@ String getmonth(DateTime date) {
   return dateYMD;
 }
 
-//totalstep을 파이어베이스에서 로드하는 함수
-Future<int> loadtotalstep() async {
-  int result;
-  await FirebaseFirestore.instance
+
+
+//데이터를 파이어베이스로 전송하는 함수, 앱 실행시, 23:59분마다 실행할 예정, 새로고침버튼도 고려중
+senddata() async {
+  debugPrint('steps: $steps');
+  debugPrint('psteps: $psteps');
+
+  await firestore
       .collection(userid)
       .doc('total_steps')
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      result = documentSnapshot.get('total_steps');
+      totalsteps = documentSnapshot.get('total_steps');
     } else {
-      result = 0;
+      totalsteps = 0;
     }
   });
-  return result;
-}
 
-//데이터를 파이어베이스로 전송하는 함수, 앱 실행시, 23:59분마다 실행할 예정, 새로고침버튼도 고려중
-senddata() {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  debugPrint('steps: $steps');
-  debugPrint('psteps: $psteps');
-  firestore
+  debugPrint('AAAAAAAAAAAAAA');
+  await firestore
       .collection(userid)
-      .doc(getdate(DateTime.now()))
-      .set({'time': DateTime.now(), 'steps': steps - psteps});
-  loadtotalstep().then((result) {
-    // If we need to rebuild the widget with the resulting data,
-    // make sure to use setState
-    totalsteps = result;
-  });
+      .doc(getdate(DateTime.now()).toString())
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      datastep = documentSnapshot.get('steps');
 
-  firestore
+    } else {
+      datastep=0;
+    }
+  });
+  debugPrint('datasteps: $datastep');
+  debugPrint('BBBBBBBBBBBBBBBB');
+
+  await firestore
+      .collection(userid)
+      .doc(getdate(DateTime.now()).toString())
+      .set({'time': DateTime.now(), 'steps': steps - psteps});
+
+  debugPrint('CCCCCCCCCCCCCCCCCCCCCC');
+  await firestore
       .collection(userid)
       .doc('total_steps')
-      .set({'total_steps': totalsteps + steps - psteps});
+      .set({'total_steps': totalsteps + steps - psteps - datastep});
+  debugPrint('DDDDDDDD');
+
 }
 
 //cloud firestore에서 나의 steps을 불러온뒤 gamecards에 넣는 함수
 Future<void> loadmydata() async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  int gamecardstep = steps;
+  int gamecardstep = steps-psteps;
   int character = 1;
   String myCharacter_str = "kitten.png";
   SpriteSheet myCharacter = new SpriteSheet(

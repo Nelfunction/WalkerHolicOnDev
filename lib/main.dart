@@ -34,10 +34,11 @@ void main() async {
   await Firebase.initializeApp();
   await initPermission();
   await signInWithGoogle();
-  await getServerdata();
-  await getLocaldata();
+
+  await getLocaldata();// sp에서 어제 페도미터를 가져와 pstep 저장
   await senddata();
   await loadmydata();
+  await getServerdata(); //파이어베이스의 토탈스탭 불러옴
   await loadfrienddata();
   await loadfriend_request_list();
   await attendance(); //출석관련 함수-global.dart에 있음
