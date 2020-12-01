@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
       create: (_) => Property(
         (property.get('presetNum') ?? 2),
         (property.get('visualize') ?? [true, true, true, true]),
-        (Color(property.get('textColor')) ?? Color(0xffffffff)),
+        (Color(property.get('textColor') ?? 0xffffffff)),
       ),
       child: Body(),
     );
