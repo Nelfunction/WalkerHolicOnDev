@@ -93,11 +93,21 @@ class _MyOptionState extends State<MyOption> {
             ),
           ),
           ListTile(
-            title: Text('Pedestrian Status'),
+            title: Text('Friends'),
             trailing: CupertinoSwitch(
               value: provider.visualize[3],
               onChanged: (bool value) {
                 stateSetter(() => provider.setVisualize(3));
+                Hive.box('Property').put('visualize', provider.visualize);
+              },
+            ),
+          ),
+          ListTile(
+            title: Text('Pedestrian Status'),
+            trailing: CupertinoSwitch(
+              value: provider.visualize[4],
+              onChanged: (bool value) {
+                stateSetter(() => provider.setVisualize(4));
                 Hive.box('Property').put('visualize', provider.visualize);
               },
             ),
@@ -292,7 +302,7 @@ class _MyOptionState extends State<MyOption> {
                     onPressed: () {
                       bottomContent(
                         title: 'Visualize',
-                        size: 250,
+                        size: 300,
                         content: visualStatus(provider),
                       );
                     },

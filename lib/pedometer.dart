@@ -29,8 +29,8 @@ class _MyPedoState extends State<MyPedo> {
       steps = event.steps;
       status.todayCount = steps - psteps;
 
-      gamecards[0].cardSteps=status.todayCount;
-      status.totalCount = totalsteps+status.todayCount-tempstep;
+      gamecards[0].cardSteps = status.todayCount;
+      status.totalCount = totalsteps + status.todayCount - tempstep;
     });
   }
 
@@ -89,7 +89,8 @@ class _MyPedoState extends State<MyPedo> {
                   if (property.visualize[0]) status.dailyStatus(),
                   if (property.visualize[1]) status.weeklyStatus(),
                   if (property.visualize[2]) status.monthlyStatus(),
-                  if (property.visualize[3]) ...[
+                  if (property.visualize[3]) friendStatus(context),
+                  if (property.visualize[4]) ...[
                     Center(
                       child: Text('Pedestrian status:',
                           style: TextStyle(fontSize: 30)),

@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<Property>(
       create: (_) => Property(
         (property.get('presetNum') ?? 2),
-        (property.get('visualize') ?? [true, true, true, true]),
+        (property.get('visualize') ?? [true, true, true, true, true]),
         (Color(property.get('textColor') ?? 0xffffffff)),
         (property.get('number') ?? 10),
       ),
