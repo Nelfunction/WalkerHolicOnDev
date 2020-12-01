@@ -331,7 +331,23 @@ class _MyOptionState extends State<MyOption> {
                   Divider(height: 1, thickness: 1),
                   flatbutton(
                     onPressed: () {
-                      Navigator.of(context).push(CustomPageRoute(RandomBox()));
+                      if (randomBoxNumber > 0) {
+                        Navigator.of(context)
+                            .push(CustomPageRoute(RandomBox()));
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: SizedBox(
+                            height: 30,
+                            child: Center(
+                              child: Text(
+                                "Not Enough RandomBox! :(",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                          backgroundColor: Colors.black.withOpacity(0.5),
+                        ));
+                      }
                     },
                     context: context,
                     text: 'RandomBox',
