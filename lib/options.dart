@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:walkerholic/bloc/provider.dart';
-import 'package:walkerholic/friend_request_list.dart';
+import 'package:walkerholic/ui/friend_request_list.dart';
 import 'package:walkerholic/logic/format.dart';
-import 'package:walkerholic/randomBox.dart';
+import 'package:walkerholic/ui/randomBox.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'friend.dart';
-import 'attendance.dart';
+import 'ui/friend.dart';
+import 'ui/attendance.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'logic/global.dart';
+import '../logic/global.dart';
 import 'package:flutter/material.dart';
 
 class Friend_request_list extends StatefulWidget {

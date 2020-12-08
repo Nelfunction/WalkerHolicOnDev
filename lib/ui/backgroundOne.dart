@@ -1,31 +1,26 @@
-import 'dart:math';
+import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:flame/widgets/animation_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:walkerholic/bloc/provider.dart';
 
-import 'logic/global.dart';
+import '../logic/global.dart';
 
-class RandomBox extends StatefulWidget {
-  Property property;
-  RandomBox(this.property);
-  @override
-  _RandomBoxState createState() => _RandomBoxState(property);
-}
+class BackgroundOne extends StatelessWidget {
+  final String nameChar;
+  final String name;
+  const BackgroundOne({this.nameChar, this.name});
 
-class _RandomBoxState extends State<RandomBox> {
-  String randomName = "Now Opening...";
-  int flag = 99;
-
-  Property property;
-
-  _RandomBoxState(this.property);
-
-  bool onetime = true;
+  int codeReturn(String nameChar) {
+    if (nameChar == "pixel_background1") {
+      return 1;
+    } else if (nameChar == "pixel_background2") {
+      return 2;
+    } else {
+      return 3;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +35,28 @@ class _RandomBoxState extends State<RandomBox> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white, width: 4),
+                border: Border.all(color: Colors.white, width: 1),
                 color: Colors.white,
               ),
-              margin: EdgeInsets.fromLTRB(5, 150, 5, 5),
+              margin: EdgeInsets.fromLTRB(5, 80, 5, 5),
               padding: EdgeInsets.all(10),
-              child: SizedBox(width: 200, height: 200, child: AnimationOrNot()),
+              child: SizedBox(
+                width: 270,
+                height: 400,
+                child: Image.asset(
+                  "assets/images/" + nameChar + ".jpg",
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             Text(
-              randomName,
+              name,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             // 아래 메뉴
             ClipRRect(
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(30, 60, 30, 40),
+                    margin: EdgeInsets.fromLTRB(30, 20, 30, 40),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24.0),
                         color: Colors.black,
@@ -64,10 +66,8 @@ class _RandomBoxState extends State<RandomBox> {
                         Container(
                           child: FlatButton(
                             onPressed: () {
-                              if (onetime) {
-                                ChangeFlag();
-                                onetime = false;
-                              }
+                              // 선택
+                              ChooseBackground(codeReturn(nameChar), context);
                             },
                             child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 5),
@@ -75,11 +75,11 @@ class _RandomBoxState extends State<RandomBox> {
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Row(children: [
-                                  Text("Choose",
+                                  Text("Select",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20.0,
+                                        fontSize: 22.0,
                                       ))
                                 ])),
                           ),
@@ -115,33 +115,48 @@ class _RandomBoxState extends State<RandomBox> {
       ),
     );
   }
+}
 
-  Future<void> ChangeFlag() async {
-    flag = Random().nextInt(globalCharacters.length);
-    randomName = globalCharacters[flag] + " Cat";
-    property.minusNumber();
-    Hive.box('Property').put('number', property.number);
+Future<void> ChooseBackground(int nowBackground, BuildContext context) async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
 
-    List<dynamic> temp = globalCharacterListBool;
-    temp[0][flag] = true;
-    Hive.box('BoolCharacter').put('bool', temp);
-    setState(() {
-      debugPrint("Random Box : Now Flag is $flag");
-    });
-  }
+  String key = "background";
+  sp.setInt(key, nowBackground);
+  debugPrint("Write SP, Now Character : $nowBackground");
 
-  Widget AnimationOrNot() {
-    if (flag == 99) {
-      // animation
-      return AnimationWidget(
-        animation: randomAnimation,
-        playing: true,
-      );
+  String character_value;
+  await firestore
+      .collection(userid)
+      .doc('Character+Background')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      character_value = documentSnapshot.get('character');
     } else {
-      return Image.asset(
-        "assets/images/kittenIcon" + globalCharacters[flag] + ".png",
-        fit: BoxFit.cover,
-      );
+      character_value = "";
     }
-  }
+  });
+
+  firestore
+      .collection(userid)
+      .doc("Character+Background")
+      .set({'character': character_value, 'background': nowBackground});
+
+  int background_int;
+
+  await firestore
+      .collection(userid)
+      .doc('Character+Background')
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      background_int = documentSnapshot.get('background');
+    } else {
+      background_int = 1;
+    }
+  });
+
+  gamecards[0].background = background_int;
+
+  Navigator.of(context).pop();
 }

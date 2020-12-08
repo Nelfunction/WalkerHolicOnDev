@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import 'backgroundOne.dart';
-import 'characterOne.dart';
+import 'ui/backgroundOne.dart';
+import 'ui/characterOne.dart';
 import 'logic/global.dart';
 
 class CharacterPage extends StatefulWidget {

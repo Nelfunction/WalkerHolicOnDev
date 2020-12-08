@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'logic/global.dart';
+import '../logic/global.dart';
 import 'package:flutter/material.dart';
 
 class Friend extends StatelessWidget {

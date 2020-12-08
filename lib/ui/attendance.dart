@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'logic/format.dart';
-import 'logic/global.dart';
+import '../logic/format.dart';
+import '../logic/global.dart';
 
 class AttendancePage extends StatefulWidget {
   int presetNum;

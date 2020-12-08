@@ -5,7 +5,7 @@ import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'logic/global.dart';
+import '../logic/global.dart';
 
 class CharacterOne extends StatelessWidget {
   final String nameChar;
